@@ -1,0 +1,61 @@
+#!/bin/bash
+
+set -euo pipefail
+
+export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin${PATH:+:$PATH}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+VENV_PYTHON="${PROJECT_ROOT}/.venv/bin/python"
+LOG_FILE="${PROJECT_ROOT}/package-macos.log"
+DIST_DIR="${PROJECT_ROOT}/dist"
+
+escape() {
+  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+notify() {
+  local message
+  message=$(escape "$1")
+  /usr/bin/osascript <<EOF
+display notification "$message" with title "Package macOS App"
+EOF
+}
+
+fail() {
+  local message
+  message=$(escape "$1")
+  /usr/bin/osascript <<EOF
+display dialog "$message" buttons {"Show Log","OK"} default button "OK" with icon stop with title "Package macOS App"
+EOF
+  if [[ "${PIPESTATUS[0]}" -eq 0 ]]; then
+    /usr/bin/open -R "${LOG_FILE}"
+  fi
+  exit 1
+}
+
+if [[ ! -x "${VENV_PYTHON}" ]]; then
+  fail "Missing .venv. Run Setup macOS.app first."
+fi
+
+cd "${PROJECT_ROOT}"
+
+{
+  "${VENV_PYTHON}" -m pip install --upgrade pyinstaller &&
+  "${VENV_PYTHON}" -m PyInstaller run.py --noconfirm --windowed --name SkeletonApp \
+    --add-data "backend:backend" \
+    --add-data "frontend/static:frontend/static"
+} >>"${LOG_FILE}" 2>&1 || fail "Packaging failed. Check package-macos.log for details."
+
+# Remove intermediate build artifacts so only dist/ remains.
+rm -rf "${PROJECT_ROOT}/build"
+
+notify "Packaging complete."
+
+if [[ -d "${DIST_DIR}" ]]; then
+  /usr/bin/open "${DIST_DIR}"
+fi
+
+/usr/bin/osascript <<'EOF'
+display dialog "SkeletonApp.app is ready in the dist folder." buttons {"OK"} default button "OK" with title "Package macOS App"
+EOF

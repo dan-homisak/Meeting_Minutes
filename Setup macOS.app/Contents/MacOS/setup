@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -euo pipefail
+
+export PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin${PATH:+:$PATH}"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+LOG_FILE="${PROJECT_ROOT}/setup.log"
+SETUP_SCRIPT="${PROJECT_ROOT}/scripts/setup.sh"
+
+escape() {
+  printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+notify() {
+  local message
+  message=$(escape "$1")
+  /usr/bin/osascript <<EOF
+display notification "$message" with title "Setup Environment"
+EOF
+}
+
+dialog() {
+  local message
+  message=$(escape "$1")
+  /usr/bin/osascript <<EOF
+display dialog "$message" buttons {"OK"} default button "OK" with title "Setup Environment"
+EOF
+}
+
+fail() {
+  local message
+  message=$(escape "$1")
+  /usr/bin/osascript <<EOF
+display dialog "$message" buttons {"Show Log","OK"} default button "OK" with icon stop with title "Setup Environment"
+EOF
+  if [[ "${PIPESTATUS[0]}" -eq 0 ]]; then
+    /usr/bin/open -R "${LOG_FILE}"
+  fi
+  exit 1
+}
+
+if [[ ! -f "${SETUP_SCRIPT}" ]]; then
+  fail "Cannot find scripts/setup.sh. Verify the project folder is intact."
+fi
+
+notify "Starting environment setup…"
+
+{
+  /bin/bash "${SETUP_SCRIPT}"
+} >>"${LOG_FILE}" 2>&1 && notify "Setup completed successfully." || fail "Setup failed. Check setup.log for details."
+
+dialog "All set! You can now launch the app with Launch macOS.app or python run.py."
