@@ -2,6 +2,8 @@
 
 - this is a list
 
+`the` 
+
 - [ ] This is a to-do
 - [x] This one is marked complete
 
@@ -18,3 +20,8 @@
 End here
 More text added here. 
 And again
+- The more I add here
+- The markdown continues
+- [ ] A check box
+- [x] A completed one
+- [ ] The

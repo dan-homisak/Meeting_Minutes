@@ -1,0 +1,2 @@
+{"receivedAt":"2026-02-17T03:07:30.646Z","source":"launcher","event":"startup","tokenPrefix":"c744a964"}
+{"receivedAt":"2026-02-17T03:07:50.228Z","source":"launcher","event":"shutdown","reason":"Stopping launcher (SIGINT)."}
