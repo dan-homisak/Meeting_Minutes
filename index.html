@@ -13,6 +13,10 @@
           <h1>Meeting Minutes</h1>
         </div>
         <div class="actions">
+          <div class="mode-toggle" role="group" aria-label="Note mode">
+            <button id="mode-raw" class="mode-button active" type="button" aria-pressed="true">Raw</button>
+            <button id="mode-preview" class="mode-button" type="button" aria-pressed="false">Preview</button>
+          </div>
           <button id="open-folder" class="primary">Open Folder</button>
           <button id="new-note" disabled>New Note</button>
           <button id="save-now" disabled>Save Now</button>
@@ -32,14 +36,10 @@
 
         <main class="pane-grid">
           <section class="pane">
-            <h2>Editor</h2>
-            <p class="hint">Type <code>/</code> to open markdown snippet autocomplete.</p>
+            <h2>Note</h2>
+            <p class="hint">Use <code>Raw</code> to edit markdown and <code>Preview</code> to read rendered output.</p>
             <div id="editor"></div>
-          </section>
-
-          <section class="pane">
-            <h2>Preview</h2>
-            <article id="preview"></article>
+            <article id="preview" hidden></article>
           </section>
         </main>
       </div>

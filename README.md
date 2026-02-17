@@ -4,7 +4,7 @@ A local-first markdown note editor built for the browser.
 
 ## MVP features
 
-- Split-pane markdown workflow with live preview.
+- Single-pane markdown workflow with explicit `Raw` and `Preview` modes.
 - CodeMirror editor with markdown list continuation and snippet autocomplete (`/` commands).
 - File and folder access through the browser File System Access API.
 - Autosave (debounced) plus manual Save button.

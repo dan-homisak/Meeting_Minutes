@@ -17,11 +17,13 @@ const LAUNCHER_HEARTBEAT_MS = 4000;
 const openFolderButton = document.querySelector('#open-folder');
 const newNoteButton = document.querySelector('#new-note');
 const saveNowButton = document.querySelector('#save-now');
+const rawModeButton = document.querySelector('#mode-raw');
+const previewModeButton = document.querySelector('#mode-preview');
 const statusElement = document.querySelector('#status');
 const fileCountElement = document.querySelector('#file-count');
 const fileListElement = document.querySelector('#file-list');
-const previewElement = document.querySelector('#preview');
 const editorElement = document.querySelector('#editor');
+const previewElement = document.querySelector('#preview');
 
 const app = {
   folderHandle: null,
@@ -31,7 +33,8 @@ const app = {
   lastSavedText: '',
   hasUnsavedChanges: false,
   isLoadingFile: false,
-  autosaveTimer: null
+  autosaveTimer: null,
+  viewMode: 'raw'
 };
 
 const launcherToken = new URLSearchParams(window.location.search).get('launcherToken');
@@ -197,13 +200,37 @@ function renderFileList() {
   }
 }
 
-function renderPreview(markdownText) {
+function renderMarkdownHtml(markdownText) {
   const rendered = markdownEngine.render(markdownText);
-  const sanitized = DOMPurify.sanitize(rendered, {
+  return DOMPurify.sanitize(rendered, {
     USE_PROFILES: { html: true }
   });
+}
 
-  previewElement.innerHTML = sanitized;
+function renderPreview(markdownText) {
+  previewElement.innerHTML = renderMarkdownHtml(markdownText);
+}
+
+function setViewMode(nextMode) {
+  const mode = nextMode === 'preview' ? 'preview' : 'raw';
+  app.viewMode = mode;
+
+  const inRawMode = mode === 'raw';
+  editorElement.hidden = !inRawMode;
+  previewElement.hidden = inRawMode;
+
+  rawModeButton.classList.toggle('active', inRawMode);
+  rawModeButton.setAttribute('aria-pressed', String(inRawMode));
+
+  previewModeButton.classList.toggle('active', !inRawMode);
+  previewModeButton.setAttribute('aria-pressed', String(!inRawMode));
+
+  if (inRawMode) {
+    editorView.focus();
+    return;
+  }
+
+  renderPreview(getEditorText());
 }
 
 function getEditorText() {
@@ -218,7 +245,9 @@ function setEditorText(nextText) {
       from: 0,
       to: editorView.state.doc.length,
       insert: nextText
-    }
+    },
+    selection: { anchor: 0 },
+    scrollIntoView: true
   });
 
   app.isLoadingFile = false;
@@ -455,7 +484,9 @@ async function openFile(path) {
   app.hasUnsavedChanges = false;
 
   setEditorText(markdownText);
-  renderPreview(markdownText);
+  if (app.viewMode === 'preview') {
+    renderPreview(markdownText);
+  }
   renderFileList();
   updateActionButtons();
 
@@ -597,6 +628,7 @@ async function createNewNote() {
 const editorView = new EditorView({
   state: EditorState.create({
     doc: '# Welcome\n\nChoose a folder and start editing markdown files.\n\nType `/` for quick markdown snippets.\n',
+    selection: { anchor: 0 },
     extensions: [
       basicSetup,
       markdown(),
@@ -618,7 +650,9 @@ const editorView = new EditorView({
         }
 
         const markdownText = update.state.doc.toString();
-        renderPreview(markdownText);
+        if (app.viewMode === 'preview') {
+          renderPreview(markdownText);
+        }
 
         if (app.isLoadingFile) {
           return;
@@ -640,6 +674,7 @@ const editorView = new EditorView({
 });
 
 renderPreview(editorView.state.doc.toString());
+setViewMode(app.viewMode);
 updateActionButtons();
 
 openFolderButton.addEventListener('click', () => {
@@ -654,6 +689,14 @@ saveNowButton.addEventListener('click', () => {
   void saveCurrentFile(true).catch((error) => {
     setStatus(`Save failed: ${error.message}`, true);
   });
+});
+
+rawModeButton.addEventListener('click', () => {
+  setViewMode('raw');
+});
+
+previewModeButton.addEventListener('click', () => {
+  setViewMode('preview');
 });
 
 window.addEventListener('beforeunload', (event) => {
