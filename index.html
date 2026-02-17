@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meeting Minutes MVP</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar">
+        <div class="brand-block">
+          <p class="eyebrow">Local Markdown Workspace</p>
+          <h1>Meeting Minutes</h1>
+        </div>
+        <div class="actions">
+          <button id="open-folder" class="primary">Open Folder</button>
+          <button id="new-note" disabled>New Note</button>
+          <button id="save-now" disabled>Save Now</button>
+        </div>
+      </header>
+
+      <p id="status" aria-live="polite">Choose a folder with markdown files to start editing.</p>
+
+      <div class="workspace">
+        <aside class="sidebar" aria-label="Markdown files">
+          <div class="sidebar-header">
+            <h2>Files</h2>
+            <span id="file-count">0</span>
+          </div>
+          <ul id="file-list"></ul>
+        </aside>
+
+        <main class="pane-grid">
+          <section class="pane">
+            <h2>Editor</h2>
+            <p class="hint">Type <code>/</code> to open markdown snippet autocomplete.</p>
+            <div id="editor"></div>
+          </section>
+
+          <section class="pane">
+            <h2>Preview</h2>
+            <article id="preview"></article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

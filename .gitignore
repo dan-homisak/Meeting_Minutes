@@ -1,32 +1,16 @@
-# macOS metadata
+# OS metadata
 .DS_Store
 
-# Python virtual environment
-.venv/
+# Node dependencies and cache
+node_modules/
+.vite/
 
-# Application logs
+# Build output
+/dist/
+
+# Logs
 *.log
 
-# SQLite database file
-backend/app.db
-
-# PyInstaller build artifacts and distributables
-build/
-dist/
-*.spec
-
-# Python bytecode cache
-__pycache__/
-*.pyc
-
-# Node/Yarn caches (if you later add a bundler)
-node_modules/
-.parcel-cache/
-.npm/
-.yarn/
-
-# IDE/project workspace files (add more as needed)
+# Editor configs
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
