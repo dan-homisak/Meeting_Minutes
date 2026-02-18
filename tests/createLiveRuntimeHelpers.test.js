@@ -28,6 +28,7 @@ test('createLiveRuntimeHelpers delegates through helper modules and controllers'
     previewRefresh: [],
     previewState: [],
     previewBlocks: [],
+    previewSourceMap: [],
     previewFenceState: [],
     cursorMove: [],
     pointerActivate: []
@@ -163,6 +164,10 @@ test('createLiveRuntimeHelpers delegates through helper modules and controllers'
         calls.previewBlocks.push(view);
         return [view];
       },
+      liveSourceMapIndexForView(view) {
+        calls.previewSourceMap.push(view);
+        return [{ id: view.id ?? null }];
+      },
       emitFenceVisibilityState(view, reason) {
         calls.previewFenceState.push({ view, reason });
       }
@@ -251,6 +256,7 @@ test('createLiveRuntimeHelpers delegates through helper modules and controllers'
   helpers.requestLivePreviewRefresh('mode-change');
   assert.deepEqual(helpers.readLivePreviewState({ id: 'state' }), { id: 'state' });
   assert.deepEqual(helpers.liveBlocksForView({ id: 'view' }), [{ id: 'view' }]);
+  assert.deepEqual(helpers.liveSourceMapIndexForView({ id: 'view' }), [{ id: 'view' }]);
   helpers.emitFenceVisibilityState('view', 'selection');
   assert.equal(helpers.moveLiveCursorVertically('view', 1, 'ArrowDown'), true);
   assert.equal(helpers.handleLivePointerActivation('view', { type: 'mousedown' }, 'mousedown'), true);
@@ -279,6 +285,7 @@ test('createLiveRuntimeHelpers delegates through helper modules and controllers'
   assert.equal(calls.previewRefresh.length, 1);
   assert.equal(calls.previewState.length, 1);
   assert.equal(calls.previewBlocks.length, 1);
+  assert.equal(calls.previewSourceMap.length, 1);
   assert.equal(calls.previewFenceState.length, 1);
   assert.equal(calls.cursorMove.length, 1);
   assert.equal(calls.pointerActivate.length, 1);
@@ -320,6 +327,7 @@ test('createLiveRuntimeHelpers returns safe fallbacks when dependencies are miss
   assert.equal(helpers.requestLivePreviewRefresh('manual'), undefined);
   assert.equal(helpers.readLivePreviewState({ id: 'state' }), null);
   assert.deepEqual(helpers.liveBlocksForView({ id: 'view' }), []);
+  assert.deepEqual(helpers.liveSourceMapIndexForView({ id: 'view' }), []);
   assert.equal(helpers.emitFenceVisibilityState('view', 'manual'), undefined);
   assert.equal(helpers.moveLiveCursorVertically('view', 1, 'ArrowDown'), false);
   assert.equal(

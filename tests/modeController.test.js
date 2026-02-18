@@ -37,6 +37,10 @@ test('setViewMode preview toggles UI and renders preview content', () => {
   const previewModeButton = createElementMock();
   const previewCalls = [];
   const refreshCalls = [];
+  const documentModel = {
+    text: '# note',
+    blocks: [{ from: 0, to: 6 }]
+  };
 
   const modeController = createModeController({
     app,
@@ -48,7 +52,8 @@ test('setViewMode preview toggles UI and renders preview content', () => {
     liveModeButton,
     previewModeButton,
     getEditorText: () => '# note',
-    renderPreview: (text) => previewCalls.push(text),
+    readDocumentModel: () => documentModel,
+    renderPreview: (text, options) => previewCalls.push({ text, options }),
     requestLivePreviewRefresh: (reason) => refreshCalls.push(reason),
     getEditorView: () => ({
       focus() {}
@@ -68,7 +73,9 @@ test('setViewMode preview toggles UI and renders preview content', () => {
   assert.equal(previewModeButton.classList.contains('active'), true);
   assert.equal(rawModeButton.classList.contains('active'), false);
   assert.equal(liveModeButton.classList.contains('active'), false);
-  assert.deepEqual(previewCalls, ['# note']);
+  assert.equal(previewCalls.length, 1);
+  assert.equal(previewCalls[0].text, '# note');
+  assert.equal(previewCalls[0].options.documentModel, documentModel);
   assert.deepEqual(refreshCalls, []);
 });
 

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { StateEffect } from '@codemirror/state';
+import { EditorState, StateEffect } from '@codemirror/state';
 import { createLivePreviewController } from '../src/live/livePreviewController.js';
 
 function createLiveDebugStub() {
@@ -88,4 +88,80 @@ test('emitFenceVisibilityState is a no-op when not in live mode', () => {
       'manual'
     );
   });
+});
+
+test('livePreviewStateField applies docChanged updates via documentSession without fallback parse', () => {
+  const refreshLivePreviewEffect = StateEffect.define();
+  const sessionCalls = {
+    ensureText: [],
+    applyEditorTransaction: []
+  };
+  const initialBlocks = [{ from: 0, to: 6 }];
+  const updatedBlocks = [{ from: 0, to: 5 }];
+  let parseCalls = 0;
+
+  const controller = createLivePreviewController({
+    app: { viewMode: 'live' },
+    liveDebug: createLiveDebugStub(),
+    markdownEngine: {
+      parse() {
+        parseCalls += 1;
+        return [];
+      }
+    },
+    documentSession: {
+      ensureText(text) {
+        sessionCalls.ensureText.push(text);
+        return {
+          model: {
+            blocks: initialBlocks,
+            meta: {
+              parser: 'incremental'
+            }
+          }
+        };
+      },
+      applyEditorTransaction(transaction) {
+        sessionCalls.applyEditorTransaction.push(transaction);
+        return {
+          model: {
+            blocks: updatedBlocks,
+            meta: {
+              parser: 'incremental',
+              reparsedCharLength: 4
+            }
+          }
+        };
+      }
+    },
+    renderMarkdownHtml() {
+      return '';
+    },
+    normalizeLogString(value) {
+      return String(value);
+    },
+    sourceFirstMode: true,
+    refreshLivePreviewEffect
+  });
+
+  const state = EditorState.create({
+    doc: 'alpha\n',
+    extensions: [controller.livePreviewStateField]
+  });
+  const initialFieldState = state.field(controller.livePreviewStateField);
+  assert.deepEqual(initialFieldState.blocks, initialBlocks);
+  assert.equal(sessionCalls.ensureText.length, 1);
+
+  const transaction = state.update({
+    changes: {
+      from: 0,
+      to: 5,
+      insert: 'beta'
+    }
+  });
+  const nextFieldState = transaction.state.field(controller.livePreviewStateField);
+
+  assert.equal(sessionCalls.applyEditorTransaction.length, 1);
+  assert.equal(parseCalls, 0);
+  assert.deepEqual(nextFieldState.blocks, updatedBlocks);
 });

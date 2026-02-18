@@ -1,3 +1,5 @@
+import { findSourceMapEntriesAtPosition } from '../core/mapping/SourceMapIndex.js';
+
 export function createPointerActivationController({
   app,
   liveDebug,
@@ -13,6 +15,7 @@ export function createPointerActivationController({
   liveDebugBlockMapLargeDeltaLines = 2,
   requestAnimationFrameFn = (callback) => window.requestAnimationFrame(callback),
   liveBlocksForView,
+  liveSourceMapIndexForView,
   normalizePointerTarget,
   readPointerCoordinates,
   describeElementForLog,
@@ -36,8 +39,122 @@ export function createPointerActivationController({
   summarizeLineNumbersForCoordSamples,
   normalizeLogString
 } = {}) {
+  function normalizeBounds(from, to) {
+    if (!Number.isFinite(from) || !Number.isFinite(to)) {
+      return null;
+    }
+
+    const rangeFrom = Math.max(0, Math.trunc(from));
+    const rangeTo = Math.max(rangeFrom, Math.trunc(to));
+    if (rangeTo <= rangeFrom) {
+      return null;
+    }
+
+    return {
+      from: rangeFrom,
+      to: rangeTo
+    };
+  }
+
+  function readSourceMapIndex(view) {
+    if (typeof liveSourceMapIndexForView !== 'function') {
+      return [];
+    }
+
+    const index = liveSourceMapIndexForView(view);
+    return Array.isArray(index) ? index : [];
+  }
+
+  function findSourceMapContext(sourceMapIndex, sourceFrom, sourceTo, fragmentFrom, fragmentTo) {
+    if (!Array.isArray(sourceMapIndex) || sourceMapIndex.length === 0) {
+      return {
+        blockBounds: null,
+        fragmentBounds: null,
+        match: null
+      };
+    }
+
+    let blockEntry = null;
+    if (Number.isFinite(sourceFrom)) {
+      blockEntry = sourceMapIndex.find((entry) =>
+        entry?.kind === 'block' &&
+          entry.sourceFrom === sourceFrom &&
+          (!Number.isFinite(sourceTo) || entry.sourceTo === sourceTo)
+      ) ?? null;
+      if (!blockEntry) {
+        blockEntry = sourceMapIndex.find((entry) =>
+          entry?.kind === 'block' &&
+            Number.isFinite(entry.sourceFrom) &&
+            Number.isFinite(entry.sourceTo) &&
+            sourceFrom >= entry.sourceFrom &&
+            sourceFrom < entry.sourceTo
+        ) ?? null;
+      }
+    }
+
+    let fragmentEntry = null;
+    if (Number.isFinite(fragmentFrom) && Number.isFinite(fragmentTo)) {
+      fragmentEntry = sourceMapIndex.find((entry) =>
+        entry?.kind === 'rendered-fragment' &&
+          entry.fragmentFrom === fragmentFrom &&
+          entry.fragmentTo === fragmentTo &&
+          (
+            !blockEntry ||
+            (entry.blockFrom === blockEntry.blockFrom && entry.blockTo === blockEntry.blockTo)
+          )
+      ) ?? null;
+    }
+
+    if (!fragmentEntry && blockEntry) {
+      fragmentEntry = sourceMapIndex.find((entry) =>
+        entry?.kind === 'rendered-fragment' &&
+          entry.blockFrom === blockEntry.blockFrom &&
+          entry.blockTo === blockEntry.blockTo
+      ) ?? null;
+    }
+
+    const blockBounds = blockEntry
+      ? normalizeBounds(blockEntry.blockFrom, blockEntry.blockTo)
+      : null;
+    const fragmentBounds = fragmentEntry
+      ? normalizeBounds(fragmentEntry.fragmentFrom, fragmentEntry.fragmentTo)
+      : null;
+    const match = blockEntry || fragmentEntry
+      ? {
+          block: blockEntry?.id ?? null,
+          fragment: fragmentEntry?.id ?? null
+        }
+      : null;
+
+    return {
+      blockBounds,
+      fragmentBounds,
+      match
+    };
+  }
+
+  function findSourceMapBlockBoundsForPosition(sourceMapIndex, position) {
+    if (!Array.isArray(sourceMapIndex) || !Number.isFinite(position)) {
+      return null;
+    }
+
+    const matches = findSourceMapEntriesAtPosition(sourceMapIndex, position);
+    const blockMatch = matches.find(
+      (entry) => entry?.kind === 'block' && Number.isFinite(entry.blockFrom) && Number.isFinite(entry.blockTo)
+    ) ?? null;
+    const fallbackMatch = blockMatch ?? matches.find(
+      (entry) => Number.isFinite(entry?.blockFrom) && Number.isFinite(entry?.blockTo)
+    ) ?? null;
+    if (!fallbackMatch) {
+      return null;
+    }
+
+    return normalizeBounds(fallbackMatch.blockFrom, fallbackMatch.blockTo);
+  }
+
   function resolveLiveActivationContext(view, targetElement, coordinates, trigger) {
     const blocks = liveBlocksForView(view);
+    const sourceMapIndex = readSourceMapIndex(view);
     const renderedBlock = targetElement.closest('.cm-rendered-block');
     if (renderedBlock) {
       const sourceFrom = parseSourceFromAttribute(renderedBlock.getAttribute('data-source-from'));
@@ -48,6 +165,17 @@ export function createPointerActivationController({
         });
         return null;
       }
+      const sourceTo = parseSourceFromAttribute(renderedBlock.getAttribute('data-source-to'));
+      const fragmentFrom = parseSourceFromAttribute(renderedBlock.getAttribute('data-fragment-from'));
+      const fragmentTo = parseSourceFromAttribute(renderedBlock.getAttribute('data-fragment-to'));
+      const sourceMapContext = findSourceMapContext(
+        sourceMapIndex,
+        sourceFrom,
+        sourceTo,
+        fragmentFrom,
+        fragmentTo
+      );
+      const sourceAnchorFrom = sourceMapContext.blockBounds?.from ?? sourceFrom;
 
       const sourceRangeTarget = findRenderedSourceRangeTarget(targetElement, renderedBlock);
       const sourcePosByCoordinates = resolvePointerPosition(view, renderedBlock, coordinates);
@@ -60,11 +188,28 @@ export function createPointerActivationController({
       );
       const sourcePosByDomTarget = resolvePointerPosition(view, targetElement, null);
       const sourcePosByDomBlock = resolvePointerPosition(view, renderedBlock, null);
-      const blockBoundsBySourceFrom = resolveActivationBlockBounds(
+      const blockBoundsBySourceFrom = sourceMapContext.blockBounds ?? resolveActivationBlockBounds(
         blocks,
-        sourceFrom,
+        sourceAnchorFrom,
         Number.isFinite(sourcePosBySourceRange) ? sourcePosBySourceRange : sourcePosByCoordinates
       );
+      const sourcePosBySourceMap = (
+        !Number.isFinite(sourcePosBySourceRange) &&
+        sourceMapContext.fragmentBounds &&
+        (
+          Number.isFinite(sourcePosByCoordinates) ||
+          Number.isFinite(sourceMapContext.fragmentBounds?.from)
+        )
+      )
+        ? resolveLiveBlockSelection(
+            view.state.doc.length,
+            sourceMapContext.fragmentBounds.from,
+            Number.isFinite(sourcePosByCoordinates)
+              ? sourcePosByCoordinates
+              : sourceMapContext.fragmentBounds.from,
+            sourceMapContext.fragmentBounds
+          )
+        : null;
       const sourcePosByCoordinatesDistanceToSourceFromBlock =
         Number.isFinite(sourcePosByCoordinates) && blockBoundsBySourceFrom
           ? distanceToBlockBounds(sourcePosByCoordinates, blockBoundsBySourceFrom)
@@ -81,7 +226,8 @@ export function createPointerActivationController({
         Number.isFinite(sourcePosByDomBlock) && blockBoundsBySourceFrom
           ? distanceToBlockBounds(sourcePosByDomBlock, blockBoundsBySourceFrom)
           : null;
-      const allowHeuristicSticky = !Number.isFinite(sourcePosBySourceRange);
+      const allowHeuristicSticky =
+        !Number.isFinite(sourcePosBySourceRange) && !Number.isFinite(sourcePosBySourceMap);
       const preferDomAnchorForRenderedClick = allowHeuristicSticky && shouldPreferRenderedDomAnchorPosition({
         sourcePosDistanceToSourceFromBlock: sourcePosByCoordinatesDistanceToSourceFromBlock,
         domTargetDistanceToSourceFromBlock: sourcePosByDomTargetDistanceToSourceFromBlock,
@@ -104,6 +250,9 @@ export function createPointerActivationController({
       if (Number.isFinite(sourcePosBySourceRange)) {
         sourcePos = sourcePosBySourceRange;
         sourcePosOrigin = 'source-range';
+      } else if (Number.isFinite(sourcePosBySourceMap)) {
+        sourcePos = sourcePosBySourceMap;
+        sourcePosOrigin = 'source-map-fragment';
       } else if (preferDomAnchorForRenderedClick) {
         if (Number.isFinite(sourcePosByStickyClamp)) {
           sourcePos = sourcePosByStickyClamp;
@@ -129,6 +278,7 @@ export function createPointerActivationController({
 
       const blockBoundsBySourcePos = Number.isFinite(sourcePos)
         ? (
+            findSourceMapBlockBoundsForPosition(sourceMapIndex, sourcePos) ??
             findBlockContainingPosition(blocks, sourcePos) ??
             findNearestBlockForPosition(blocks, sourcePos, 1)
           )
@@ -231,7 +381,7 @@ export function createPointerActivationController({
       const stickySelection = (preferSourceFromForRenderedFencedClick || preferSourceFromForRenderedBoundaryClick)
         ? resolveLiveBlockSelection(
             view.state.doc.length,
-            sourceFrom,
+            sourceAnchorFrom,
             sourcePos,
             blockBoundsBySourceFrom
           )
@@ -412,6 +562,7 @@ export function createPointerActivationController({
         sourcePosOrigin,
         sourcePosByCoordinates,
         sourcePosBySourceRange,
+        sourcePosBySourceMap,
         sourcePosByDomTarget,
         sourcePosByDomBlock,
         sourcePosByStickyClamp,
@@ -433,16 +584,18 @@ export function createPointerActivationController({
         preferredSelection,
         allowCoordinateRemap,
         reboundToSourcePosBlock: shouldReboundToSourcePosBlock,
+        sourceMapMatch: sourceMapContext.match,
         pointerProbe
       });
 
       return {
-        sourceFrom: blockBounds?.from ?? sourceFrom,
+        sourceFrom: blockBounds?.from ?? sourceAnchorFrom,
         sourcePos: preferredSelection,
         rawSourcePos: Number.isFinite(sourcePosByCoordinates) ? sourcePosByCoordinates : null,
         sourcePosOrigin,
         blockBounds,
         strategy: 'rendered-block',
+        match: sourceMapContext.match,
         allowCoordinateRemap,
         pointerProbe
       };

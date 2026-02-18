@@ -12,6 +12,7 @@ export function createAppControllers({
   writeWorkspaceToDb,
   getEditorText,
   setEditorText,
+  readDocumentModel,
   renderPreview,
   liveDebug,
   sourceFirstMode,
@@ -66,6 +67,7 @@ export function createAppControllers({
     renderFileList,
     getEditorText,
     setEditorText,
+    readDocumentModel,
     renderPreview,
     liveDebug
   });
@@ -80,6 +82,7 @@ export function createAppControllers({
     liveModeButton,
     previewModeButton,
     getEditorText,
+    readDocumentModel,
     renderPreview,
     requestLivePreviewRefresh,
     getEditorView,

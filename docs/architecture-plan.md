@@ -41,11 +41,20 @@ Current checkpoint:
 - Completed: extracted shared live constants into `src/bootstrap/liveConstants.js`.
 - Completed: extracted app composition root into `src/bootstrap/createApp.js`; `src/main.js` is now a thin entrypoint.
 
-### Phase 2: Shared document model and incremental parser
+### Phase 2: Shared document model and incremental parser (completed)
 
 - Introduce an incremental markdown model pipeline.
 - Build block graph and inline spans from transaction deltas.
 - Replace full-document parse-on-change paths.
+
+Current checkpoint:
+
+- Completed: added shared core model/document/parser modules under `src/core/*` (`DocumentSession`, `TransactionClassifier`, `DocModel`, `ModelDiff`, `BlockNode`, `IncrementalMarkdownParser`, `BlockGraphBuilder`, `InlineSpanBuilder`).
+- Completed: live preview block collection now uses `DocumentSession` incremental transaction updates with full-parse fallback.
+- Completed: preview rendering path accepts shared model input and reuses block-fragment HTML cache in preview mode.
+- Completed: mode switch and workspace file-open preview renders now pass shared model context when synchronized with editor text.
+- Completed: added regression coverage for document session, transaction classification, incremental parser behavior, and model-backed preview rendering.
+- Completed: added integration coverage that `docChanged` live preview updates are applied through `DocumentSession` without invoking fallback markdown parser calls in steady-state flow.
 
 ### Phase 3: Hybrid live renderer
 
@@ -53,11 +62,22 @@ Current checkpoint:
 - Inactive blocks render via shared model.
 - Maintain deterministic source/map index for all rendered fragments.
 
+Current checkpoint:
+
+- In progress: live preview state now builds a deterministic source-map index (`src/core/mapping/SourceMapIndex.js`) from block + rendered-fragment ranges.
+- In progress: source-map index is stored alongside live preview decorations and exposed via bridge/runtime helper delegates for downstream selection/mapping hardening.
+
 ### Phase 4: Selection and mapping hardening
 
 - Centralize click, cursor, and keyboard activation logic.
 - Remove fallback heuristics where possible.
 - Enforce block-bound clamping and deterministic remapping.
+
+Current checkpoint:
+
+- In progress: rendered pointer activation now consults `SourceMapIndex` block/fragment entries before coordinate-heuristic fallback.
+- In progress: rendered click resolution can clamp to deterministic source fragment bounds (`source-map-fragment` origin) when token/source-range attributes are unavailable.
+- In progress: vertical cursor navigation now reads `SourceMapIndex` and applies bounded target clamping when arrow movement resolves outside deterministic block boundaries.
 
 ### Phase 5: Viewport and performance
 

@@ -8,6 +8,7 @@ export function createModeController({
   liveModeButton,
   previewModeButton,
   getEditorText,
+  readDocumentModel,
   renderPreview,
   requestLivePreviewRefresh,
   getEditorView,
@@ -52,7 +53,14 @@ export function createModeController({
     }
 
     if (mode === 'preview') {
-      renderPreview(getEditorText());
+      const markdownText = getEditorText();
+      const documentModel =
+        typeof readDocumentModel === 'function' ? readDocumentModel() : null;
+      const previewDocumentModel =
+        documentModel && documentModel.text === markdownText ? documentModel : null;
+      renderPreview(markdownText, {
+        documentModel: previewDocumentModel
+      });
       return;
     }
 

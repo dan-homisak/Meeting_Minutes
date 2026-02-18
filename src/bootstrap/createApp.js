@@ -12,6 +12,7 @@ import {
   shouldPreferSourceFromForRenderedFencedClick
 } from '../livePreviewCore.js';
 import { MARKDOWN_ENGINE_OPTIONS, createMarkdownEngine } from '../markdownConfig.js';
+import { createDocumentSession } from '../core/document/DocumentSession.js';
 import { createLiveLineMappingHelpers } from '../live/liveLineMappingHelpers.js';
 import { createLivePreviewBridge } from '../live/livePreviewBridge.js';
 import { createLiveDiagnosticsLogHelpers } from '../live/liveDiagnosticsLogHelpers.js';
@@ -107,6 +108,9 @@ export function createApp({
   const launcherToken = urlParams.get('launcherToken');
   
   const markdownEngine = createMarkdownEngine();
+  const documentSession = createDocumentSession({
+    markdownEngine
+  });
   const markdownRenderer = createMarkdownRenderer({
     markdownEngine,
     previewElement,
@@ -234,6 +238,7 @@ export function createApp({
     writeWorkspaceToDb,
     getEditorText,
     setEditorText,
+    readDocumentModel: () => documentSession.getModel(),
     renderPreview,
     liveDebug,
     sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
@@ -291,6 +296,7 @@ export function createApp({
     app,
     liveDebug,
     markdownEngine,
+    documentSession,
     renderMarkdownHtml,
     normalizeLogString,
     sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
@@ -352,6 +358,7 @@ export function createApp({
     updateActionButtons,
     setStatus,
     scheduleAutosave,
+    readDocumentModel: () => documentSession.getModel(),
     windowObject: window,
     documentObject: document,
     requestAnimationFrameFn: (callback) => window.requestAnimationFrame(callback),

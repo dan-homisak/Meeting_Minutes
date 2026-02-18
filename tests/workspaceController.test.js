@@ -38,6 +38,7 @@ function createBaseHarness(overrides = {}) {
     renderFileList: overrides.renderFileList ?? (() => {}),
     getEditorText: overrides.getEditorText ?? (() => 'note body'),
     setEditorText: overrides.setEditorText ?? (() => {}),
+    readDocumentModel: overrides.readDocumentModel ?? (() => null),
     renderPreview: overrides.renderPreview ?? (() => {}),
     liveDebug: overrides.liveDebug ?? { info() {} }
   };
@@ -82,6 +83,7 @@ test('saveCurrentFile reports permission denial without writing', async () => {
 test('openFile updates app state and persists workspace', async () => {
   let persistedPayload = null;
   let renderedPreview = null;
+  let renderedPreviewOptions = null;
   let editorTextSet = null;
   let loggedRead = null;
   let renderFileListCalls = 0;
@@ -110,9 +112,14 @@ test('openFile updates app state and persists workspace', async () => {
     setEditorText: (value) => {
       editorTextSet = value;
     },
-    renderPreview: (value) => {
+    renderPreview: (value, options) => {
       renderedPreview = value;
+      renderedPreviewOptions = options;
     },
+    readDocumentModel: () => ({
+      text: '# heading\n',
+      blocks: [{ from: 0, to: 10 }]
+    }),
     liveDebug: {
       info(event, data) {
         if (event === 'file.open.read') {
@@ -136,6 +143,7 @@ test('openFile updates app state and persists workspace', async () => {
   assert.equal(app.hasUnsavedChanges, false);
   assert.equal(editorTextSet, '# heading\n');
   assert.equal(renderedPreview, '# heading\n');
+  assert.equal(renderedPreviewOptions.documentModel.text, '# heading\n');
   assert.equal(renderFileListCalls, 1);
   assert.equal(updateActionCalls, 1);
   assert.deepEqual(persistedPayload, {

@@ -84,11 +84,32 @@ function createView({ docLength = 120, mappedPos = 12 } = {}) {
   return { view, dispatched, readFocusCount: () => focusCount };
 }
 
-function createRenderedTarget(sourceFrom = '10') {
+function createRenderedTarget(sourceFromOrConfig = '10') {
+  const sourceFrom = typeof sourceFromOrConfig === 'object'
+    ? sourceFromOrConfig.sourceFrom ?? '10'
+    : sourceFromOrConfig;
+  const sourceTo = typeof sourceFromOrConfig === 'object'
+    ? sourceFromOrConfig.sourceTo ?? null
+    : null;
+  const fragmentFrom = typeof sourceFromOrConfig === 'object'
+    ? sourceFromOrConfig.fragmentFrom ?? null
+    : null;
+  const fragmentTo = typeof sourceFromOrConfig === 'object'
+    ? sourceFromOrConfig.fragmentTo ?? null
+    : null;
   const renderedBlock = {
     getAttribute(name) {
       if (name === 'data-source-from') {
         return sourceFrom;
+      }
+      if (name === 'data-source-to') {
+        return sourceTo;
+      }
+      if (name === 'data-fragment-from') {
+        return fragmentFrom;
+      }
+      if (name === 'data-fragment-to') {
+        return fragmentTo;
       }
       return null;
     }
@@ -117,6 +138,7 @@ function createController(overrides = {}) {
       return 1;
     },
     liveBlocksForView: () => [{ from: 10, to: 15 }],
+    liveSourceMapIndexForView: () => [],
     normalizePointerTarget: (target) => target ?? null,
     readPointerCoordinates: (event) => (
       Number.isFinite(event?.clientX) && Number.isFinite(event?.clientY)
@@ -282,4 +304,60 @@ test('handleLivePointerActivation in source-first mode passes through native han
   assert.equal(handled, false);
   assert.equal(defaultPrevented, false);
   assert.equal(dispatched.length, 0);
+});
+
+test('resolveLiveActivationContext prefers source-map fragment clamping before heuristic fallback', () => {
+  const controller = createController({
+    liveBlocksForView: () => [],
+    liveSourceMapIndexForView: () => [
+      {
+        id: 'block:10:20',
+        kind: 'block',
+        sourceFrom: 10,
+        sourceTo: 20,
+        blockFrom: 10,
+        blockTo: 20,
+        fragmentFrom: 10,
+        fragmentTo: 20
+      },
+      {
+        id: 'fragment:12:16',
+        kind: 'rendered-fragment',
+        sourceFrom: 12,
+        sourceTo: 16,
+        blockFrom: 10,
+        blockTo: 20,
+        fragmentFrom: 12,
+        fragmentTo: 16
+      }
+    ],
+    resolveActivationBlockBounds: () => null,
+    resolvePointerPosition: () => 18,
+    resolvePositionFromRenderedSourceRange: () => null
+  });
+  const { view } = createView({ docLength: 40, mappedPos: 18 });
+  const { targetElement } = createRenderedTarget({
+    sourceFrom: '10',
+    sourceTo: '20',
+    fragmentFrom: '12',
+    fragmentTo: '16'
+  });
+
+  const activation = controller.resolveLiveActivationContext(
+    view,
+    targetElement,
+    { x: 30, y: 40 },
+    'mousedown'
+  );
+
+  assert.ok(activation);
+  assert.equal(activation.sourcePosOrigin, 'source-map-fragment');
+  assert.equal(activation.sourcePos, 15);
+  assert.equal(activation.sourceFrom, 10);
+  assert.equal(activation.allowCoordinateRemap, false);
+  assert.deepEqual(activation.blockBounds, { from: 10, to: 20 });
+  assert.deepEqual(activation.match, {
+    block: 'block:10:20',
+    fragment: 'fragment:12:16'
+  });
 });

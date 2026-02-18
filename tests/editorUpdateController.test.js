@@ -134,3 +134,38 @@ test('handleEditorUpdate exits after tracing when file is loading', () => {
   assert.equal(statusCalls.length, 0);
   assert.equal(autosaveCalls.length, 0);
 });
+
+test('handleEditorUpdate prefers shared document model text when provided', () => {
+  const app = {
+    viewMode: 'preview',
+    isLoadingFile: false,
+    hasUnsavedChanges: false,
+    lastSavedText: 'before',
+    currentPath: 'notes/demo.md'
+  };
+  const previewCalls = [];
+  const controller = createEditorUpdateController({
+    app,
+    liveDebug: createLiveDebugSpy(),
+    readDocumentModel: () => ({
+      text: 'from-session'
+    }),
+    renderPreview: (text, options) => previewCalls.push({ text, options })
+  });
+
+  controller.handleEditorUpdate({
+    selectionSet: false,
+    docChanged: true,
+    state: {
+      doc: {
+        toString() {
+          return 'from-update';
+        }
+      }
+    }
+  });
+
+  assert.equal(previewCalls.length, 1);
+  assert.equal(previewCalls[0].text, 'from-session');
+  assert.equal(previewCalls[0].options.documentModel.text, 'from-session');
+});

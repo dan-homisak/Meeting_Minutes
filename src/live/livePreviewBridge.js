@@ -45,6 +45,15 @@ export function createLivePreviewBridge({
     return controller.liveBlockIndexForView(view);
   }
 
+  function liveSourceMapIndexForView(view) {
+    const controller = readController();
+    if (!controller || typeof controller.liveSourceMapIndexForView !== 'function') {
+      return [];
+    }
+
+    return controller.liveSourceMapIndexForView(view);
+  }
+
   function emitFenceVisibilityState(view, reason = 'selection-changed') {
     const controller = readController();
     if (!controller || typeof controller.emitFenceVisibilityState !== 'function') {
@@ -59,6 +68,7 @@ export function createLivePreviewBridge({
     readLivePreviewState,
     liveBlocksForView,
     liveBlockIndexForView,
+    liveSourceMapIndexForView,
     emitFenceVisibilityState
   };
 }

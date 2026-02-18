@@ -39,6 +39,9 @@ test('readLivePreviewState/liveBlocksForView/emitFenceVisibilityState delegate w
     liveBlocksForView(view) {
       return [{ from: 0, to: 10, viewId: view.id }];
     },
+    liveSourceMapIndexForView(view) {
+      return [{ sourceFrom: 0, sourceTo: 10, viewId: view.id }];
+    },
     emitFenceVisibilityState(view, reason) {
       emitted.push({ view, reason });
     }
@@ -53,6 +56,9 @@ test('readLivePreviewState/liveBlocksForView/emitFenceVisibilityState delegate w
   });
   assert.deepEqual(bridge.liveBlocksForView({ id: 'view-1' }), [
     { from: 0, to: 10, viewId: 'view-1' }
+  ]);
+  assert.deepEqual(bridge.liveSourceMapIndexForView({ id: 'view-1' }), [
+    { sourceFrom: 0, sourceTo: 10, viewId: 'view-1' }
   ]);
   bridge.emitFenceVisibilityState({ id: 'view-2' }, 'selection-changed');
   assert.deepEqual(emitted, [
@@ -69,4 +75,5 @@ test('readLivePreviewState/liveBlocksForView/emitFenceVisibilityState delegate w
   assert.equal(missingBridge.readLivePreviewState({ id: 'state-x' }), null);
   assert.deepEqual(missingBridge.liveBlocksForView({ id: 'view-x' }), []);
   assert.deepEqual(missingBridge.liveBlockIndexForView({ id: 'view-x' }), []);
+  assert.deepEqual(missingBridge.liveSourceMapIndexForView({ id: 'view-x' }), []);
 });

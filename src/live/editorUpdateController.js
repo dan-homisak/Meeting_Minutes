@@ -5,7 +5,8 @@ export function createEditorUpdateController({
   renderPreview,
   updateActionButtons,
   setStatus,
-  scheduleAutosave
+  scheduleAutosave,
+  readDocumentModel
 } = {}) {
   const runSelectionUpdate =
     typeof handleSelectionUpdate === 'function' ? handleSelectionUpdate : () => {};
@@ -15,6 +16,36 @@ export function createEditorUpdateController({
   const runSetStatus = typeof setStatus === 'function' ? setStatus : () => {};
   const runScheduleAutosave =
     typeof scheduleAutosave === 'function' ? scheduleAutosave : () => {};
+  const runReadDocumentModel =
+    typeof readDocumentModel === 'function' ? readDocumentModel : null;
+
+  function readSharedDocumentModel() {
+    if (!runReadDocumentModel) {
+      return null;
+    }
+
+    const model = runReadDocumentModel();
+    if (!model || typeof model.text !== 'string') {
+      return null;
+    }
+
+    return model;
+  }
+
+  function resolveDocumentText(update, documentModel = null) {
+    if (documentModel && typeof documentModel.text === 'string') {
+      return documentModel.text;
+    }
+
+    if (runReadDocumentModel) {
+      const model = runReadDocumentModel();
+      if (model && typeof model.text === 'string') {
+        return model.text;
+      }
+    }
+
+    return update?.state?.doc?.toString?.() ?? '';
+  }
 
   function handleEditorUpdate(update) {
     if (app.viewMode === 'live' && update.selectionSet) {
@@ -25,13 +56,16 @@ export function createEditorUpdateController({
       return;
     }
 
-    const markdownText = update.state.doc.toString();
+    const documentModel = readSharedDocumentModel();
+    const markdownText = resolveDocumentText(update, documentModel);
     liveDebug.trace('document.changed', {
       mode: app.viewMode,
       length: markdownText.length
     });
     if (app.viewMode === 'preview') {
-      runRenderPreview(markdownText);
+      runRenderPreview(markdownText, {
+        documentModel
+      });
     }
 
     if (app.isLoadingFile) {

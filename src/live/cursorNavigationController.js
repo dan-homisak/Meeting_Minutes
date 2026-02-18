@@ -1,4 +1,5 @@
 import { EditorSelection } from '@codemirror/state';
+import { findSourceMapEntriesAtPosition } from '../core/mapping/SourceMapIndex.js';
 
 export function createCursorNavigationController({
   app,
@@ -9,9 +10,89 @@ export function createCursorNavigationController({
   readCursorVisibilityForLog,
   readDomSelectionForLog,
   isCursorVisibilitySuspect,
+  liveSourceMapIndexForView,
   requestAnimationFrameFn = (callback) => window.requestAnimationFrame(callback),
   createCursorSelection = (position, assoc) => EditorSelection.cursor(position, assoc)
 } = {}) {
+  function readSourceMapIndex(view) {
+    if (typeof liveSourceMapIndexForView !== 'function') {
+      return [];
+    }
+
+    const sourceMapIndex = liveSourceMapIndexForView(view);
+    return Array.isArray(sourceMapIndex) ? sourceMapIndex : [];
+  }
+
+  function findSourceMapBlockAtCursorPosition(sourceMapIndex, position) {
+    if (!Array.isArray(sourceMapIndex) || !Number.isFinite(position)) {
+      return null;
+    }
+
+    const lookupPositions = [];
+    const truncated = Math.max(0, Math.trunc(position));
+    lookupPositions.push(truncated);
+    if (truncated > 0) {
+      lookupPositions.push(truncated - 1);
+    }
+
+    for (const lookupPosition of lookupPositions) {
+      const entries = findSourceMapEntriesAtPosition(sourceMapIndex, lookupPosition);
+      const blockEntry = entries.find((entry) => entry?.kind === 'block');
+      if (blockEntry) {
+        return blockEntry;
+      }
+    }
+
+    let nearest = null;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    for (const entry of sourceMapIndex) {
+      if (
+        !entry ||
+        entry.kind !== 'block' ||
+        !Number.isFinite(entry.sourceFrom) ||
+        !Number.isFinite(entry.sourceTo)
+      ) {
+        continue;
+      }
+
+      const distanceToStart = Math.abs(truncated - entry.sourceFrom);
+      const distanceToEnd = Math.abs(truncated - entry.sourceTo);
+      const distance = Math.min(distanceToStart, distanceToEnd);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearest = entry;
+      }
+    }
+
+    if (nearest && nearestDistance <= 1) {
+      return nearest;
+    }
+
+    return null;
+  }
+
+  function clampCursorPositionToSourceMapBlock(position, blockEntry) {
+    if (
+      !Number.isFinite(position) ||
+      !blockEntry ||
+      !Number.isFinite(blockEntry.sourceFrom) ||
+      !Number.isFinite(blockEntry.sourceTo)
+    ) {
+      return {
+        position,
+        clamped: false
+      };
+    }
+
+    const min = Math.max(0, Math.trunc(blockEntry.sourceFrom));
+    const max = Math.max(min, Math.trunc(blockEntry.sourceTo));
+    const clampedPosition = Math.max(min, Math.min(max, Math.trunc(position)));
+    return {
+      position: clampedPosition,
+      clamped: clampedPosition !== position
+    };
+  }
+
   function moveLiveCursorVertically(view, direction, trigger = 'arrow') {
     if (app.viewMode !== 'live' || !Number.isInteger(direction) || direction === 0) {
       return false;
@@ -47,7 +128,11 @@ export function createCursorNavigationController({
 
     const targetLine = view.state.doc.line(targetLineNumber);
     const currentColumn = Math.max(0, selection.head - currentLine.from);
-    const targetPos = Math.min(targetLine.to, targetLine.from + currentColumn);
+    const rawTargetPos = Math.min(targetLine.to, targetLine.from + currentColumn);
+    const sourceMapIndex = readSourceMapIndex(view);
+    const sourceMapTargetBlock = findSourceMapBlockAtCursorPosition(sourceMapIndex, rawTargetPos);
+    const sourceMapClamp = clampCursorPositionToSourceMapBlock(rawTargetPos, sourceMapTargetBlock);
+    const targetPos = sourceMapClamp.position;
     const currentLineLength = Math.max(0, currentLine.to - currentLine.from);
     const targetLineLength = Math.max(0, targetLine.to - targetLine.from);
     const primaryAssoc = direction > 0 ? -1 : 1;
@@ -73,8 +158,25 @@ export function createCursorNavigationController({
         view.state.doc.sliceString(targetLine.from, targetLine.to),
         80
       ),
+      rawTargetPos,
+      sourceMapTargetBlockId: sourceMapTargetBlock?.id ?? null,
+      sourceMapTargetFrom: sourceMapTargetBlock?.sourceFrom ?? null,
+      sourceMapTargetTo: sourceMapTargetBlock?.sourceTo ?? null,
+      sourceMapClamped: sourceMapClamp.clamped,
       assoc: primaryAssoc
     });
+    if (sourceMapClamp.clamped) {
+      liveDebug.warn('cursor.move.vertical.source-map-clamped', {
+        trigger,
+        direction,
+        from: selection.head,
+        rawTargetPos,
+        targetPos,
+        sourceMapTargetBlockId: sourceMapTargetBlock?.id ?? null,
+        sourceMapTargetFrom: sourceMapTargetBlock?.sourceFrom ?? null,
+        sourceMapTargetTo: sourceMapTargetBlock?.sourceTo ?? null
+      });
+    }
     scheduleCursorVisibilityProbe(view, 'moveLiveCursorVertically');
 
     requestAnimationFrameFn(() => {

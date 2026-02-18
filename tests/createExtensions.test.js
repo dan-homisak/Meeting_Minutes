@@ -16,6 +16,7 @@ test('createExtensions composes refresh effect, live preview controller, and edi
   const app = { id: 'app' };
   const liveDebug = { id: 'live-debug' };
   const markdownEngine = { id: 'markdown-engine' };
+  const documentSession = { id: 'document-session' };
   const renderMarkdownHtml = () => 'html';
   const normalizeLogString = () => 'normalized';
   const liveRuntimeHelpers = { id: 'runtime-helpers' };
@@ -25,6 +26,7 @@ test('createExtensions composes refresh effect, live preview controller, and edi
     app,
     liveDebug,
     markdownEngine,
+    documentSession,
     renderMarkdownHtml,
     normalizeLogString,
     sourceFirstMode: false,
@@ -57,6 +59,7 @@ test('createExtensions composes refresh effect, live preview controller, and edi
   assert.equal(calls.createLivePreviewController[0].app, app);
   assert.equal(calls.createLivePreviewController[0].liveDebug, liveDebug);
   assert.equal(calls.createLivePreviewController[0].markdownEngine, markdownEngine);
+  assert.equal(calls.createLivePreviewController[0].documentSession, documentSession);
   assert.equal(calls.createLivePreviewController[0].renderMarkdownHtml, renderMarkdownHtml);
   assert.equal(calls.createLivePreviewController[0].normalizeLogString, normalizeLogString);
   assert.equal(calls.createLivePreviewController[0].sourceFirstMode, false);

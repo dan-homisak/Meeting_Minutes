@@ -32,6 +32,7 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
       isCursorVisibilitySuspect: () => {},
       moveLiveCursorVertically: () => {},
       readRecentInputSignal: () => {},
+      liveSourceMapIndexForView: () => {},
       emitFenceVisibilityState: () => {}
     },
     resolveActivationBlockBounds: () => {},
@@ -48,6 +49,7 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
     updateActionButtons: () => {},
     setStatus: () => {},
     scheduleAutosave: () => {},
+    readDocumentModel: () => {},
     requestAnimationFrameFn: () => {},
     createCursorSelection: () => {},
     nowFn: () => {},
@@ -80,6 +82,7 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
     updateActionButtons: sentinel.updateActionButtons,
     setStatus: sentinel.setStatus,
     scheduleAutosave: sentinel.scheduleAutosave,
+    readDocumentModel: sentinel.readDocumentModel,
     windowObject: { id: 'window' },
     documentObject: { id: 'document' },
     requestAnimationFrameFn: sentinel.requestAnimationFrameFn,
@@ -104,6 +107,11 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
   assert.equal(options.helpers.isRefreshEffect, sentinel.isRefreshEffect);
   assert.equal(options.helpers.renderPreview, sentinel.renderPreview);
   assert.equal(options.helpers.scheduleAutosave, sentinel.scheduleAutosave);
+  assert.equal(options.helpers.readDocumentModel, sentinel.readDocumentModel);
+  assert.equal(
+    options.helpers.liveSourceMapIndexForView,
+    sentinel.liveRuntimeHelpers.liveSourceMapIndexForView
+  );
 
   assert.equal(options.runtime.windowObject.id, 'window');
   assert.equal(options.runtime.documentObject.id, 'document');

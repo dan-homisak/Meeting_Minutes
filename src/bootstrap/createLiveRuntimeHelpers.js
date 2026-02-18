@@ -199,6 +199,10 @@ export function createLiveRuntimeHelpers({
     return getLivePreviewBridge()?.liveBlocksForView(view) ?? [];
   }
 
+  function liveSourceMapIndexForView(view) {
+    return getLivePreviewBridge()?.liveSourceMapIndexForView(view) ?? [];
+  }
+
   function emitFenceVisibilityState(view, reason = 'selection-changed') {
     getLivePreviewBridge()?.emitFenceVisibilityState(view, reason);
   }
@@ -238,6 +242,7 @@ export function createLiveRuntimeHelpers({
     requestLivePreviewRefresh,
     readLivePreviewState,
     liveBlocksForView,
+    liveSourceMapIndexForView,
     emitFenceVisibilityState,
     moveLiveCursorVertically,
     handleLivePointerActivation

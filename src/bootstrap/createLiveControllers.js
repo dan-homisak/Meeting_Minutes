@@ -105,6 +105,7 @@ export function createLiveControllers({
     liveDebugBlockMapLargeDeltaLines: config.liveDebugBlockMapLargeDeltaLines,
     requestAnimationFrameFn,
     liveBlocksForView: helpers.liveBlocksForView,
+    liveSourceMapIndexForView: helpers.liveSourceMapIndexForView,
     normalizePointerTarget: helpers.normalizePointerTarget,
     readPointerCoordinates: helpers.readPointerCoordinates,
     describeElementForLog: helpers.describeElementForLog,
@@ -157,6 +158,7 @@ export function createLiveControllers({
     readCursorVisibilityForLog: helpers.readCursorVisibilityForLog,
     readDomSelectionForLog: helpers.readDomSelectionForLog,
     isCursorVisibilitySuspect: helpers.isCursorVisibilitySuspect,
+    liveSourceMapIndexForView: helpers.liveSourceMapIndexForView,
     requestAnimationFrameFn
   });
 
@@ -206,7 +208,8 @@ export function createLiveControllers({
     renderPreview: helpers.renderPreview,
     updateActionButtons: helpers.updateActionButtons,
     setStatus: helpers.setStatus,
-    scheduleAutosave: helpers.scheduleAutosave
+    scheduleAutosave: helpers.scheduleAutosave,
+    readDocumentModel: helpers.readDocumentModel
   });
 
   return {

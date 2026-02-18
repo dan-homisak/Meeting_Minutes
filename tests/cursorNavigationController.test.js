@@ -132,6 +132,7 @@ function createController(overrides = {}) {
     readCursorVisibilityForLog: overrides.readCursorVisibilityForLog ?? (() => ({ hasCursorElement: false })),
     readDomSelectionForLog: overrides.readDomSelectionForLog ?? (() => null),
     isCursorVisibilitySuspect: overrides.isCursorVisibilitySuspect ?? (() => false),
+    liveSourceMapIndexForView: overrides.liveSourceMapIndexForView ?? (() => []),
     requestAnimationFrameFn: overrides.requestAnimationFrameFn ?? ((callback) => {
       callback();
       return 1;
@@ -225,4 +226,37 @@ test('moveLiveCursorVertically applies assoc correction when cursor state is sus
   ]);
   assert.equal(debugSpy.calls.warn.length, 1);
   assert.equal(debugSpy.calls.warn[0].event, 'cursor.move.vertical.corrected-assoc');
+});
+
+test('moveLiveCursorVertically clamps target to source-map block bounds', () => {
+  const debugSpy = createLiveDebugSpy();
+  const { controller } = createController({
+    liveDebug: debugSpy,
+    liveSourceMapIndexForView: () => [
+      {
+        id: 'block:line-2',
+        kind: 'block',
+        sourceFrom: 5,
+        sourceTo: 6,
+        blockFrom: 5,
+        blockTo: 6,
+        fragmentFrom: 5,
+        fragmentTo: 6
+      }
+    ]
+  });
+  const { view, dispatched } = createView({
+    text: 'abcd\nxy',
+    head: 2
+  });
+
+  const handled = controller.moveLiveCursorVertically(view, 1, 'ArrowDown');
+
+  assert.equal(handled, true);
+  assert.equal(dispatched.length, 1);
+  assert.equal(view.state.selection.main.head, 6);
+  assert.equal(debugSpy.calls.warn.length, 1);
+  assert.equal(debugSpy.calls.warn[0].event, 'cursor.move.vertical.source-map-clamped');
+  assert.equal(debugSpy.calls.warn[0].data.rawTargetPos, 7);
+  assert.equal(debugSpy.calls.warn[0].data.targetPos, 6);
 });

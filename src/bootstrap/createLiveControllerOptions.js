@@ -20,6 +20,7 @@ export function createLiveControllerOptions({
   updateActionButtons,
   setStatus,
   scheduleAutosave,
+  readDocumentModel,
   windowObject,
   documentObject,
   requestAnimationFrameFn,
@@ -73,12 +74,14 @@ export function createLiveControllerOptions({
       isCursorVisibilitySuspect: liveRuntimeHelpers.isCursorVisibilitySuspect,
       moveLiveCursorVertically: liveRuntimeHelpers.moveLiveCursorVertically,
       readRecentInputSignal: liveRuntimeHelpers.readRecentInputSignal,
+      liveSourceMapIndexForView: liveRuntimeHelpers.liveSourceMapIndexForView,
       emitFenceVisibilityState: liveRuntimeHelpers.emitFenceVisibilityState,
       isRefreshEffect,
       renderPreview,
       updateActionButtons,
       setStatus,
-      scheduleAutosave
+      scheduleAutosave,
+      readDocumentModel
     },
     runtime: {
       windowObject,

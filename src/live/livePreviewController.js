@@ -1,5 +1,6 @@
 import { StateField } from '@codemirror/state';
 import { Decoration, WidgetType } from '@codemirror/view';
+import { buildSourceMapIndex } from '../core/mapping/SourceMapIndex.js';
 import {
   buildLiveBlockIndex,
   blockContainsLine,
@@ -16,6 +17,7 @@ export function createLivePreviewController({
   app,
   liveDebug,
   markdownEngine,
+  documentSession = null,
   renderMarkdownHtml,
   normalizeLogString,
   sourceFirstMode = true,
@@ -23,8 +25,38 @@ export function createLivePreviewController({
   fragmentCacheMax = 2500,
   slowBuildWarnMs = 12
 } = {}) {
-  function collectTopLevelBlocksSafe(doc) {
+  function collectTopLevelBlocksSafe(doc, transaction = null, reason = 'state-read') {
     const startedAt = performance.now();
+    if (documentSession) {
+      try {
+        let sessionResult = null;
+        if (transaction?.docChanged) {
+          sessionResult = documentSession.applyEditorTransaction(transaction);
+        } else {
+          sessionResult = documentSession.ensureText(doc.toString());
+        }
+
+        const blocks = Array.isArray(sessionResult?.model?.blocks) ? sessionResult.model.blocks : [];
+        const elapsedMs = Number((performance.now() - startedAt).toFixed(2));
+        const parserMeta = sessionResult?.model?.meta ?? {};
+        liveDebug.trace('blocks.collected', {
+          blockCount: blocks.length,
+          docLength: doc.length,
+          elapsedMs,
+          strategy: parserMeta.parser ?? 'session',
+          reason,
+          reparsedCharLength: Number.isFinite(parserMeta.reparsedCharLength)
+            ? parserMeta.reparsedCharLength
+            : null
+        });
+        return blocks;
+      } catch (error) {
+        liveDebug.error('blocks.collect.session-failed', {
+          message: error instanceof Error ? error.message : String(error)
+        });
+      }
+    }
+
     try {
       const blocks = collectTopLevelBlocks(doc, (source) => markdownEngine.parse(source, {}));
       liveDebug.trace('blocks.collected', {
@@ -86,7 +118,13 @@ export function createLivePreviewController({
 
   function buildLivePreviewDecorations(state, blocks, fragmentHtmlCache = null) {
     if (app.viewMode !== 'live') {
-      return Decoration.none;
+      return {
+        decorations: Decoration.none,
+        sourceMapIndex: buildSourceMapIndex({
+          blocks: [],
+          renderedFragments: []
+        })
+      };
     }
 
     const startedAt = performance.now();
@@ -145,14 +183,30 @@ export function createLivePreviewController({
         fenceLineCount: plan.stats.fenceLineCount,
         fenceMarkerLineCount: plan.stats.fenceMarkerLineCount
       });
-      return ranges.length > 0 ? Decoration.set(ranges, true) : Decoration.none;
+      const sourceMapIndex = buildSourceMapIndex({
+        blocks,
+        renderedFragments: [],
+        activeLine
+      });
+      return {
+        decorations: ranges.length > 0 ? Decoration.set(ranges, true) : Decoration.none,
+        sourceMapIndex
+      };
     }
 
     if (blocks.length === 0) {
-      return Decoration.none;
+      return {
+        decorations: Decoration.none,
+        sourceMapIndex: buildSourceMapIndex({
+          blocks: [],
+          renderedFragments: [],
+          activeLine
+        })
+      };
     }
 
     const ranges = [];
+    const renderedFragments = [];
     let skippedEmptyActiveLineBlocks = 0;
     let skippedEmptyBoundaryBlocks = 0;
     let skippedActiveFencedCodeBlocks = 0;
@@ -252,6 +306,12 @@ export function createLivePreviewController({
 
       const fragments = splitBlockAroundActiveLine(doc, block, activeLine, renderFragmentMarkdown);
       for (const fragment of fragments) {
+        renderedFragments.push({
+          from: fragment.from,
+          to: fragment.to,
+          blockFrom: block.from,
+          blockTo: block.to
+        });
         ranges.push(
           Decoration.replace({
             block: true,
@@ -279,6 +339,7 @@ export function createLivePreviewController({
       skippedEmptyBoundaryBlocks,
       skippedActiveFencedCodeBlocks,
       decorationCount: ranges.length,
+      sourceMapIndexCount: renderedFragments.length + blocks.length,
       cacheHits,
       cacheMisses,
       cacheSize: fragmentHtmlCache instanceof Map ? fragmentHtmlCache.size : 0,
@@ -293,15 +354,22 @@ export function createLivePreviewController({
       });
     }
 
-    return ranges.length > 0 ? Decoration.set(ranges, true) : Decoration.none;
+    return {
+      decorations: ranges.length > 0 ? Decoration.set(ranges, true) : Decoration.none,
+      sourceMapIndex: buildSourceMapIndex({
+        blocks,
+        renderedFragments,
+        activeLine
+      })
+    };
   }
 
   const livePreviewStateField = StateField.define({
     create(state) {
-      const blocks = collectTopLevelBlocksSafe(state.doc);
+      const blocks = collectTopLevelBlocksSafe(state.doc, null, 'state-create');
       const blockIndex = buildLiveBlockIndex(state.doc, blocks);
       const fragmentHtmlCache = new Map();
-      const decorations = buildLivePreviewDecorations(state, blocks, fragmentHtmlCache);
+      const initialRender = buildLivePreviewDecorations(state, blocks, fragmentHtmlCache);
       const lastSelectionLineFrom = state.doc.lineAt(state.selection.main.head).from;
       liveDebug.trace('block.index.rebuilt', {
         reason: 'create',
@@ -311,7 +379,8 @@ export function createLivePreviewController({
       return {
         blocks,
         blockIndex,
-        decorations,
+        decorations: initialRender.decorations,
+        sourceMapIndex: initialRender.sourceMapIndex,
         fragmentHtmlCache,
         lastSelectionLineFrom
       };
@@ -322,7 +391,7 @@ export function createLivePreviewController({
       let fragmentHtmlCache = value.fragmentHtmlCache;
 
       if (transaction.docChanged) {
-        blocks = collectTopLevelBlocksSafe(transaction.state.doc);
+        blocks = collectTopLevelBlocksSafe(transaction.state.doc, transaction, 'transaction-doc-changed');
         const nextBlockIndex = buildLiveBlockIndex(transaction.state.doc, blocks);
         const previousIds = new Set(blockIndex.map((entry) => entry.id));
         const nextIds = new Set(nextBlockIndex.map((entry) => entry.id));
@@ -384,14 +453,16 @@ export function createLivePreviewController({
           refreshReasons
         });
 
+        const renderResult = buildLivePreviewDecorations(
+          transaction.state,
+          blocks,
+          fragmentHtmlCache
+        );
         return {
           blocks,
           blockIndex,
-          decorations: buildLivePreviewDecorations(
-            transaction.state,
-            blocks,
-            fragmentHtmlCache
-          ),
+          decorations: renderResult.decorations,
+          sourceMapIndex: renderResult.sourceMapIndex,
           fragmentHtmlCache,
           lastSelectionLineFrom: currentSelectionLineFrom
         };
@@ -435,6 +506,11 @@ export function createLivePreviewController({
     return Array.isArray(livePreviewState?.blockIndex) ? livePreviewState.blockIndex : [];
   }
 
+  function liveSourceMapIndexForView(view) {
+    const livePreviewState = readLivePreviewState(view.state);
+    return Array.isArray(livePreviewState?.sourceMapIndex) ? livePreviewState.sourceMapIndex : [];
+  }
+
   function emitFenceVisibilityState(view, reason = 'selection-changed') {
     if (app.viewMode !== 'live') {
       return;
@@ -469,6 +545,7 @@ export function createLivePreviewController({
     readLivePreviewState,
     liveBlocksForView,
     liveBlockIndexForView,
+    liveSourceMapIndexForView,
     emitFenceVisibilityState
   };
 }
