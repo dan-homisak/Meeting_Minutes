@@ -1,0 +1,245 @@
+export function createLiveRuntimeHelpers({
+  liveDebugInputTtlMs = 900,
+  windowObject,
+  nowFn = () => Date.now(),
+  liveDiagnosticsLogHelpers = null,
+  liveLineMappingHelpers = null,
+  pointerInputHelpers = null,
+  getLiveViewportProbe = () => null,
+  getPointerProbeGeometry = () => null,
+  getPointerSourceMapping = () => null,
+  getPointerMappingProbe = () => null,
+  getLivePreviewBridge = () => null,
+  getLiveSnapshotController = () => null,
+  getCursorVisibilityController = () => null,
+  getCursorNavigationController = () => null,
+  getPointerActivationController = () => null
+} = {}) {
+  function describeElementForLog(element) {
+    return liveDiagnosticsLogHelpers?.describeElementForLog(element) ?? null;
+  }
+
+  function readDomSelectionForLog(targetWindow = windowObject) {
+    return liveDiagnosticsLogHelpers?.readDomSelectionForLog(targetWindow) ?? { hasSelection: false };
+  }
+
+  function readCursorVisibilityForLog(view, selectionHead = Number.NaN) {
+    const liveViewportProbe = getLiveViewportProbe();
+    if (!liveViewportProbe) {
+      return {
+        hasView: false
+      };
+    }
+
+    return liveViewportProbe.readCursorVisibilityForLog(view, selectionHead);
+  }
+
+  function readGutterVisibilityForLog(view) {
+    const liveViewportProbe = getLiveViewportProbe();
+    if (!liveViewportProbe) {
+      return {
+        hasView: false
+      };
+    }
+
+    return liveViewportProbe.readGutterVisibilityForLog(view);
+  }
+
+  function isCursorVisibilitySuspect(
+    cursorState,
+    selectionLineLength,
+    domSelectionOnContentContainer
+  ) {
+    const cursorVisibilityController = getCursorVisibilityController();
+    if (!cursorVisibilityController) {
+      return true;
+    }
+
+    return cursorVisibilityController.isCursorVisibilitySuspect(
+      cursorState,
+      selectionLineLength,
+      domSelectionOnContentContainer
+    );
+  }
+
+  function scheduleCursorVisibilityProbe(view, reason = 'manual') {
+    const cursorVisibilityController = getCursorVisibilityController();
+    if (!cursorVisibilityController) {
+      return;
+    }
+
+    cursorVisibilityController.scheduleCursorVisibilityProbe(view, reason);
+  }
+
+  function recordInputSignal(kind, details = {}) {
+    const liveSnapshotController = getLiveSnapshotController();
+    if (!liveSnapshotController) {
+      return {
+        at: nowFn(),
+        kind,
+        ...details
+      };
+    }
+
+    return liveSnapshotController.recordInputSignal(kind, details);
+  }
+
+  function readRecentInputSignal(maxAgeMs = liveDebugInputTtlMs) {
+    const liveSnapshotController = getLiveSnapshotController();
+    if (!liveSnapshotController) {
+      return null;
+    }
+
+    return liveSnapshotController.readRecentInputSignal(maxAgeMs);
+  }
+
+  function captureLiveDebugSnapshot(reason = 'manual') {
+    getLiveSnapshotController()?.captureLiveDebugSnapshot(reason);
+  }
+
+  function distanceToBlockBounds(position, blockBounds) {
+    return pointerInputHelpers?.distanceToBlockBounds(position, blockBounds) ?? null;
+  }
+
+  function normalizePointerTarget(target) {
+    return pointerInputHelpers?.normalizePointerTarget(target) ?? null;
+  }
+
+  function readPointerCoordinates(event) {
+    return pointerInputHelpers?.readPointerCoordinates(event) ?? null;
+  }
+
+  function clampNumber(value, min, max) {
+    return liveLineMappingHelpers?.clampNumber(value, min, max) ?? null;
+  }
+
+  function summarizeRectForLog(rect) {
+    return getPointerProbeGeometry()?.summarizeRectForLog(rect) ?? null;
+  }
+
+  function readComputedStyleSnapshotForLog(element) {
+    return getPointerProbeGeometry()?.readComputedStyleSnapshotForLog(element) ?? null;
+  }
+
+  function readLineInfoForPosition(doc, position) {
+    return liveLineMappingHelpers?.readLineInfoForPosition(doc, position) ?? null;
+  }
+
+  function readBlockLineBoundsForLog(doc, blockBounds) {
+    return liveLineMappingHelpers?.readBlockLineBoundsForLog(doc, blockBounds) ?? null;
+  }
+
+  function buildCoordSamples(view, samples) {
+    return getPointerProbeGeometry()?.buildCoordSamples(view, samples) ?? [];
+  }
+
+  function summarizeLineNumbersForCoordSamples(samples) {
+    return getPointerProbeGeometry()?.summarizeLineNumbersForCoordSamples(samples) ?? [];
+  }
+
+  function buildRenderedPointerProbe(
+    view,
+    renderedBlock,
+    targetElement,
+    coordinates,
+    blockBounds,
+    sourcePos,
+    sourceFromBlockBounds = null,
+    sourcePosBlockBounds = null
+  ) {
+    return (
+      getPointerMappingProbe()?.buildRenderedPointerProbe(
+        view,
+        renderedBlock,
+        targetElement,
+        coordinates,
+        blockBounds,
+        sourcePos,
+        sourceFromBlockBounds,
+        sourcePosBlockBounds
+      ) ?? null
+    );
+  }
+
+  function findRenderedSourceRangeTarget(targetElement, renderedBlock) {
+    return getPointerSourceMapping()?.findRenderedSourceRangeTarget(targetElement, renderedBlock) ?? null;
+  }
+
+  function resolvePositionFromRenderedSourceRange(
+    doc,
+    sourceRange,
+    sourceRangeElement,
+    coordinates,
+    fallbackPosition = null
+  ) {
+    return (
+      getPointerSourceMapping()?.resolvePositionFromRenderedSourceRange(
+        doc,
+        sourceRange,
+        sourceRangeElement,
+        coordinates,
+        fallbackPosition
+      ) ?? null
+    );
+  }
+
+  function resolvePointerPosition(view, targetElement, coordinates = null) {
+    return getPointerSourceMapping()?.resolvePointerPosition(view, targetElement, coordinates) ?? null;
+  }
+
+  function requestLivePreviewRefresh(reason = 'manual') {
+    getLivePreviewBridge()?.requestLivePreviewRefresh(reason);
+  }
+
+  function readLivePreviewState(state) {
+    return getLivePreviewBridge()?.readLivePreviewState(state) ?? null;
+  }
+
+  function liveBlocksForView(view) {
+    return getLivePreviewBridge()?.liveBlocksForView(view) ?? [];
+  }
+
+  function emitFenceVisibilityState(view, reason = 'selection-changed') {
+    getLivePreviewBridge()?.emitFenceVisibilityState(view, reason);
+  }
+
+  function moveLiveCursorVertically(view, direction, trigger = 'arrow') {
+    return getCursorNavigationController()?.moveLiveCursorVertically(view, direction, trigger) ?? false;
+  }
+
+  function handleLivePointerActivation(view, event, trigger) {
+    return getPointerActivationController()?.handleLivePointerActivation(view, event, trigger) ?? false;
+  }
+
+  return {
+    describeElementForLog,
+    readDomSelectionForLog,
+    readCursorVisibilityForLog,
+    readGutterVisibilityForLog,
+    isCursorVisibilitySuspect,
+    scheduleCursorVisibilityProbe,
+    recordInputSignal,
+    readRecentInputSignal,
+    captureLiveDebugSnapshot,
+    distanceToBlockBounds,
+    normalizePointerTarget,
+    readPointerCoordinates,
+    clampNumber,
+    summarizeRectForLog,
+    readComputedStyleSnapshotForLog,
+    readLineInfoForPosition,
+    readBlockLineBoundsForLog,
+    buildCoordSamples,
+    summarizeLineNumbersForCoordSamples,
+    buildRenderedPointerProbe,
+    findRenderedSourceRangeTarget,
+    resolvePositionFromRenderedSourceRange,
+    resolvePointerPosition,
+    requestLivePreviewRefresh,
+    readLivePreviewState,
+    liveBlocksForView,
+    emitFenceVisibilityState,
+    moveLiveCursorVertically,
+    handleLivePointerActivation
+  };
+}

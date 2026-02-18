@@ -148,7 +148,15 @@ function summarizeAnomalies(records) {
     markdownConfigEvents: 0,
     markdownBreaksEnabledEvents: 0,
     markdownBreaksDisabledEvents: 0,
-    lastMarkdownBreaksEnabled: null
+    lastMarkdownBreaksEnabled: null,
+    sourceFirstDecorationPassThrough: 0,
+    sourceFirstDecorationBuilt: 0,
+    blockIndexRebuilt: 0,
+    blockIndexDelta: 0,
+    fenceVisibilityState: 0,
+    fenceInsideCount: 0,
+    pointerMapNative: 0,
+    pointerMapClamped: 0
   };
 
   for (const record of records) {
@@ -355,6 +363,37 @@ function summarizeAnomalies(records) {
         summary.lastMarkdownBreaksEnabled = false;
       }
     }
+
+    if (eventName === 'decorations.source-first-pass-through') {
+      summary.sourceFirstDecorationPassThrough += 1;
+    }
+
+    if (eventName === 'decorations.source-first-built') {
+      summary.sourceFirstDecorationBuilt += 1;
+    }
+
+    if (eventName === 'block.index.rebuilt') {
+      summary.blockIndexRebuilt += 1;
+    }
+
+    if (eventName === 'block.index.delta') {
+      summary.blockIndexDelta += 1;
+    }
+
+    if (eventName === 'fence.visibility.state') {
+      summary.fenceVisibilityState += 1;
+      if (data.insideFence === true) {
+        summary.fenceInsideCount += 1;
+      }
+    }
+
+    if (eventName === 'pointer.map.native') {
+      summary.pointerMapNative += 1;
+    }
+
+    if (eventName === 'pointer.map.clamped') {
+      summary.pointerMapClamped += 1;
+    }
   }
 
   return summary;
@@ -458,6 +497,22 @@ function formatRecord(record) {
     details = ` reason=${data.reason ?? ''} display=${data.gutterState?.display ?? ''} visible=${data.gutterState?.visibleLineNumberCount ?? ''}/${data.gutterState?.totalLineNumberCount ?? ''}`;
   } else if (eventName === 'snapshot.editor') {
     details = ` reason=${data.reason ?? ''} sel=${data.selectionHead ?? ''} line=${data.selectionLineNumber ?? ''} recentKey=${data.recentInputKey ?? ''}`;
+  } else if (eventName === 'live.mode.architecture') {
+    details = ` sourceFirst=${String(Boolean(data.sourceFirst))} queryOverride=${data.queryOverride ?? ''} storedOverride=${data.storedOverride ?? ''}`;
+  } else if (eventName === 'decorations.source-first-pass-through') {
+    details = ` line=${data.activeLineNumber ?? ''} lineLen=${data.activeLineLength ?? ''} blocks=${data.blockCount ?? ''}`;
+  } else if (eventName === 'decorations.source-first-built') {
+    details = ` line=${data.activeLineNumber ?? ''} lineLen=${data.activeLineLength ?? ''} blocks=${data.blockCount ?? ''} lineDecos=${data.lineDecorationCount ?? ''} tokenDecos=${data.tokenDecorationCount ?? ''} fenceLines=${data.fenceLineCount ?? ''} fenceMarkers=${data.fenceMarkerLineCount ?? ''}`;
+  } else if (eventName === 'block.index.rebuilt') {
+    details = ` reason=${data.reason ?? ''} blocks=${data.blockCount ?? ''} index=${data.indexCount ?? ''}`;
+  } else if (eventName === 'block.index.delta') {
+    details = ` prev=${data.previousCount ?? ''} next=${data.nextCount ?? ''} added=${data.addedCount ?? ''} removed=${data.removedCount ?? ''}`;
+  } else if (eventName === 'fence.visibility.state') {
+    details = ` reason=${data.reason ?? ''} head=${data.selectionHead ?? ''} inside=${String(Boolean(data.insideFence))} line=${data.activeLineNumber ?? ''} block=${data.blockFrom ?? ''}-${data.blockTo ?? ''} fence=${data.openingFenceLineNumber ?? ''}-${data.closingFenceLineNumber ?? ''} type=${data.indexedBlockType ?? ''}`;
+  } else if (eventName === 'pointer.map.native') {
+    details = ` trigger=${data.trigger ?? ''} mapped=${data.mappedPosition ?? ''} raw=${data.rawMappedPosition ?? ''} line=${data.lineInfo?.lineNumber ?? ''} col=${data.lineInfo?.column ?? ''} block=${data.blockFrom ?? ''}-${data.blockTo ?? ''} target=${data.targetTagName ?? ''}`;
+  } else if (eventName === 'pointer.map.clamped') {
+    details = ` trigger=${data.trigger ?? ''} raw=${data.rawMappedPosition ?? ''} mapped=${data.mappedPosition ?? ''} docLen=${data.docLength ?? ''} target=${data.targetTagName ?? ''}`;
   } else if (eventName === 'markdown.engine.config') {
     details = ` breaks=${String(Boolean(data.breaks))} html=${String(Boolean(data.html))} linkify=${String(Boolean(data.linkify))}`;
   }
@@ -550,6 +605,14 @@ async function main() {
   console.log(`- markdown.engine.config (breaks=true): ${anomalies.markdownBreaksEnabledEvents}`);
   console.log(`- markdown.engine.config (breaks=false): ${anomalies.markdownBreaksDisabledEvents}`);
   console.log(`- markdown breaks currently enabled: ${String(anomalies.lastMarkdownBreaksEnabled)}`);
+  console.log(`- decorations.source-first-pass-through: ${anomalies.sourceFirstDecorationPassThrough}`);
+  console.log(`- decorations.source-first-built: ${anomalies.sourceFirstDecorationBuilt}`);
+  console.log(`- block.index.rebuilt: ${anomalies.blockIndexRebuilt}`);
+  console.log(`- block.index.delta: ${anomalies.blockIndexDelta}`);
+  console.log(`- fence.visibility.state: ${anomalies.fenceVisibilityState}`);
+  console.log(`- fence.visibility.state (insideFence=true): ${anomalies.fenceInsideCount}`);
+  console.log(`- pointer.map.native: ${anomalies.pointerMapNative}`);
+  console.log(`- pointer.map.clamped: ${anomalies.pointerMapClamped}`);
 
   const tail = records.slice(-maxLines);
   console.log(`Last ${tail.length} records:`);

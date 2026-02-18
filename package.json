@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node --test",
     "test:watch": "node --test --watch",
-    "logs:latest": "node scripts/live-debug-report.mjs"
+    "logs:latest": "node scripts/live-debug-report.mjs",
+    "logs:verify": "node scripts/live-debug-verify.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",

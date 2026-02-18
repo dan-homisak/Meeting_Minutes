@@ -4,14 +4,18 @@ import { EditorState } from '@codemirror/state';
 import MarkdownIt from 'markdown-it';
 import {
   annotateMarkdownTokensWithSourceRanges,
+  buildLiveBlockIndex,
   buildLineStartOffsets,
   clampSelectionToBlockRange,
   collectTopLevelBlocksFromTokens,
+  detectLiveBlockType,
   findBlockBySourceFrom,
   findBlockContainingPosition,
+  findIndexedBlockAtPosition,
   findNearestBlockForPosition,
   isFencedCodeBlock,
   parseSourceFromAttribute,
+  readFenceVisibilityState,
   resolveActivationBlockBounds,
   resolveLiveBlockSelection,
   resolveSourceRangeFromTokenMap,
@@ -397,4 +401,70 @@ test('clampSelectionToBlockRange constrains selection to block interior', () => 
   assert.equal(clampSelectionToBlockRange(100, 7, block), 20);
   assert.equal(clampSelectionToBlockRange(100, 88, block), 29);
   assert.equal(clampSelectionToBlockRange(100, 88, null), 88);
+});
+
+test('detectLiveBlockType classifies headings, lists, quotes, fences, and paragraphs', () => {
+  const headingDoc = docFrom('## Heading\nParagraph\n');
+  assert.equal(detectLiveBlockType(headingDoc, { from: 0, to: headingDoc.line(1).to + 1 }), 'heading');
+
+  const listDoc = docFrom('- One\n- Two\n');
+  assert.equal(detectLiveBlockType(listDoc, { from: 0, to: listDoc.length }), 'list');
+
+  const quoteDoc = docFrom('> Quote\n> Quote 2\n');
+  assert.equal(detectLiveBlockType(quoteDoc, { from: 0, to: quoteDoc.length }), 'blockquote');
+
+  const fenceDoc = docFrom('```js\nconst n = 1;\n```\n');
+  assert.equal(detectLiveBlockType(fenceDoc, { from: 0, to: fenceDoc.length }), 'fence');
+
+  const paragraphDoc = docFrom('plain paragraph text\nsecond line\n');
+  assert.equal(detectLiveBlockType(paragraphDoc, { from: 0, to: paragraphDoc.length }), 'paragraph');
+});
+
+test('buildLiveBlockIndex returns stable ids and line bounds', () => {
+  const doc = docFrom('## Heading\n\nParagraph one\n\n```js\nconst n = 1;\n```\n');
+  const blocks = [
+    { from: 0, to: doc.line(1).to + 1 },
+    { from: doc.line(3).from, to: doc.line(3).to + 1 },
+    { from: doc.line(5).from, to: doc.length }
+  ];
+
+  const index = buildLiveBlockIndex(doc, blocks);
+  assert.equal(index.length, 3);
+  assert.equal(index[0].type, 'heading');
+  assert.equal(index[1].type, 'paragraph');
+  assert.equal(index[2].type, 'fence');
+  assert.ok(typeof index[0].id === 'string' && index[0].id.length > 0);
+  assert.equal(index[2].startLineNumber, 5);
+  assert.equal(index[2].endLineNumber, 7);
+});
+
+test('findIndexedBlockAtPosition resolves in-range and boundary positions', () => {
+  const blockIndex = [
+    { id: 'a', from: 0, to: 10, type: 'paragraph' },
+    { id: 'b', from: 12, to: 20, type: 'paragraph' }
+  ];
+
+  assert.equal(findIndexedBlockAtPosition(blockIndex, 5), blockIndex[0]);
+  assert.equal(findIndexedBlockAtPosition(blockIndex, 11), blockIndex[1]);
+  assert.equal(findIndexedBlockAtPosition(blockIndex, 40), null);
+});
+
+test('readFenceVisibilityState reports fence marker visibility while cursor is inside fenced block', () => {
+  const doc = docFrom('Before\n\n```js\nconst total = 1;\n```\n\nAfter\n');
+  const fencedBlock = { from: doc.line(3).from, to: doc.line(5).to + 1 };
+  const blocks = [
+    { from: 0, to: doc.line(1).to + 1 },
+    fencedBlock,
+    { from: doc.line(7).from, to: doc.length }
+  ];
+
+  const insideState = readFenceVisibilityState(doc, blocks, doc.line(4).from + 2);
+  assert.equal(insideState.insideFence, true);
+  assert.equal(insideState.openingFenceLineNumber, 3);
+  assert.equal(insideState.closingFenceLineNumber, 5);
+  assert.equal(insideState.openingFenceVisible, true);
+  assert.equal(insideState.closingFenceVisible, true);
+
+  const outsideState = readFenceVisibilityState(doc, blocks, doc.line(1).from);
+  assert.equal(outsideState.insideFence, false);
 });
