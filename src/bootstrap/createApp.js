@@ -1,16 +1,16 @@
 import { EditorSelection, Transaction } from '@codemirror/state';
 import {
-  annotateMarkdownTokensWithSourceRanges,
-  findBlockContainingPosition,
   findNearestBlockForPosition,
-  isFencedCodeBlock,
   parseSourceFromAttribute,
   resolveActivationBlockBounds,
   resolveLiveBlockSelection,
   shouldPreferRenderedDomAnchorPosition,
   shouldPreferSourceFromForRenderedBoundaryClick,
   shouldPreferSourceFromForRenderedFencedClick
-} from '../livePreviewCore.js';
+} from '../core/selection/LiveActivationHelpers.js';
+import { findBlockContainingPosition } from '../core/render/LiveBlockIndex.js';
+import { isFencedCodeBlock } from '../core/render/LiveBlockHelpers.js';
+import { annotateMarkdownTokensWithSourceRanges } from '../core/mapping/SourceRangeMapper.js';
 import { MARKDOWN_ENGINE_OPTIONS, createMarkdownEngine } from '../markdownConfig.js';
 import { createDocumentSession } from '../core/document/DocumentSession.js';
 import { createLiveLineMappingHelpers } from '../live/liveLineMappingHelpers.js';

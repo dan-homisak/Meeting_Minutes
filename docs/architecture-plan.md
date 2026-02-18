@@ -56,7 +56,7 @@ Current checkpoint:
 - Completed: added regression coverage for document session, transaction classification, incremental parser behavior, and model-backed preview rendering.
 - Completed: added integration coverage that `docChanged` live preview updates are applied through `DocumentSession` without invoking fallback markdown parser calls in steady-state flow.
 
-### Phase 3: Hybrid live renderer
+### Phase 3: Hybrid live renderer (completed)
 
 - Active block remains editable markdown.
 - Inactive blocks render via shared model.
@@ -64,8 +64,16 @@ Current checkpoint:
 
 Current checkpoint:
 
-- In progress: live preview state now builds a deterministic source-map index (`src/core/mapping/SourceMapIndex.js`) from block + rendered-fragment ranges.
-- In progress: source-map index is stored alongside live preview decorations and exposed via bridge/runtime helper delegates for downstream selection/mapping hardening.
+- Completed: live preview state now builds a deterministic source-map index (`src/core/mapping/SourceMapIndex.js`) from block + rendered-fragment ranges.
+- Completed: source-map index is stored alongside live preview decorations and exposed via bridge/runtime helper delegates for downstream selection/mapping hardening.
+- Completed: extracted hybrid-decoration assembly into `src/core/render/LiveHybridRenderer.js` and widget rendering into `src/core/render/RenderedBlockWidget.js`; `src/live/livePreviewController.js` now delegates phase-3 rendering to shared core modules.
+- Completed: extracted preview/model rendering to `src/core/render/PreviewRenderer.js` and markdown render composition to `src/core/render/MarkdownRenderer.js`; legacy `src/render/markdownRenderer.js` now forwards to the core module.
+- Completed: extracted source-first line/token classification into `src/core/render/LiveSourceRenderer.js`; legacy `src/liveSourceRenderer.js` now forwards to the core module.
+- Completed: extracted live block fragment/fence helpers into `src/core/render/LiveBlockHelpers.js`; `src/livePreviewCore.js` now re-exports these compatibility APIs.
+- Completed: extracted block typing/indexing/fence visibility logic into `src/core/render/LiveBlockIndex.js`; `src/livePreviewCore.js` now forwards these APIs to the core module.
+- Completed: extracted markdown token source-range mapping utilities into `src/core/mapping/SourceRangeMapper.js`; `src/livePreviewCore.js` now forwards those mapping APIs.
+- Completed: extracted top-level markdown block range collection into `src/core/parser/BlockRangeCollector.js`; `src/livePreviewCore.js` now forwards `collectTopLevelBlocks*` and `lineIndexToPos` compatibility APIs.
+- Completed: runtime consumers now import hybrid renderer helpers directly from `src/core/*` modules (for example `createApp` and `livePreviewController`); `src/livePreviewCore.js` remains a compatibility re-export boundary.
 
 ### Phase 4: Selection and mapping hardening
 
@@ -78,6 +86,7 @@ Current checkpoint:
 - In progress: rendered pointer activation now consults `SourceMapIndex` block/fragment entries before coordinate-heuristic fallback.
 - In progress: rendered click resolution can clamp to deterministic source fragment bounds (`source-map-fragment` origin) when token/source-range attributes are unavailable.
 - In progress: vertical cursor navigation now reads `SourceMapIndex` and applies bounded target clamping when arrow movement resolves outside deterministic block boundaries.
+- In progress: extracted rendered-activation heuristics and block/selection clamp helpers into `src/core/selection/LiveActivationHelpers.js`; `src/livePreviewCore.js` now forwards these compatibility APIs.
 
 ### Phase 5: Viewport and performance
 
@@ -117,6 +126,7 @@ Current checkpoint:
 - `src/core/model/BlockNode.js`
 - `src/core/model/ModelDiff.js`
 - `src/core/parser/IncrementalMarkdownParser.js`
+- `src/core/parser/BlockRangeCollector.js`
 - `src/core/parser/BlockGraphBuilder.js`
 - `src/core/parser/InlineSpanBuilder.js`
 - `src/core/parser/FenceStateTracker.js`
@@ -125,13 +135,18 @@ Current checkpoint:
 
 - `src/core/render/MarkdownRenderer.js`
 - `src/core/render/LiveHybridRenderer.js`
+- `src/core/render/LiveBlockHelpers.js`
+- `src/core/render/LiveBlockIndex.js`
+- `src/core/render/LiveSourceRenderer.js`
 - `src/core/render/PreviewRenderer.js`
 - `src/core/render/RenderedBlockWidget.js`
 - `src/core/mapping/SourceMapIndex.js`
+- `src/core/mapping/SourceRangeMapper.js`
 - `src/core/mapping/DomSourceMap.js`
 - `src/core/mapping/CoordinateMapper.js`
 - `src/core/selection/ActivationController.js`
 - `src/core/selection/CursorNavigator.js`
+- `src/core/selection/LiveActivationHelpers.js`
 - `src/core/selection/SelectionPolicy.js`
 - `src/core/layout/LineMetricsStore.js`
 - `src/core/layout/ScrollInvariantController.js`
