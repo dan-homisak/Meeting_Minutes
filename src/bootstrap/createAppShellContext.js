@@ -25,7 +25,7 @@ export function createAppShellContext({
     hasUnsavedChanges: false,
     isLoadingFile: false,
     autosaveTimer: null,
-    viewMode: 'raw'
+    viewMode: 'live'
   };
 
   return {

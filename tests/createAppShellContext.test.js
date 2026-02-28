@@ -66,7 +66,7 @@ test('createAppShellContext resolves shell elements and initializes app state', 
   assert.equal(context.app.hasUnsavedChanges, false);
   assert.equal(context.app.isLoadingFile, false);
   assert.equal(context.app.autosaveTimer, null);
-  assert.equal(context.app.viewMode, 'raw');
+  assert.equal(context.app.viewMode, 'live');
   assert.equal(context.app.fileHandles instanceof Map, true);
   assert.equal(context.app.fileHandles.size, 0);
 });

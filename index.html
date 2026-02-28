@@ -3,48 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meeting Minutes MVP</title>
+    <title>Meeting Minutes</title>
   </head>
   <body>
     <div class="app-shell">
-      <header class="top-bar">
-        <div class="brand-block">
-          <p class="eyebrow">Local Markdown Workspace</p>
+      <aside class="vault-sidebar" aria-label="Vault navigation">
+        <div class="vault-header">
+          <p class="vault-eyebrow">Local Vault</p>
           <h1>Meeting Minutes</h1>
         </div>
-        <div class="actions">
-          <div class="mode-toggle" role="group" aria-label="Note mode">
-            <button id="mode-raw" class="mode-button active" type="button" aria-pressed="true">Raw</button>
-            <button id="mode-live" class="mode-button" type="button" aria-pressed="false">Live</button>
-            <button id="mode-preview" class="mode-button" type="button" aria-pressed="false">Preview</button>
-          </div>
-          <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
-          <button id="open-folder" class="primary">Open Folder</button>
-          <button id="new-note" disabled>New Note</button>
-          <button id="save-now" disabled>Save Now</button>
+
+        <div class="vault-actions">
+          <button id="open-folder" class="primary" type="button">Open Vault</button>
+          <button id="new-note" type="button" disabled>New Note</button>
         </div>
-      </header>
 
-      <p id="status" aria-live="polite">Choose a folder with markdown files to start editing.</p>
-
-      <div class="workspace">
-        <aside class="sidebar" aria-label="Markdown files">
-          <div class="sidebar-header">
+        <div class="file-pane" aria-label="Markdown files">
+          <div class="file-pane-header">
             <h2>Files</h2>
             <span id="file-count">0</span>
           </div>
           <ul id="file-list"></ul>
-        </aside>
+        </div>
+      </aside>
 
-        <main class="pane-grid">
-          <section class="pane">
-            <h2>Note</h2>
-            <p class="hint">Use <code>Raw</code> to edit markdown, <code>Live</code> for real-time inline render, and <code>Preview</code> for full read view.</p>
-            <div id="editor"></div>
-            <article id="preview" hidden></article>
-          </section>
-        </main>
-      </div>
+      <main class="workspace-main">
+        <header class="note-toolbar">
+          <div class="mode-toggle" role="group" aria-label="View mode">
+            <button id="mode-raw" class="mode-button" type="button" aria-pressed="false">Source</button>
+            <button id="mode-live" class="mode-button active" type="button" aria-pressed="true">Live Preview</button>
+            <button id="mode-preview" class="mode-button" type="button" aria-pressed="false">Reading</button>
+          </div>
+
+          <div class="note-toolbar-actions">
+            <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+            <button id="save-now" type="button" disabled>Save</button>
+          </div>
+        </header>
+
+        <p id="status" aria-live="polite">Choose a folder with markdown files to start editing.</p>
+
+        <section class="note-pane" aria-label="Note content">
+          <div id="editor"></div>
+          <article id="preview" hidden></article>
+        </section>
+      </main>
     </div>
 
     <script type="module" src="/src/main.js"></script>

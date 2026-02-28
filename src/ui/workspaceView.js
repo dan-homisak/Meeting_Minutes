@@ -49,11 +49,18 @@ export function createWorkspaceView({
     for (const path of paths) {
       const item = document.createElement('li');
       const button = document.createElement('button');
+      const parts = path.split('/');
+      const filename = parts[parts.length - 1] ?? path;
+      const parentPath = parts.length > 1 ? parts.slice(0, -1).join('/') : '';
 
       button.type = 'button';
       button.className = 'file-button';
-      button.textContent = path;
+      button.textContent = filename;
       button.title = path;
+      button.dataset.path = path;
+      if (parentPath) {
+        button.setAttribute('aria-description', parentPath);
+      }
       button.classList.toggle('active', path === currentPath);
       button.addEventListener('click', () => {
         if (typeof onOpenFile === 'function') {
