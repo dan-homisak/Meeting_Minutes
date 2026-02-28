@@ -23,6 +23,10 @@ function findSourceMapBlockAtPosition(sourceMapIndex, position, nearestTolerance
 
   for (const lookupPosition of lookupPositions) {
     const entries = findSourceMapEntriesAtPosition(sourceMapIndex, lookupPosition);
+    const fragmentEntry = entries.find((entry) => entry?.kind === 'rendered-fragment');
+    if (fragmentEntry) {
+      return fragmentEntry;
+    }
     const blockEntry = entries.find((entry) => entry?.kind === 'block');
     if (blockEntry) {
       return blockEntry;
@@ -34,7 +38,7 @@ function findSourceMapBlockAtPosition(sourceMapIndex, position, nearestTolerance
   for (const entry of sourceMapIndex) {
     if (
       !entry ||
-      entry.kind !== 'block' ||
+      (entry.kind !== 'block' && entry.kind !== 'rendered-fragment') ||
       !Number.isFinite(entry.sourceFrom) ||
       !Number.isFinite(entry.sourceTo)
     ) {
@@ -350,7 +354,7 @@ export function resolveVerticalCursorAssocCorrection({
   };
 }
 
-function buildSourceFirstPointerLogPayloads({
+function buildHybridPointerLogPayloads({
   trigger,
   coordinates = null,
   rawMappedPosition = null,
@@ -386,7 +390,7 @@ function buildSourceFirstPointerLogPayloads({
   };
 }
 
-function buildSourceFirstPointerLogEvents({
+function buildHybridPointerLogEvents({
   trigger,
   coordinates = null,
   rawMappedPosition = null,
@@ -399,7 +403,7 @@ function buildSourceFirstPointerLogEvents({
   docLength = null,
   clamped = false
 } = {}) {
-  const payloads = buildSourceFirstPointerLogPayloads({
+  const payloads = buildHybridPointerLogPayloads({
     trigger,
     coordinates,
     rawMappedPosition,
@@ -493,13 +497,20 @@ function resolvePointerInputSignalEvents({
   trigger,
   coordinates = null,
   targetSummary = null,
-  recordInputSignal = null
+  recordInputSignal = null,
+  pointerModifiers = null
 } = {}) {
   const pointerSignalPayload = buildPointerInputSignalPayload({
     trigger,
     coordinates,
     targetSummary
   });
+  if (pointerModifiers && typeof pointerModifiers === 'object') {
+    pointerSignalPayload.altKey = Boolean(pointerModifiers.altKey);
+    pointerSignalPayload.ctrlKey = Boolean(pointerModifiers.ctrlKey);
+    pointerSignalPayload.metaKey = Boolean(pointerModifiers.metaKey);
+    pointerSignalPayload.shiftKey = Boolean(pointerModifiers.shiftKey);
+  }
   const pointerSignal = typeof recordInputSignal === 'function'
     ? recordInputSignal('pointer', pointerSignalPayload)
     : pointerSignalPayload;
@@ -554,13 +565,13 @@ function resolvePointerActivationPreflight({
 
   return {
     proceed: true,
-    mode: 'source-first',
+    mode: 'hybrid',
     renderedBlockTarget: null,
     logs: []
   };
 }
 
-function resolveSourceFirstPointerMapping({
+function resolveHybridPointerMapping({
   docLength = null,
   rawMappedPosition = null,
   doc = null,
@@ -611,7 +622,7 @@ function resolveSourceFirstPointerMapping({
   };
 }
 
-function resolveSourceFirstPointerActivation({
+function resolveHybridPointerActivation({
   trigger,
   coordinates = null,
   rawMappedPosition = null,
@@ -624,7 +635,7 @@ function resolveSourceFirstPointerActivation({
   resolveActivationBlockBounds = null,
   readBlockLineBoundsForLog = null
 } = {}) {
-  const mapping = resolveSourceFirstPointerMapping({
+  const mapping = resolveHybridPointerMapping({
     docLength,
     rawMappedPosition,
     doc,
@@ -638,7 +649,7 @@ function resolveSourceFirstPointerActivation({
   )
     ? readBlockLineBoundsForLog(doc, mapping.mappedBlock)
     : null;
-  const logs = buildSourceFirstPointerLogEvents({
+  const logs = buildHybridPointerLogEvents({
     trigger,
     coordinates,
     rawMappedPosition,
@@ -659,6 +670,86 @@ function resolveSourceFirstPointerActivation({
   };
 }
 
+function readFiniteAttributeValue(element, attributeName) {
+  if (!element || typeof attributeName !== 'string' || attributeName.length === 0) {
+    return null;
+  }
+  const value = Number(
+    typeof element.getAttribute === 'function'
+      ? element.getAttribute(attributeName)
+      : element?.dataset?.[attributeName]
+  );
+  return Number.isFinite(value) ? Math.trunc(value) : null;
+}
+
+function readAttributeString(element, attributeName) {
+  if (!element || typeof attributeName !== 'string' || attributeName.length === 0) {
+    return null;
+  }
+  const value = typeof element.getAttribute === 'function'
+    ? element.getAttribute(attributeName)
+    : null;
+  return typeof value === 'string' && value.length > 0 ? value : null;
+}
+
+function readClosestAttributeString(targetElement, selector, attributeName) {
+  if (!targetElement || typeof targetElement.closest !== 'function') {
+    return null;
+  }
+  const closest = targetElement.closest(selector);
+  if (!closest) {
+    return null;
+  }
+  return readAttributeString(closest, attributeName);
+}
+
+function resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex) {
+  if (!targetElement || !Array.isArray(sourceMapIndex) || sourceMapIndex.length === 0) {
+    return {
+      sourceFrom: null,
+      fragmentId: null,
+      blockId: null
+    };
+  }
+
+  const fragmentId = readAttributeString(targetElement, 'data-fragment-id') ??
+    readClosestAttributeString(targetElement, '[data-fragment-id]', 'data-fragment-id');
+  const blockId = readAttributeString(targetElement, 'data-block-id') ??
+    readClosestAttributeString(targetElement, '[data-block-id]', 'data-block-id');
+
+  if (fragmentId) {
+    const fragmentEntry = sourceMapIndex.find(
+      (entry) => entry?.kind === 'rendered-fragment' && entry.fragmentId === fragmentId
+    );
+    if (fragmentEntry && Number.isFinite(fragmentEntry.sourceFrom)) {
+      return {
+        sourceFrom: Math.trunc(fragmentEntry.sourceFrom),
+        fragmentId,
+        blockId: fragmentEntry.blockId ?? blockId
+      };
+    }
+  }
+
+  if (blockId) {
+    const blockEntry = sourceMapIndex.find(
+      (entry) => entry?.kind === 'block' && entry.blockId === blockId
+    );
+    if (blockEntry && Number.isFinite(blockEntry.sourceFrom)) {
+      return {
+        sourceFrom: Math.trunc(blockEntry.sourceFrom),
+        fragmentId,
+        blockId
+      };
+    }
+  }
+
+  return {
+    sourceFrom: null,
+    fragmentId,
+    blockId
+  };
+}
+
 export function resolvePointerActivationIntent({
   viewMode = null,
   trigger = null,
@@ -669,19 +760,45 @@ export function resolvePointerActivationIntent({
   resolvePointerPosition = null,
   view = null,
   liveBlocksForView = null,
+  liveSourceMapIndexForView = null,
   readLineInfoForPosition = null,
   resolveActivationBlockBounds = null,
   readBlockLineBoundsForLog = null
 } = {}) {
   const logs = [];
   let pointerSignal = null;
+  const sourceMapIndex = typeof liveSourceMapIndexForView === 'function'
+    ? liveSourceMapIndexForView(view)
+    : [];
+  const fragmentMapping = resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex);
+  const sourceFromFromTarget = (() => {
+    if (!targetElement) {
+      return null;
+    }
+    const direct = readFiniteAttributeValue(targetElement, 'data-source-from');
+    if (Number.isFinite(direct)) {
+      return direct;
+    }
+    const closestWithSource = typeof targetElement?.closest === 'function'
+      ? targetElement.closest('[data-source-from]')
+      : null;
+    const closestValue = readFiniteAttributeValue(closestWithSource, 'data-source-from');
+    return Number.isFinite(closestValue) ? closestValue : null;
+  })();
 
   if (viewMode === 'live') {
+    const pointerModifiers = {
+      altKey: Boolean(coordinates?.altKey),
+      ctrlKey: Boolean(coordinates?.ctrlKey),
+      metaKey: Boolean(coordinates?.metaKey),
+      shiftKey: Boolean(coordinates?.shiftKey)
+    };
     const pointerInput = resolvePointerInputSignalEvents({
       trigger,
       coordinates,
       targetSummary,
-      recordInputSignal
+      recordInputSignal,
+      pointerModifiers
     });
     pointerSignal = pointerInput.pointerSignal;
     logs.push(...pointerInput.logs);
@@ -699,15 +816,40 @@ export function resolvePointerActivationIntent({
       mode: preflight.mode,
       renderedBlockTarget: preflight.renderedBlockTarget ?? null,
       pointerSignal,
-      sourceFirstActivation: null,
+      hybridActivation: null,
       logs
     };
   }
 
-  const rawMappedPosition = typeof resolvePointerPosition === 'function'
+  const rawMappedPositionResolved = typeof resolvePointerPosition === 'function'
     ? resolvePointerPosition(view, targetElement, coordinates)
     : null;
-  const sourceFirstActivation = resolveSourceFirstPointerActivation({
+  const rawMappedPosition = Number.isFinite(rawMappedPositionResolved)
+    ? rawMappedPositionResolved
+    : Number.isFinite(fragmentMapping.sourceFrom)
+      ? fragmentMapping.sourceFrom
+    : Number.isFinite(sourceFromFromTarget)
+      ? sourceFromFromTarget
+      : Number.isFinite(targetSummary?.sourceFrom)
+        ? Math.trunc(targetSummary.sourceFrom)
+        : null;
+  if (fragmentMapping.fragmentId || fragmentMapping.blockId) {
+    logs.push({
+      level: Number.isFinite(fragmentMapping.sourceFrom) ? 'trace' : 'warn',
+      event: Number.isFinite(fragmentMapping.sourceFrom)
+        ? 'pointer.map.fragment'
+        : 'pointer.map.fragment-miss',
+      payload: {
+        trigger,
+        fragmentId: fragmentMapping.fragmentId,
+        blockId: fragmentMapping.blockId,
+        mappedSourceFrom: Number.isFinite(fragmentMapping.sourceFrom)
+          ? fragmentMapping.sourceFrom
+          : null
+      }
+    });
+  }
+  const hybridActivation = resolveHybridPointerActivation({
     trigger,
     coordinates,
     rawMappedPosition,
@@ -720,14 +862,42 @@ export function resolvePointerActivationIntent({
     resolveActivationBlockBounds,
     readBlockLineBoundsForLog
   });
-  logs.push(...sourceFirstActivation.logs);
+  logs.push(...hybridActivation.logs);
+
+  const hasTargetPosition = Number.isFinite(hybridActivation?.mappedPosition);
+  if (hasTargetPosition) {
+    logs.push({
+      level: 'trace',
+      event: 'block.activate.request',
+      payload: {
+        trigger,
+        mappedPosition: hybridActivation.mappedPosition,
+        sourceFromFromFragmentMap: Number.isFinite(fragmentMapping.sourceFrom)
+          ? fragmentMapping.sourceFrom
+          : null,
+        sourceFromFromTarget: Number.isFinite(sourceFromFromTarget)
+          ? sourceFromFromTarget
+          : null
+      }
+    });
+  } else {
+    logs.push({
+      level: 'warn',
+      event: 'block.activate.failed',
+      payload: {
+        trigger,
+        reason: 'no-mapped-position'
+      }
+    });
+  }
 
   return {
-    proceed: false,
+    proceed: hasTargetPosition,
     mode: preflight.mode,
     renderedBlockTarget: null,
     pointerSignal,
-    sourceFirstActivation,
+    hybridActivation,
+    targetPosition: hasTargetPosition ? hybridActivation.mappedPosition : null,
     logs
   };
 }

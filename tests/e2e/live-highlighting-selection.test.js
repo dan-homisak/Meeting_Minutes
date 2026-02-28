@@ -75,7 +75,7 @@ test('same-line selection updates are skipped and cross-line updates rebuild dec
   const lineChangeTraceEvents = liveDebug.calls.trace.slice(traceCountBeforeLineChange);
   const lineChangeRebuild = lineChangeTraceEvents.filter((entry) => entry.event === 'plugin.update');
   const lineChangeDecorations = lineChangeTraceEvents.filter(
-    (entry) => entry.event === 'decorations.source-first-built'
+    (entry) => entry.event === 'decorations.hybrid-built'
   );
 
   assert.notEqual(lineChangeFieldState, sameLineFieldState);

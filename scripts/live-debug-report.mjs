@@ -88,13 +88,15 @@ function summarizeAnomalies(records) {
     markdownBreaksEnabledEvents: 0,
     markdownBreaksDisabledEvents: 0,
     lastMarkdownBreaksEnabled: null,
-    sourceFirstDecorationBuilt: 0,
+    hybridDecorationBuilt: 0,
     blockIndexRebuilt: 0,
     blockIndexDelta: 0,
     fenceVisibilityState: 0,
     fenceInsideCount: 0,
     inputPointerRoot: 0,
     inputPointer: 0,
+    pointerMapFragmentHit: 0,
+    pointerMapFragmentMiss: 0,
     pointerMapNative: 0,
     pointerMapClamped: 0
   };
@@ -242,8 +244,8 @@ function summarizeAnomalies(records) {
       }
     }
 
-    if (eventName === 'decorations.source-first-built') {
-      summary.sourceFirstDecorationBuilt += 1;
+    if (eventName === 'decorations.hybrid-built') {
+      summary.hybridDecorationBuilt += 1;
     }
 
     if (eventName === 'block.index.rebuilt') {
@@ -267,6 +269,14 @@ function summarizeAnomalies(records) {
 
     if (eventName === 'input.pointer') {
       summary.inputPointer += 1;
+    }
+
+    if (eventName === 'pointer.map.fragment') {
+      summary.pointerMapFragmentHit += 1;
+    }
+
+    if (eventName === 'pointer.map.fragment-miss') {
+      summary.pointerMapFragmentMiss += 1;
     }
 
     if (eventName === 'pointer.map.native') {
@@ -339,9 +349,9 @@ function formatRecord(record) {
   } else if (eventName === 'snapshot.editor') {
     details = ` reason=${data.reason ?? ''} sel=${data.selectionHead ?? ''} line=${data.selectionLineNumber ?? ''}`;
   } else if (eventName === 'live.mode.architecture') {
-    details = ` sourceFirst=${String(Boolean(data.sourceFirst))} queryOverride=${data.queryOverride ?? ''} storedOverride=${data.storedOverride ?? ''}`;
-  } else if (eventName === 'decorations.source-first-built') {
-    details = ` line=${data.activeLineNumber ?? ''} lineLen=${data.activeLineLength ?? ''} blocks=${data.blockCount ?? ''} lineDecos=${data.lineDecorationCount ?? ''} tokenDecos=${data.tokenDecorationCount ?? ''}`;
+    details = ` renderer=${data.renderer ?? ''} sourceOfTruth=${data.sourceOfTruth ?? ''} queryOverride=${data.queryOverride ?? ''} storedOverride=${data.storedOverride ?? ''}`;
+  } else if (eventName === 'decorations.hybrid-built') {
+    details = ` blocks=${data.blockCount ?? ''} activeBlock=${data.activeBlockId ?? ''} renderedFragments=${data.renderedFragmentCount ?? ''} virtualized=${data.virtualizedBlockCount ?? ''} budget=${data.renderBudgetMaxBlocks ?? ''} truncated=${String(Boolean(data.renderBudgetTruncated))}`;
   } else if (eventName === 'block.index.rebuilt') {
     details = ` reason=${data.reason ?? ''} blocks=${data.blockCount ?? ''} index=${data.indexCount ?? ''}`;
   } else if (eventName === 'block.index.delta') {
@@ -441,13 +451,15 @@ async function main() {
   console.log(`- markdown.engine.config (breaks=true): ${anomalies.markdownBreaksEnabledEvents}`);
   console.log(`- markdown.engine.config (breaks=false): ${anomalies.markdownBreaksDisabledEvents}`);
   console.log(`- markdown breaks currently enabled: ${String(anomalies.lastMarkdownBreaksEnabled)}`);
-  console.log(`- decorations.source-first-built: ${anomalies.sourceFirstDecorationBuilt}`);
+  console.log(`- decorations.hybrid-built: ${anomalies.hybridDecorationBuilt}`);
   console.log(`- block.index.rebuilt: ${anomalies.blockIndexRebuilt}`);
   console.log(`- block.index.delta: ${anomalies.blockIndexDelta}`);
   console.log(`- fence.visibility.state: ${anomalies.fenceVisibilityState}`);
   console.log(`- fence.visibility.state (insideFence=true): ${anomalies.fenceInsideCount}`);
   console.log(`- input.pointer.root: ${anomalies.inputPointerRoot}`);
   console.log(`- input.pointer: ${anomalies.inputPointer}`);
+  console.log(`- pointer.map.fragment: ${anomalies.pointerMapFragmentHit}`);
+  console.log(`- pointer.map.fragment-miss: ${anomalies.pointerMapFragmentMiss}`);
   console.log(`- pointer.map.native: ${anomalies.pointerMapNative}`);
   console.log(`- pointer.map.clamped: ${anomalies.pointerMapClamped}`);
 

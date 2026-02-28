@@ -265,6 +265,7 @@ export function createApp({
     liveDebug,
     markdownEngine,
     documentSession,
+    renderMarkdownHtml: markdownRenderer.renderMarkdownHtml,
     liveDebugKeylogKeys: LIVE_DEBUG_KEYLOG_KEYS,
     liveRuntimeHelpers
   }));

@@ -275,7 +275,7 @@ function createPointerHandlers({ app, liveDebug, pointerController }) {
   return livePreviewPointerHandlers;
 }
 
-test('source-first click path keeps native selection and logs pointer mapping', () => {
+test('hybrid click mapping activates source position from rendered content', () => {
   const app = { viewMode: 'live' };
   const liveDebug = createLiveDebugSpy();
   const blocks = [{ from: 6, to: 14 }];
@@ -315,11 +315,11 @@ test('source-first click path keeps native selection and logs pointer mapping', 
   );
 
   const traceEvents = liveDebug.calls.trace.map((entry) => entry.event);
-  assert.equal(handled, false);
-  assert.equal(prevented, false);
-  assert.equal(dispatched.length, 0);
-  assert.equal(view.state.selection.main.head, 0);
+  assert.equal(handled, true);
+  assert.equal(prevented, true);
+  assert.equal(dispatched.length, 1);
+  assert.equal(view.state.selection.main.head, 9);
   assert.ok(traceEvents.includes('input.pointer'));
   assert.ok(traceEvents.includes('pointer.map.native'));
-  assert.equal(traceEvents.includes('block.activate.request'), false);
+  assert.ok(traceEvents.includes('block.activate.request'));
 });

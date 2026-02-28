@@ -47,7 +47,8 @@ export function createLiveDebugBootstrap({
     liveDebug.info('markdown.engine.config', markdownEngineOptions);
   }
   liveDebug.info('live.mode.architecture', {
-    sourceFirst: true
+    renderer: 'hybrid-v2',
+    sourceOfTruth: 'markdown'
   });
 
   return {

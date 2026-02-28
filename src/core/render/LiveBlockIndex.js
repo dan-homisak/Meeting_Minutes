@@ -225,7 +225,7 @@ export function readFenceVisibilityState(doc, blocks, selectionHead) {
     activeLine.number <= closingFenceLine.number
   );
 
-  // In source-first live mode, fence markers remain part of editable source lines.
+  // In hybrid live mode, fence markers remain part of editable source lines.
   return {
     insideFence,
     activeLineNumber: activeLine.number,

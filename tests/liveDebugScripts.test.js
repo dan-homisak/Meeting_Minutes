@@ -107,7 +107,7 @@ test('live-debug-verify fails when selection jump is not the initial pointer bas
   );
 });
 
-test('live-debug-report summarizes source-first anomalies and omits removed rendered-era counters', async () => {
+test('live-debug-report summarizes hybrid anomalies and omits removed rendered-era counters', async () => {
   await withTempLog(
     [
       initialPointerJumpRecord(),
@@ -148,6 +148,7 @@ test('live-debug-report summarizes source-first anomalies and omits removed rend
       assert.match(result.stdout, /plugin\.update\.selection-skipped: 0/);
       assert.match(result.stdout, /plugin\.update\.selection-skipped \(line mismatch\): 0/);
       assert.match(result.stdout, /block\.activate\.miss: 1/);
+      assert.match(result.stdout, /decorations\.hybrid-built: 0/);
       assert.doesNotMatch(result.stdout, /block\.activate\.rendered-block-unbounded/);
     }
   );

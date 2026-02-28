@@ -80,7 +80,8 @@ test('createLiveDebugBootstrap resolves level, persists, attaches, and logs star
     ['markdown.engine.config', 'live.mode.architecture']
   );
   assert.deepEqual(calls.info[1].data, {
-    sourceFirst: true
+    renderer: 'hybrid-v2',
+    sourceOfTruth: 'markdown'
   });
 
   const nextLevel = bootstrap.setLiveDebugLevel('debug');

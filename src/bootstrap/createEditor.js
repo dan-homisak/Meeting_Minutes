@@ -10,7 +10,7 @@ export const DEFAULT_EDITOR_DOC =
   '# Welcome\n\nChoose a folder and start editing markdown files.\n\nType `/` for quick markdown snippets.\n';
 
 const selectionMatchHighlighter = highlightSelectionMatches()[1];
-const sourceFirstBasicSetup = basicSetup.filter(
+const livePreviewBasicSetup = basicSetup.filter(
   (extension) => !(Array.isArray(extension) && extension.includes(selectionMatchHighlighter))
 );
 
@@ -40,7 +40,7 @@ export function createEditor({
   const lineWrappingExtension = factories.lineWrappingExtension ?? EditorView.lineWrapping;
   const indentWithTabCommand = factories.indentWithTabCommand ?? indentWithTab;
   const insertNewlineCommand = factories.insertNewlineCommand ?? insertNewlineContinueMarkup;
-  const basicSetupExtension = factories.basicSetupExtension ?? sourceFirstBasicSetup;
+  const basicSetupExtension = factories.basicSetupExtension ?? livePreviewBasicSetup;
 
   const keyBindings = [
     indentWithTabCommand,

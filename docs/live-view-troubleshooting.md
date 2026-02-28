@@ -4,13 +4,13 @@ This document defines how to iterate on live mode without cursor drift, gutter c
 
 ## Shipped Architecture
 
-1. Live mode runs in source-first architecture.
-2. Source-first mode preserves CodeMirror source lines and renders markdown presentation using line/token decorations.
-3. Live mode architecture is fixed to source-first in runtime (no URL/storage architecture override).
-4. Pointer clicks in source-first mode stay native and are logged (`pointer.map.native`).
+1. Live mode now runs a hybrid renderer architecture.
+2. Active block stays source-editable while inactive blocks render as widget fragments.
+3. Fragment-map entries are emitted for rendered widgets and mapped back to source ranges.
+4. Pointer clicks map to source activation and are logged (`pointer.map.native`, `block.activate.request`, `block.activated`).
 5. A block index is rebuilt on document changes for deterministic diagnostics (`block.index.rebuilt`, `block.index.delta`).
 6. Fence marker state is logged on selection changes (`fence.visibility.state`).
-7. Source-first decorations now rebuild on selection-line changes so active-line markdown visibility stays in sync.
+7. Hybrid decoration rebuilds emit render telemetry (`decorations.hybrid-built`).
 
 ## Behavioral Targets
 
@@ -34,16 +34,20 @@ Primary events:
 - `gutter.visibility.probe`
 - `gutter.visibility.hidden`
 - `pointer.map.native`
+- `pointer.map.fragment`
+- `pointer.map.fragment-miss`
 - `pointer.map.clamped`
+- `block.activate.request`
+- `block.activated`
 - `block.index.rebuilt`
 - `block.index.delta`
 - `fence.visibility.state`
 - `document.changed`
 
-Source-first compatibility event:
+Hybrid compatibility event:
 
-- `decorations.source-first-built`
-- includes per-class counters (`headingLineCount`, `paragraphLineCount`, `listLineCount`, `taskLineCount`, `quoteLineCount`, `tableLineCount`, `hrLineCount`)
+- `decorations.hybrid-built`
+- includes hybrid counters (`renderedFragmentCount`, `virtualizedBlockCount`, `renderBudgetTruncated`)
 
 ## Debug Controls
 
@@ -84,7 +88,8 @@ npm run logs:verify -- --max-selection-jumps 0 --max-selection-skip-line-mismatc
 3. Ensure `debugLive=trace`.
 4. Perform exact pointer/key actions.
 5. Inspect logs for:
-   - `pointer.map.native` records around each click
+   - `pointer.map.fragment` / `pointer.map.fragment-miss` hit-rate around rendered widget clicks
+   - `pointer.map.native` and `block.activated` records around each click
    - `fence.visibility.state` while moving in/out of fenced code
    - no unexpected `selection.jump.detected`
    - no `gutter.visibility.hidden`

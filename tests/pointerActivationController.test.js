@@ -170,7 +170,7 @@ test('handleLivePointerActivation logs miss when pointer target is unavailable',
   assert.ok(traceEvents.includes('block.activate.miss'));
 });
 
-test('handleLivePointerActivation keeps native handling in live mode and emits source-first mapping logs', () => {
+test('handleLivePointerActivation dispatches mapped activation in live mode', () => {
   const debugSpy = createLiveDebugSpy();
   const controller = createController({
     liveDebug: debugSpy
@@ -195,14 +195,15 @@ test('handleLivePointerActivation keeps native handling in live mode and emits s
     'mousedown'
   );
 
-  assert.equal(handled, false);
-  assert.equal(defaultPrevented, false);
-  assert.equal(dispatched.length, 0);
-  assert.equal(readFocusCount(), 0);
+  assert.equal(handled, true);
+  assert.equal(defaultPrevented, true);
+  assert.equal(dispatched.length, 1);
+  assert.equal(readFocusCount(), 1);
   const traceEvents = debugSpy.calls.trace.map((entry) => entry.event);
   assert.ok(traceEvents.includes('input.pointer'));
   assert.ok(traceEvents.includes('pointer.map.native'));
-  assert.equal(traceEvents.includes('block.activate.request'), false);
+  assert.ok(traceEvents.includes('block.activate.request'));
+  assert.ok(traceEvents.includes('block.activated'));
 });
 
 test('handleLivePointerActivation records pointer signal and includes signal payload in trace event', () => {
@@ -269,4 +270,141 @@ test('handleLivePointerActivation emits pointer.map.clamped when mapped position
   assert.ok(warnEvent);
   assert.equal(warnEvent.data.mappedPosition, 40);
   assert.equal(warnEvent.data.rawMappedPosition, 999);
+});
+
+test('handleLivePointerActivation toggles rendered task checkbox using source mapping', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy
+  });
+
+  const docText = '- [ ] task one';
+  const dispatched = [];
+  let focusCount = 0;
+  const view = {
+    state: {
+      doc: {
+        length: docText.length,
+        sliceString(from, to) {
+          return docText.slice(from, to);
+        },
+        lineAt() {
+          return {
+            from: 0,
+            to: docText.length,
+            number: 1
+          };
+        }
+      },
+      selection: {
+        main: {
+          anchor: 0,
+          head: 0,
+          empty: true
+        }
+      }
+    },
+    dispatch(transaction) {
+      dispatched.push(transaction);
+    },
+    focus() {
+      focusCount += 1;
+    }
+  };
+
+  let defaultPrevented = false;
+  const handled = controller.handleLivePointerActivation(
+    view,
+    {
+      target: {
+        checked: false,
+        getAttribute(name) {
+          if (name === 'data-task-source-from') {
+            return '0';
+          }
+          return null;
+        },
+        closest() {
+          return null;
+        }
+      },
+      clientX: 30,
+      clientY: 40,
+      preventDefault() {
+        defaultPrevented = true;
+      }
+    },
+    'mousedown'
+  );
+
+  assert.equal(handled, true);
+  assert.equal(defaultPrevented, true);
+  assert.equal(dispatched.length, 1);
+  assert.equal(dispatched[0].changes.from, 3);
+  assert.equal(dispatched[0].changes.to, 4);
+  assert.equal(dispatched[0].changes.insert, 'x');
+  assert.equal(focusCount, 1);
+  assert.ok(debugSpy.calls.trace.some((entry) => entry.event === 'task.toggle'));
+});
+
+test('handleLivePointerActivation opens link on modifier-click', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy
+  });
+  let openedUrl = null;
+  const { view } = createView({ docLength: 40, mappedPos: 12 });
+  view.contentDOM = {
+    ownerDocument: {
+      defaultView: {
+        open(href) {
+          openedUrl = href;
+        }
+      }
+    }
+  };
+
+  let defaultPrevented = false;
+  const anchorTarget = {
+    getAttribute(name) {
+      if (name === 'href') {
+        return 'https://example.com';
+      }
+      if (name === 'target') {
+        return '_blank';
+      }
+      if (name === 'rel') {
+        return 'noopener noreferrer';
+      }
+      return null;
+    },
+    closest(selector) {
+      if (selector === 'a[href]') {
+        return this;
+      }
+      return null;
+    }
+  };
+
+  const handled = controller.handleLivePointerActivation(
+    view,
+    {
+      target: anchorTarget,
+      clientX: 20,
+      clientY: 25,
+      ctrlKey: true,
+      metaKey: false,
+      altKey: false,
+      shiftKey: false,
+      preventDefault() {
+        defaultPrevented = true;
+      }
+    },
+    'mousedown'
+  );
+
+  assert.equal(handled, true);
+  assert.equal(defaultPrevented, true);
+  assert.equal(openedUrl, 'https://example.com');
+  assert.ok(debugSpy.calls.trace.some((entry) => entry.event === 'link.open.modifier'));
 });

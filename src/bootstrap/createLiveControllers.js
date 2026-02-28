@@ -52,6 +52,7 @@ export function createLiveControllers({
     app,
     liveDebug,
     liveBlocksForView: helpers.liveBlocksForView,
+    liveSourceMapIndexForView: helpers.liveSourceMapIndexForView,
     normalizePointerTarget: helpers.normalizePointerTarget,
     readPointerCoordinates: helpers.readPointerCoordinates,
     describeElementForLog: helpers.describeElementForLog,

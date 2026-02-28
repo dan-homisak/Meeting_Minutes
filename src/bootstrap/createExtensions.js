@@ -7,6 +7,7 @@ export function createExtensions({
   liveDebug,
   markdownEngine,
   documentSession,
+  renderMarkdownHtml,
   liveDebugKeylogKeys,
   liveRuntimeHelpers,
   factories = {}
@@ -24,6 +25,7 @@ export function createExtensions({
     liveDebug,
     markdownEngine,
     documentSession,
+    renderMarkdownHtml,
     refreshLivePreviewEffect,
   });
   const livePreviewStateField = livePreviewController.livePreviewStateField;

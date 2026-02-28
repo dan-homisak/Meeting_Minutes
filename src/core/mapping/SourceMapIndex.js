@@ -20,11 +20,12 @@ function buildEntryId(entry) {
     entry.kind,
     `${entry.sourceFrom}:${entry.sourceTo}`,
     `${entry.blockFrom}:${entry.blockTo}`,
-    `${entry.fragmentFrom}:${entry.fragmentTo}`
+    `${entry.fragmentFrom}:${entry.fragmentTo}`,
+    `${entry.priority}`
   ].join('|');
 }
 
-function normalizeBlockEntry(block, activeLine) {
+function normalizeBlockEntry(block, activeLine, index) {
   const blockRange = normalizeRange(block, 'from', 'to');
   if (!blockRange) {
     return null;
@@ -38,17 +39,24 @@ function normalizeBlockEntry(block, activeLine) {
 
   return {
     kind: 'block',
+    blockId:
+      typeof block?.id === 'string' && block.id.length > 0
+        ? block.id
+        : `block-${index}-${blockRange.from}-${blockRange.to}`,
+    fragmentId: null,
     sourceFrom: blockRange.from,
     sourceTo: blockRange.to,
     blockFrom: blockRange.from,
     blockTo: blockRange.to,
     fragmentFrom: blockRange.from,
     fragmentTo: blockRange.to,
+    domPathHint: null,
+    priority: 0,
     active: activeIntersectsBlock
   };
 }
 
-function normalizeFragmentEntry(fragment) {
+function normalizeFragmentEntry(fragment, index) {
   if (!fragment) {
     return null;
   }
@@ -68,12 +76,25 @@ function normalizeFragmentEntry(fragment) {
 
   return {
     kind: 'rendered-fragment',
+    blockId:
+      typeof fragment?.blockId === 'string' && fragment.blockId.length > 0
+        ? fragment.blockId
+        : `fragment-block-${index}-${blockRange.from}-${blockRange.to}`,
+    fragmentId:
+      typeof fragment?.fragmentId === 'string' && fragment.fragmentId.length > 0
+        ? fragment.fragmentId
+        : `fragment-${index}-${fragmentRange.from}-${fragmentRange.to}`,
     sourceFrom: fragmentRange.from,
     sourceTo: fragmentRange.to,
     blockFrom: blockRange.from,
     blockTo: blockRange.to,
     fragmentFrom: fragmentRange.from,
     fragmentTo: fragmentRange.to,
+    domPathHint:
+      typeof fragment?.domPathHint === 'string' && fragment.domPathHint.length > 0
+        ? fragment.domPathHint
+        : null,
+    priority: Number.isFinite(fragment?.priority) ? Math.trunc(fragment.priority) : 100,
     active: false
   };
 }
@@ -82,6 +103,7 @@ function sortSourceMapEntries(left, right) {
   return (
     left.sourceFrom - right.sourceFrom ||
     left.sourceTo - right.sourceTo ||
+    left.priority - right.priority ||
     left.blockFrom - right.blockFrom ||
     left.blockTo - right.blockTo ||
     left.fragmentFrom - right.fragmentFrom ||
@@ -98,8 +120,8 @@ export function buildSourceMapIndex({
   const entries = [];
 
   if (Array.isArray(blocks)) {
-    for (const block of blocks) {
-      const blockEntry = normalizeBlockEntry(block, activeLine);
+    for (let index = 0; index < blocks.length; index += 1) {
+      const blockEntry = normalizeBlockEntry(blocks[index], activeLine, index);
       if (blockEntry) {
         entries.push(blockEntry);
       }
@@ -107,8 +129,8 @@ export function buildSourceMapIndex({
   }
 
   if (Array.isArray(renderedFragments)) {
-    for (const fragment of renderedFragments) {
-      const fragmentEntry = normalizeFragmentEntry(fragment);
+    for (let index = 0; index < renderedFragments.length; index += 1) {
+      const fragmentEntry = normalizeFragmentEntry(renderedFragments[index], index);
       if (fragmentEntry) {
         entries.push(fragmentEntry);
       }

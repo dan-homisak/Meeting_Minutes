@@ -197,7 +197,7 @@ test('emitLiveDebugEvents routes event batches by level and ignores malformed en
   ]);
 });
 
-test('resolvePointerActivationIntent composes pointer-input, preflight, and source-first logs', () => {
+test('resolvePointerActivationIntent composes pointer-input, preflight, and hybrid mapping logs', () => {
   const recordedSignals = [];
   const intent = resolvePointerActivationIntent({
     viewMode: 'live',
@@ -234,14 +234,16 @@ test('resolvePointerActivationIntent composes pointer-input, preflight, and sour
     readBlockLineBoundsForLog: () => ({ startLineNumber: 2, endLineNumber: 3 })
   });
 
-  assert.equal(intent.proceed, false);
-  assert.equal(intent.mode, 'source-first');
+  assert.equal(intent.proceed, true);
+  assert.equal(intent.mode, 'hybrid');
   assert.equal(intent.renderedBlockTarget, null);
   assert.equal(intent.pointerSignal.signalId, 'sig-1');
-  assert.ok(intent.sourceFirstActivation);
+  assert.ok(intent.hybridActivation);
+  assert.equal(intent.targetPosition, 20);
   assert.equal(intent.logs[0].event, 'input.pointer');
   assert.equal(intent.logs[1].event, 'pointer.map.native');
   assert.equal(intent.logs[2].event, 'pointer.map.clamped');
+  assert.equal(intent.logs[3].event, 'block.activate.request');
   assert.equal(recordedSignals.length, 1);
 
   const missIntent = resolvePointerActivationIntent({
@@ -253,7 +255,7 @@ test('resolvePointerActivationIntent composes pointer-input, preflight, and sour
   });
   assert.equal(missIntent.proceed, false);
   assert.equal(missIntent.mode, 'miss');
-  assert.equal(missIntent.sourceFirstActivation, null);
+  assert.equal(missIntent.hybridActivation, null);
   assert.equal(missIntent.logs[0].event, 'input.pointer');
   assert.equal(missIntent.logs[1].event, 'block.activate.miss');
 
@@ -266,4 +268,62 @@ test('resolvePointerActivationIntent composes pointer-input, preflight, and sour
   });
   assert.equal(inactiveIntent.mode, 'inactive');
   assert.deepEqual(inactiveIntent.logs, []);
+});
+
+test('resolvePointerActivationIntent prefers fragment-map source lookup over coordinate mapping', () => {
+  const intent = resolvePointerActivationIntent({
+    viewMode: 'live',
+    trigger: 'mousedown',
+    targetElement: {
+      tagName: 'SECTION',
+      className: 'cm-rendered-block-widget',
+      getAttribute(name) {
+        if (name === 'data-fragment-id') {
+          return 'fragment-1';
+        }
+        if (name === 'data-block-id') {
+          return 'block-1';
+        }
+        return null;
+      },
+      closest() {
+        return null;
+      }
+    },
+    coordinates: { x: 10, y: 12 },
+    targetSummary: {
+      tagName: 'SECTION',
+      className: 'cm-rendered-block-widget',
+      sourceFrom: null
+    },
+    resolvePointerPosition: () => null,
+    view: {
+      state: {
+        doc: {
+          length: 120
+        }
+      }
+    },
+    liveBlocksForView: () => [{ from: 30, to: 40 }],
+    liveSourceMapIndexForView: () => [
+      {
+        kind: 'rendered-fragment',
+        fragmentId: 'fragment-1',
+        blockId: 'block-1',
+        sourceFrom: 33,
+        sourceTo: 40,
+        blockFrom: 30,
+        blockTo: 40,
+        fragmentFrom: 33,
+        fragmentTo: 40
+      }
+    ],
+    readLineInfoForPosition: () => ({ lineNumber: 3 }),
+    resolveActivationBlockBounds: () => ({ from: 30, to: 40 }),
+    readBlockLineBoundsForLog: () => ({ startLineNumber: 3, endLineNumber: 4 })
+  });
+
+  assert.equal(intent.proceed, true);
+  assert.equal(intent.targetPosition, 33);
+  assert.ok(intent.logs.some((entry) => entry.event === 'pointer.map.fragment'));
 });

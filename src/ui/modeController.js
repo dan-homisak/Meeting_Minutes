@@ -21,7 +21,7 @@ export function createModeController({
     liveDebug.info('mode.changed', {
       from: previousMode,
       to: mode,
-      sourceFirst: true
+      renderer: 'hybrid-v2'
     });
 
     const showEditor = mode !== 'preview';

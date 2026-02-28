@@ -15,6 +15,7 @@ export function createLivePreviewController({
   markdownEngine,
   documentSession = null,
   refreshLivePreviewEffect,
+  renderMarkdownHtml = null
 } = {}) {
   function normalizeRefreshReason(value) {
     if (typeof value === 'string' && value.trim().length > 0) {
@@ -76,9 +77,11 @@ export function createLivePreviewController({
       return [];
     }
   }
+
   const liveHybridRenderer = createLiveHybridRenderer({
     app,
-    liveDebug
+    liveDebug,
+    renderMarkdownHtml
   });
 
   const livePreviewStateField = StateField.define({
@@ -97,6 +100,8 @@ export function createLivePreviewController({
         blockIndex,
         decorations: initialRender.decorations,
         sourceMapIndex: initialRender.sourceMapIndex,
+        fragmentMap: initialRender.fragmentMap,
+        activeBlockId: initialRender.activeBlockId,
         lastSelectionLineFrom
       };
     },
@@ -107,38 +112,12 @@ export function createLivePreviewController({
       if (transaction.docChanged) {
         blocks = collectTopLevelBlocksSafe(transaction.state.doc, transaction, 'transaction-doc-changed');
         const nextBlockIndex = buildLiveBlockIndex(transaction.state.doc, blocks);
-        const previousIds = new Set(blockIndex.map((entry) => entry.id));
-        const nextIds = new Set(nextBlockIndex.map((entry) => entry.id));
-        let addedCount = 0;
-        let removedCount = 0;
-        for (const id of nextIds) {
-          if (!previousIds.has(id)) {
-            addedCount += 1;
-          }
-        }
-        for (const id of previousIds) {
-          if (!nextIds.has(id)) {
-            removedCount += 1;
-          }
-        }
-        liveDebug.trace('block.index.rebuilt', {
-          reason: 'doc-changed',
-          blockCount: blocks.length,
-          indexCount: nextBlockIndex.length
-        });
-        liveDebug.trace('block.index.delta', {
-          previousCount: blockIndex.length,
-          nextCount: nextBlockIndex.length,
-          addedCount,
-          removedCount
-        });
         blockIndex = nextBlockIndex;
       }
 
-      const refreshRequests = transaction.effects
+      const refreshReasons = transaction.effects
         .filter((effect) => effect.is(refreshLivePreviewEffect))
         .map((effect) => normalizeRefreshReason(effect.value));
-      const refreshReasons = refreshRequests;
       const refreshRequested = refreshReasons.length > 0;
 
       const previousSelection = transaction.startState.selection.main;
@@ -154,6 +133,7 @@ export function createLivePreviewController({
         transaction.docChanged || refreshRequested || selectionLineChanged;
 
       if (shouldRebuildDecorations) {
+        const renderResult = liveHybridRenderer.buildDecorations(transaction.state, blocks);
         liveDebug.trace('plugin.update', {
           docChanged: transaction.docChanged,
           selectionSet,
@@ -161,33 +141,36 @@ export function createLivePreviewController({
           previousSelectionLineFrom: value.lastSelectionLineFrom,
           currentSelectionLineFrom,
           refreshRequested,
-          refreshReasons
+          refreshReasons,
+          activeBlockId: renderResult.activeBlockId,
+          renderedFragmentCount: renderResult.fragmentMap.length
         });
 
-        const renderResult = liveHybridRenderer.buildDecorations(transaction.state, blocks);
         return {
           blocks,
           blockIndex,
           decorations: renderResult.decorations,
           sourceMapIndex: renderResult.sourceMapIndex,
+          fragmentMap: renderResult.fragmentMap,
+          activeBlockId: renderResult.activeBlockId,
           lastSelectionLineFrom: currentSelectionLineFrom
         };
       }
 
-      if (selectionSet) {
+      if (selectionSet && currentSelectionLineFrom === value.lastSelectionLineFrom) {
         liveDebug.trace('plugin.update.selection-skipped', {
           previousSelectionLineFrom: value.lastSelectionLineFrom,
           currentSelectionLineFrom
         });
+      }
 
-        if (currentSelectionLineFrom !== value.lastSelectionLineFrom) {
-          return {
-            ...value,
-            blocks,
-            blockIndex,
-            lastSelectionLineFrom: currentSelectionLineFrom
-          };
-        }
+      if (selectionSet && currentSelectionLineFrom !== value.lastSelectionLineFrom) {
+        return {
+          ...value,
+          blocks,
+          blockIndex,
+          lastSelectionLineFrom: currentSelectionLineFrom
+        };
       }
 
       return value;
