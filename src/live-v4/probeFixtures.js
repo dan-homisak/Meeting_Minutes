@@ -35,6 +35,16 @@ Paragraph with **bold**, *emphasis*, ~~strike~~, \`inline code\`, [link](https:/
   - [ ]
 1.
   1.
+`,
+  'nested-guides': `# Nested Guides
+
+- Top
+  - Child one
+    - Grandchild
+      - Great grandchild
+    - Grandchild sibling
+  - Child two
+- Sibling top
 `
 });
 

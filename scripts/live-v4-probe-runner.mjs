@@ -893,6 +893,32 @@ function buildEmptyMarkersFixtureSteps() {
   ];
 }
 
+function buildNestedGuidesFixtureSteps() {
+  return [
+    {
+      id: 'load-fixture-nested-guides',
+      action: 'load-fixture',
+      fixtureName: 'nested-guides'
+    },
+    {
+      id: 'baseline',
+      action: 'snapshot'
+    },
+    {
+      id: 'cursor-line-4-col-8',
+      action: 'set-cursor',
+      lineNumber: 4,
+      column: 8
+    },
+    {
+      id: 'cursor-line-5-col-10',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 10
+    }
+  ];
+}
+
 function buildStepDefinitions(fixtureName) {
   if (fixtureName === 'lists-and-tasks') {
     return buildListFixtureSteps();
@@ -902,6 +928,9 @@ function buildStepDefinitions(fixtureName) {
   }
   if (fixtureName === 'empty-markers') {
     return buildEmptyMarkersFixtureSteps();
+  }
+  if (fixtureName === 'nested-guides') {
+    return buildNestedGuidesFixtureSteps();
   }
   return buildDefaultFixtureSteps();
 }

@@ -30,12 +30,16 @@ Every visual/runtime change must run these fixtures:
 - Empty bullet/task/numbered markers to verify depth/indent updates before line content is typed.
 - Required screenshot steps: `01-baseline`, all cursor-line steps for lines 3-8.
 
+5. `nested-guides`
+- Deep nested list indentation/connector-line continuity.
+- Required screenshot steps: `01-baseline`, cursor depth steps.
+
 ## Required Gates
 
 1. `npm test -- --runInBand`
 2. `npm run build`
-3. Probe runs for all three fixtures with explicit output dirs.
-4. Probe run for `empty-markers` fixture with explicit output dir.
+3. Probe runs for `default-welcome`, `lists-and-tasks`, and `mixed-inline` with explicit output dirs.
+4. Probe runs for `empty-markers` and `nested-guides` with explicit output dirs when list behavior or spacing changes.
 
 ## Run History
 
@@ -48,6 +52,7 @@ Every visual/runtime change must run these fixtures:
 | 2026-02-28 | Horizontal marker-gap cursor traversal + spacing parity tune (ordered/task vs bullet) | lists-and-tasks, mixed-inline, empty-markers | `logs/probes/lists-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-34-13-611Z`, `logs/probes/mixed-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-34-56-969Z`, `logs/probes/empty-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-35-04-434Z` |
 | 2026-02-28 | Final list parity tuning: task/ordered spacing rebalance + marker trailing-space visibility while syntax is active | lists-and-tasks, mixed-inline, empty-markers | `logs/probes/lists-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-44-53-276Z`, `logs/probes/mixed-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-998Z`, `logs/probes/empty-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-999Z` |
 | 2026-02-28 | User-reported list spacing cleanup from screenshot (bullet/task marker-text separation retune) | lists-and-tasks, mixed-inline | `logs/probes/lists-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z`, `logs/probes/mixed-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z` |
+| 2026-02-28 | Spacing bump + checkbox checkmark centering + vertical nested connector lines | lists-and-tasks, mixed-inline, nested-guides | `logs/probes/lists-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z`, `logs/probes/mixed-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z`, `logs/probes/nested-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z` |
 
 ## How To Extend History
 

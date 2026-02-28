@@ -16,6 +16,7 @@ npm run probe:live-v4 -- --fixture lists-and-tasks --output-dir logs/probes/<run
 npm run probe:live-v4 -- --fixture mixed-inline --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture default-welcome --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture empty-markers --output-dir logs/probes/<run-label>
+npm run probe:live-v4 -- --fixture nested-guides --output-dir logs/probes/<run-label>
 ```
 
 3. Inspect `report.json` first:

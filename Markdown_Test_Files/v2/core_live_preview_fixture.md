@@ -26,7 +26,7 @@ Paragraph with a [standard link](https://example.com), a [[Wiki Target]], and an
 - This is a bullet list.
   - This is a nested bullet.
     - This is a further nested bullet.
-   
+
 
 | Name | Value |
 | --- | --- |
