@@ -12,10 +12,10 @@ Companion docs:
 1. Starts the launcher in no-open mode (unless `--url` is provided).
 2. Opens a headless Chrome debugging session.
 3. Runs deterministic probe steps:
-   - fixture load (`default-welcome`, `lists-and-tasks`, `mixed-inline`, or `empty-markers`)
+   - fixture load (`default-welcome`, `lists-and-tasks`, `mixed-inline`, `empty-markers`, `nested-guides`, `single-bullet`, `single-nested-bullet`)
    - baseline snapshot
    - cursor placement by line/column
-   - list/task marker reveal checks (content column vs syntax column on top-level and nested items)
+   - list/task/ordered marker reveal checks (content column vs syntax column on top-level and nested items)
    - rendered click mapping and task-checkbox toggles (fixture dependent)
 4. Captures screenshots after each step.
 5. Collects structured state snapshots from `window.__MM_LIVE_V4_PROBE__`.
@@ -48,3 +48,19 @@ Each run creates:
 
 The report includes assertions for pointer activation and source-fragment mapping, plus per-step snapshots to compare visual/cursor behavior over time.
 Snapshots include source lines, DOM lines, gutter lines, widget bounds, typography metrics, and per-line content/prefix rects for list-indent regression triage.
+
+## Numbered/Task Cursor Verification
+
+For numbered and checkbox lines, use `lists-and-tasks` plus the single-line fixtures:
+
+```bash
+npm run probe:live-v4 -- --fixture lists-and-tasks
+npm run probe:live-v4 -- --fixture single-bullet
+npm run probe:live-v4 -- --fixture single-nested-bullet
+```
+
+Expected behavior:
+
+1. Cursor remains visible while traversing list/task/ordered syntax.
+2. Cursor can access visible marker characters (for example `-`, `1.`, `[ ]`) directly.
+3. Hidden-only ranges are skipped without introducing mid-syntax cursor loss.

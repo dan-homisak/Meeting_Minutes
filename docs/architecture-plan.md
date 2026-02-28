@@ -22,7 +22,7 @@
 - `src/live-v4/model/LiveDocModel.js`: canonical data contract.
 - `src/live-v4/InteractionMap.js`: deterministic click-to-source mapping.
 - `src/live-v4/PointerController.js`: pointer activation, task toggle, modifier-link behavior.
-- `src/live-v4/CursorController.js`: vertical cursor policy.
+- `src/live-v4/CursorController.js`: vertical + horizontal cursor policy and list indent/outdent controls.
 
 ## Source-Transform Strategy (Current Path)
 
@@ -31,6 +31,18 @@
 - For single-line syntax-sensitive blocks (`heading`, `list`, `task`, `blockquote`), keep the line in source and apply syntax transforms via marks/widgets.
 - Hide syntax markers when cursor is outside marker ranges; reveal marker source only when cursor enters marker syntax.
 - Use marker-width-aware inline prefix widgets to keep horizontal geometry stable across hidden/visible marker transitions.
+
+## List Syntax Cursor Policy (Current)
+
+This is the active behavior contract for list-like lines in live view:
+
+1. Bullet, task/checkbox, and ordered list syntax must be directly reachable by cursor.
+2. Horizontal movement should remain native inside visible syntax characters.
+3. Controller-assisted movement is only used to skip hidden ranges:
+- hidden indentation (guide columns)
+- hidden marker trailing spacing before content
+4. Cursor must not become invisible due to landing in hidden marker ranges.
+5. `Tab` / `Shift-Tab` / `Backspace` in the marker/guide zone perform list indent/outdent.
 
 ## Non-Negotiable Runtime Contracts
 
@@ -45,5 +57,8 @@
 1. `npm test`
 2. `npm run build`
 3. `npm run probe:live-v4 -- --fixture lists-and-tasks`
+4. For cursor/list-marker changes, also run:
+`npm run probe:live-v4 -- --fixture single-bullet`
+`npm run probe:live-v4 -- --fixture single-nested-bullet`
 
 Probe output is the visual/interaction source of truth for regression triage.

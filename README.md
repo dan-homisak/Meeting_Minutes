@@ -28,7 +28,7 @@ Key modules:
 - `src/live-v4/LiveProjection.js`: active block selection, virtualization, render budgeting.
 - `src/live-v4/InteractionMap.js`: deterministic source interaction mapping.
 - `src/live-v4/PointerController.js`: pointer activation, task toggle, modifier-link open.
-- `src/live-v4/CursorController.js`: vertical cursor movement.
+- `src/live-v4/CursorController.js`: vertical/horizontal cursor movement + list indent/outdent controls.
 
 Operational docs:
 
@@ -70,6 +70,15 @@ npm run probe:live-v4
 ```
 
 See `docs/live-v4-probe.md` for flags and artifact details.
+
+## Current List Cursor Strategy
+
+This repository currently uses a "visible-syntax first" cursor policy for list lines:
+
+1. Bullet, checkbox/task, and numbered list syntax is cursor-accessible character-by-character.
+2. Custom horizontal handling only skips hidden ranges (hidden indentation guides and hidden marker trailing gaps).
+3. Cursor never intentionally lands inside hidden syntax ranges.
+4. `Tab` / `Shift-Tab` / `Backspace` in guide/marker zone adjust list nesting (indent/outdent).
 
 ## Build
 

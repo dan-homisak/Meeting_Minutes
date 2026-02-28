@@ -34,12 +34,21 @@ Every visual/runtime change must run these fixtures:
 - Deep nested list indentation/connector-line continuity.
 - Required screenshot steps: `01-baseline`, indentation cursor steps (`cursor-line-4-col-1-indent`, `cursor-line-4-col-2-indent`, `cursor-line-5-col-3-indent`), and left-arrow regression steps (`arrow-left-line-4-pretext`, `arrow-left-line-4-pretext-second`).
 
+6. `single-bullet`
+- Minimal top-level bullet marker traversal regression.
+- Required screenshot steps: `01-baseline`, `02-cursor-line-3-col-2-pretext`, `03-arrow-left-line-3-pretext`, `04-arrow-left-line-3-pretext-second`.
+
+7. `single-nested-bullet`
+- Minimal nested bullet marker traversal and hidden-indent boundary regression.
+- Required screenshot steps: `01-baseline`, `02-cursor-line-3-col-4-pretext`, `03-arrow-left-line-3-pretext`, `04-arrow-left-line-3-pretext-second`.
+
 ## Required Gates
 
 1. `npm test -- --runInBand`
 2. `npm run build`
 3. Probe runs for `default-welcome`, `lists-and-tasks`, and `mixed-inline` with explicit output dirs.
 4. Probe runs for `empty-markers` and `nested-guides` with explicit output dirs when list behavior or spacing changes.
+5. Probe runs for `single-bullet` and `single-nested-bullet` when cursor/list marker behavior changes.
 
 ## Run History
 
@@ -59,6 +68,8 @@ Every visual/runtime change must run these fixtures:
 | 2026-02-28 | Reverted full-marker reveal regression (no extra left padding spaces), kept only marker-core reveal, added guide-zone Tab/Shift-Tab/Backspace indent controls, and stabilized probe cleanup retries | lists-and-tasks, nested-guides | `logs/probes/live-v4-probe-2026-02-28T22-45-35-630Z`, `logs/probes/live-v4-probe-2026-02-28T22-43-42-093Z` |
 | 2026-02-28 | Verification rerun after renderer/cursor revert: nested-guides + lists-and-tasks probes regenerated with same fixture matrix | lists-and-tasks, nested-guides | `logs/probes/live-v4-probe-2026-02-28T22-49-31-382Z`, `logs/probes/live-v4-probe-2026-02-28T22-49-23-189Z` |
 | 2026-02-28 | Cursor-boundary simplification for nested lists: use visible marker anchor on indented lines and add left-arrow regression probe steps | nested-guides | `logs/probes/live-v4-probe-2026-02-28T23-06-02-516Z`, `logs/probes/live-v4-probe-2026-02-28T23-04-19-891Z` |
+| 2026-02-28 | Added minimal single-line cursor fixtures for top-level and nested bullets to isolate marker-boundary regressions | single-bullet, single-nested-bullet | `logs/probes/live-v4-probe-2026-02-28T23-17-08-922Z`, `logs/probes/live-v4-probe-2026-02-28T23-17-42-632Z` |
+| 2026-02-28 | Numbered/task cursor accessibility reset: restore marker-syntax reachability while only skipping hidden ranges (indent/trailing-gap) | lists-and-tasks, single-bullet, single-nested-bullet | `logs/probes/live-v4-probe-2026-02-28T23-34-53-916Z`, `logs/probes/live-v4-probe-2026-02-28T23-23-31-616Z`, `logs/probes/live-v4-probe-2026-02-28T23-23-45-719Z` |
 
 ## How To Extend History
 

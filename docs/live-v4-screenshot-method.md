@@ -17,6 +17,8 @@ npm run probe:live-v4 -- --fixture mixed-inline --output-dir logs/probes/<run-la
 npm run probe:live-v4 -- --fixture default-welcome --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture empty-markers --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture nested-guides --output-dir logs/probes/<run-label>
+npm run probe:live-v4 -- --fixture single-bullet --output-dir logs/probes/<run-label>
+npm run probe:live-v4 -- --fixture single-nested-bullet --output-dir logs/probes/<run-label>
 ```
 
 3. Inspect `report.json` first:
@@ -50,7 +52,8 @@ Important:
 5. Task toggle correctness:
 - source lines switch `[ ]` <-> `[x]` at expected `sourceFrom`.
 6. Horizontal marker-gap traversal:
-- `arrow-right-*` and `arrow-left-*` steps must move across marker trailing space in one keypress.
+- `arrow-right-*` and `arrow-left-*` steps must skip hidden marker trailing space in one keypress.
+- inside visible marker syntax, movement should remain character-accessible (no forced skip over visible `-`, `1.`, or `[ ]` characters).
 
 ## Acceptance Heuristics
 
@@ -58,6 +61,7 @@ Important:
 - No disappearing gutter numbers during cursor movement.
 - Checkbox and text baseline should stay visually centered.
 - Top-level and nested list depth must remain deterministic from source indentation.
+- Task and ordered marker syntax must remain cursor-accessible and visible when selected.
 
 ## Artifact Conventions
 
