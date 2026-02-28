@@ -4,9 +4,15 @@ import { indentWithTab } from '@codemirror/commands';
 import { markdown, insertNewlineContinueMarkup } from '@codemirror/lang-markdown';
 import { EditorView, keymap } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
+import { highlightSelectionMatches } from '@codemirror/search';
 
 export const DEFAULT_EDITOR_DOC =
   '# Welcome\n\nChoose a folder and start editing markdown files.\n\nType `/` for quick markdown snippets.\n';
+
+const selectionMatchHighlighter = highlightSelectionMatches()[1];
+const sourceFirstBasicSetup = basicSetup.filter(
+  (extension) => !(Array.isArray(extension) && extension.includes(selectionMatchHighlighter))
+);
 
 export function createEditor({
   parent,
@@ -34,7 +40,7 @@ export function createEditor({
   const lineWrappingExtension = factories.lineWrappingExtension ?? EditorView.lineWrapping;
   const indentWithTabCommand = factories.indentWithTabCommand ?? indentWithTab;
   const insertNewlineCommand = factories.insertNewlineCommand ?? insertNewlineContinueMarkup;
-  const basicSetupExtension = factories.basicSetupExtension ?? basicSetup;
+  const basicSetupExtension = factories.basicSetupExtension ?? sourceFirstBasicSetup;
 
   const keyBindings = [
     indentWithTabCommand,

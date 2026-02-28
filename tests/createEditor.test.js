@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { highlightSelectionMatches } from '@codemirror/search';
 import { DEFAULT_EDITOR_DOC, createEditor } from '../src/bootstrap/createEditor.js';
 
 function createFactoryHarness() {
@@ -149,4 +150,28 @@ test('createEditor uses custom doc and arrow handlers return false without curso
   const arrowUpBinding = capture.keyBindings.find((binding) => binding.key === 'ArrowUp');
   assert.equal(arrowDownBinding.run({ id: 'view-1' }), false);
   assert.equal(arrowUpBinding.run({ id: 'view-2' }), false);
+});
+
+test('createEditor default setup excludes repeated-match selection highlighter', () => {
+  const { capture, factories } = createFactoryHarness();
+  delete factories.basicSetupExtension;
+  const selectionMatchHighlighter = highlightSelectionMatches()[1];
+
+  createEditor({
+    parent: { id: 'editor-parent' },
+    livePreviewStateField: { id: 'live-preview-field' },
+    livePreviewAtomicRanges: { id: 'atomic-ranges' },
+    livePreviewPointerHandlers: { id: 'pointer-handlers' },
+    slashCommandCompletion: { id: 'slash-completion' },
+    factories
+  });
+
+  const defaultSetup = capture.stateConfig.extensions[0];
+  assert.equal(Array.isArray(defaultSetup), true);
+  const includesSelectionMatchHighlighter = defaultSetup.some(
+    (extension) =>
+      extension === selectionMatchHighlighter ||
+      (Array.isArray(extension) && extension.includes(selectionMatchHighlighter))
+  );
+  assert.equal(includesSelectionMatchHighlighter, false);
 });
