@@ -142,6 +142,7 @@ Current checkpoint:
 
 - Completed: added interaction-flow E2E coverage for pointer click mapping in `tests/e2e/live-click-mapping.test.js` (source-first native mapping pass-through through editor pointer handlers).
 - Completed: added interaction-flow E2E coverage for root keydown vertical navigation in `tests/e2e/live-cursor-navigation.test.js` (diagnostics interception + source-map clamp behavior).
+- Completed: added interaction-flow E2E coverage for highlighting selection updates in `tests/e2e/live-highlighting-selection.test.js` (same-line selection skip + cross-line rebuild parity).
 - Completed: shifted controller regression imports to core selection modules (`tests/pointerActivationController.test.js`, `tests/cursorNavigationController.test.js`) to reduce compatibility-wrapper dependency in the test surface.
 - Completed: removed compatibility wrapper modules (`src/livePreviewCore.js`, `src/liveSourceRenderer.js`, `src/render/markdownRenderer.js`, `src/live/pointerActivationController.js`, `src/live/cursorNavigationController.js`) after moving all internal imports/tests to core modules.
 - Completed: removed runtime live-architecture override path (`liveSourceFirst` query/storage resolution) by hard-wiring app bootstrap to source-first mode and deleting `src/liveArchitecture.js`.
@@ -159,76 +160,93 @@ Current checkpoint:
 - Completed: reduced `src/core/selection/SelectionPolicy.js` export surface to runtime-consumed APIs only, internalizing test-only helpers while preserving behavior coverage through public controller-facing policy functions.
 - Completed: simplified `scripts/live-debug-report.mjs` to source-first runtime telemetry, removing stale rendered-era anomaly counters from the default log summary output.
 - Completed: updated live-debug verification/reporting to ignore the initial pointer-driven selection jump from document-start baseline (`head=0`) while keeping strict checks for subsequent unexpected jumps.
+- Completed: extracted shared live-debug log parsing/event helpers into `scripts/live-debug-log-utils.mjs` and wired both `live-debug-report` and `live-debug-verify` through the shared utility surface.
+- Completed: added direct script regression coverage in `tests/liveDebugScripts.test.js` for verify/report behavior (initial pointer-jump ignore gate + source-first anomaly summary output).
+- Completed: added a highlighting-safety verify guard for `plugin.update.selection-skipped` line mismatches (skipped updates where `previousSelectionLineFrom !== currentSelectionLineFrom`) to catch stale-decoration regressions.
+- Completed: refreshed the architecture plan module layout section to match current repo paths after Phase 6 removals/moves.
 
-## Target File/Module Layout
+## Current File/Module Layout
 
 ### Bootstrap and app wiring
 
 - `src/main.js`
-- `src/bootstrap/createAppShellContext.js`
-- `src/bootstrap/createAppControllers.js`
-- `src/bootstrap/createLiveControllers.js`
-- `src/bootstrap/createLiveRuntimeHelpers.js`
-- `src/bootstrap/createLiveDebugBootstrap.js`
-- `src/bootstrap/createTelemetryBootstrap.js`
-- `src/bootstrap/createEditorDocumentAdapter.js`
-- `src/bootstrap/createLiveEditorExtensions.js`
-- `src/bootstrap/createLiveControllerOptions.js`
-- `src/bootstrap/liveConstants.js`
 - `src/bootstrap/createApp.js`
+- `src/bootstrap/createAppControllers.js`
+- `src/bootstrap/createAppShellContext.js`
 - `src/bootstrap/createEditor.js`
+- `src/bootstrap/createEditorDocumentAdapter.js`
 - `src/bootstrap/createExtensions.js`
+- `src/bootstrap/createLiveControllerOptions.js`
+- `src/bootstrap/createLiveControllers.js`
+- `src/bootstrap/createLiveDebugBootstrap.js`
+- `src/bootstrap/createLiveEditorExtensions.js`
+- `src/bootstrap/createLiveRuntimeHelpers.js`
+- `src/bootstrap/createTelemetryBootstrap.js`
+- `src/bootstrap/liveConstants.js`
 - `src/bootstrap/startAppLifecycle.js`
 
-### Core document/model/parser
+### Core document/model/parser/mapping
 
 - `src/core/document/DocumentSession.js`
 - `src/core/document/TransactionClassifier.js`
-- `src/core/model/DocModel.js`
 - `src/core/model/BlockNode.js`
+- `src/core/model/DocModel.js`
 - `src/core/model/ModelDiff.js`
-- `src/core/parser/IncrementalMarkdownParser.js`
-- `src/core/parser/BlockRangeCollector.js`
 - `src/core/parser/BlockGraphBuilder.js`
+- `src/core/parser/BlockRangeCollector.js`
+- `src/core/parser/IncrementalMarkdownParser.js`
 - `src/core/parser/InlineSpanBuilder.js`
-- `src/core/parser/FenceStateTracker.js`
-
-### Rendering, mapping, selection, viewport
-
-- `src/core/render/MarkdownRenderer.js`
-- `src/core/render/LiveHybridRenderer.js`
-- `src/core/render/LiveBlockHelpers.js`
-- `src/core/render/LiveBlockIndex.js`
-- `src/core/render/LiveSourceRenderer.js`
-- `src/core/render/PreviewRenderer.js`
 - `src/core/mapping/SourceMapIndex.js`
 - `src/core/mapping/SourceRangeMapper.js`
-- `src/core/mapping/DomSourceMap.js`
-- `src/core/mapping/CoordinateMapper.js`
+
+### Core rendering and selection
+
+- `src/core/render/LiveBlockHelpers.js`
+- `src/core/render/LiveBlockIndex.js`
+- `src/core/render/LiveHybridRenderer.js`
+- `src/core/render/LiveSourceRenderer.js`
+- `src/core/render/MarkdownRenderer.js`
+- `src/core/render/PreviewRenderer.js`
 - `src/core/selection/ActivationController.js`
 - `src/core/selection/CursorNavigator.js`
 - `src/core/selection/LiveActivationHelpers.js`
 - `src/core/selection/SelectionPolicy.js`
-- `src/core/layout/LineMetricsStore.js`
-- `src/core/layout/ScrollInvariantController.js`
+
+### Live runtime and diagnostics
+
+- `src/live/cursorVisibilityController.js`
+- `src/live/editorUpdateController.js`
+- `src/live/liveDiagnosticsController.js`
+- `src/live/liveDiagnosticsLogHelpers.js`
+- `src/live/liveLineMappingHelpers.js`
+- `src/live/livePreviewBridge.js`
+- `src/live/livePreviewController.js`
+- `src/live/liveSnapshotController.js`
+- `src/live/liveViewportProbe.js`
+- `src/live/logString.js`
+- `src/live/pointerInputHelpers.js`
+- `src/live/selectionDiagnosticsController.js`
+- `src/liveDebugLogger.js`
+- `src/markdownConfig.js`
 
 ### Workspace, UI, telemetry
 
-- `src/workspace/WorkspaceStore.js`
-- `src/workspace/FileSystemGateway.js`
-- `src/workspace/AutosaveController.js`
-- `src/ui/ModeController.js`
-- `src/ui/FileListController.js`
-- `src/ui/StatusController.js`
-- `src/ui/ThemeController.js`
-- `src/telemetry/LiveTelemetry.js`
-- `src/telemetry/TelemetryEvents.js`
-- `src/telemetry/DebugPanelController.js`
+- `src/workspace/fileSystem.js`
+- `src/workspace/workspaceController.js`
+- `src/workspace/workspaceDb.js`
+- `src/ui/modeController.js`
+- `src/ui/themeController.js`
+- `src/ui/workspaceView.js`
+- `src/telemetry/launcherBridge.js`
+- `src/telemetry/liveDebugPanelController.js`
 
-### Tests
+### Representative tests
 
-- `tests/unit/parser/IncrementalMarkdownParser.test.js`
-- `tests/unit/mapping/SourceMapIndex.test.js`
-- `tests/unit/selection/ActivationController.test.js`
+- `tests/incrementalMarkdownParser.test.js`
+- `tests/sourceMapIndex.test.js`
+- `tests/pointerActivationController.test.js`
+- `tests/cursorNavigationController.test.js`
 - `tests/e2e/live-click-mapping.test.js`
 - `tests/e2e/live-cursor-navigation.test.js`
+- `tests/e2e/live-highlighting-selection.test.js`
+- `tests/liveDebugScripts.test.js`

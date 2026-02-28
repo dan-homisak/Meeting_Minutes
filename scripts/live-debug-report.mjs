@@ -1,6 +1,13 @@
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import {
+  findLatestLogFile,
+  isInitialPointerSelectionJump,
+  parseJsonLines,
+  readEventData,
+  readEventName
+} from './live-debug-log-utils.mjs';
 
 const projectRoot = process.cwd();
 const logsDir = path.join(projectRoot, 'logs');
@@ -37,67 +44,6 @@ function parseCliArguments(argv) {
 
 const { maxLines, explicitFileArg } = parseCliArguments(process.argv);
 
-function readEventName(record) {
-  if (typeof record?.entry?.event === 'string') {
-    return record.entry.event;
-  }
-  if (typeof record?.event === 'string') {
-    return record.event;
-  }
-  return 'unknown';
-}
-
-function readEventData(record) {
-  if (record && typeof record === 'object' && record.entry && typeof record.entry.data === 'object') {
-    return record.entry.data;
-  }
-  return {};
-}
-
-function parseJsonLines(content) {
-  return content
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean);
-}
-
-async function findLatestLogFile() {
-  let entries;
-  try {
-    entries = await readdir(logsDir);
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      return null;
-    }
-    throw error;
-  }
-
-  const candidatePaths = entries
-    .filter((name) => name.startsWith('live-debug-') && name.endsWith('.jsonl'))
-    .map((name) => path.join(logsDir, name));
-  if (candidatePaths.length === 0) {
-    return null;
-  }
-
-  const withStats = await Promise.all(
-    candidatePaths.map(async (filePath) => ({
-      filePath,
-      stats: await stat(filePath)
-    }))
-  );
-
-  withStats.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
-  return withStats[0].filePath;
-}
-
 function summarizeTopEvents(records) {
   const counts = new Map();
   for (const record of records) {
@@ -107,27 +53,13 @@ function summarizeTopEvents(records) {
   return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12);
 }
 
-function isInitialPointerSelectionJump(data) {
-  if (!data || typeof data !== 'object') {
-    return false;
-  }
-
-  return (
-    data.recentInputKind === 'pointer' &&
-    Number.isFinite(data.previousHead) &&
-    data.previousHead === 0 &&
-    Number.isFinite(data.previousLineNumber) &&
-    data.previousLineNumber === 1 &&
-    Number.isFinite(data.currentHead) &&
-    data.currentHead > 0
-  );
-}
-
 function summarizeAnomalies(records) {
   const summary = {
     selectionJumpDetected: 0,
     selectionJumpIgnoredInitialPointer: 0,
     selectionJumpSuppressed: 0,
+    selectionSkippedUpdateCount: 0,
+    selectionSkipLineMismatch: 0,
     slowDecorations: 0,
     longTasks: 0,
     blockActivateMiss: 0,
@@ -181,6 +113,19 @@ function summarizeAnomalies(records) {
 
     if (eventName === 'selection.jump.suppressed') {
       summary.selectionJumpSuppressed += 1;
+    }
+
+    if (eventName === 'plugin.update.selection-skipped') {
+      summary.selectionSkippedUpdateCount += 1;
+      const previousSelectionLineFrom = data.previousSelectionLineFrom;
+      const currentSelectionLineFrom = data.currentSelectionLineFrom;
+      if (
+        Number.isFinite(previousSelectionLineFrom) &&
+        Number.isFinite(currentSelectionLineFrom) &&
+        previousSelectionLineFrom !== currentSelectionLineFrom
+      ) {
+        summary.selectionSkipLineMismatch += 1;
+      }
     }
 
     if (eventName === 'decorations.slow') {
@@ -431,7 +376,7 @@ async function main() {
       : path.join(projectRoot, explicitFileArg);
   } else {
     try {
-      logFilePath = await findLatestLogFile();
+      logFilePath = await findLatestLogFile(logsDir);
     } catch (error) {
       console.error('Could not read logs directory:', error instanceof Error ? error.message : String(error));
       process.exit(1);
@@ -464,6 +409,10 @@ async function main() {
     `- selection.jump.detected (ignored initial pointer jump): ${anomalies.selectionJumpIgnoredInitialPointer}`
   );
   console.log(`- selection.jump.suppressed: ${anomalies.selectionJumpSuppressed}`);
+  console.log(`- plugin.update.selection-skipped: ${anomalies.selectionSkippedUpdateCount}`);
+  console.log(
+    `- plugin.update.selection-skipped (line mismatch): ${anomalies.selectionSkipLineMismatch}`
+  );
   console.log(`- decorations.slow: ${anomalies.slowDecorations}`);
   console.log(`- perf.longtask: ${anomalies.longTasks}`);
   console.log(`- block.activate.miss: ${anomalies.blockActivateMiss}`);

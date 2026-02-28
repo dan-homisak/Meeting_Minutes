@@ -1,6 +1,13 @@
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import {
+  findLatestLogFile,
+  isInitialPointerSelectionJump,
+  parseJsonLines,
+  readEventData,
+  readEventName
+} from './live-debug-log-utils.mjs';
 
 const projectRoot = process.cwd();
 const logsDir = path.join(projectRoot, 'logs');
@@ -9,6 +16,7 @@ function parseCliArguments(argv) {
   const args = {
     explicitFileArg: null,
     maxSelectionJumps: 0,
+    maxSelectionSkipLineMismatches: 0,
     maxCursorSuspects: 0,
     maxGutterHidden: 0,
     maxPointerClamped: 0,
@@ -20,6 +28,11 @@ function parseCliArguments(argv) {
     const nextValue = Number(argv[index + 1]);
     if (arg === '--max-selection-jumps' && Number.isInteger(nextValue)) {
       args.maxSelectionJumps = Math.max(0, nextValue);
+      index += 1;
+      continue;
+    }
+    if (arg === '--max-selection-skip-line-mismatches' && Number.isInteger(nextValue)) {
+      args.maxSelectionSkipLineMismatches = Math.max(0, nextValue);
       index += 1;
       continue;
     }
@@ -52,74 +65,11 @@ function parseCliArguments(argv) {
   return args;
 }
 
-async function findLatestLogFile() {
-  let entries;
-  try {
-    entries = await readdir(logsDir);
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      return null;
-    }
-    throw error;
-  }
-
-  const candidatePaths = entries
-    .filter((name) => name.startsWith('live-debug-') && name.endsWith('.jsonl'))
-    .map((name) => path.join(logsDir, name));
-
-  if (candidatePaths.length === 0) {
-    return null;
-  }
-
-  const withStats = await Promise.all(
-    candidatePaths.map(async (filePath) => ({
-      filePath,
-      stats: await stat(filePath)
-    }))
-  );
-  withStats.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
-  return withStats[0].filePath;
-}
-
-function parseJsonLines(content) {
-  return content
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean);
-}
-
-function isInitialPointerSelectionJump(data) {
-  if (!data || typeof data !== 'object') {
-    return false;
-  }
-
-  const previousHead = data.previousHead;
-  const currentHead = data.currentHead;
-  const previousLineNumber = data.previousLineNumber;
-  const recentInputKind = data.recentInputKind;
-  return (
-    recentInputKind === 'pointer' &&
-    Number.isFinite(previousHead) &&
-    previousHead === 0 &&
-    Number.isFinite(previousLineNumber) &&
-    previousLineNumber === 1 &&
-    Number.isFinite(currentHead) &&
-    currentHead > 0
-  );
-}
-
 function countKeyEvents(records) {
   const summary = {
     selectionJumpDetected: 0,
     selectionJumpIgnoredInitialPointer: 0,
+    selectionSkipLineMismatch: 0,
     cursorVisibilitySuspect: 0,
     gutterVisibilityHidden: 0,
     pointerMapNative: 0,
@@ -129,19 +79,25 @@ function countKeyEvents(records) {
   };
 
   for (const record of records) {
-    const eventName =
-      typeof record?.entry?.event === 'string'
-        ? record.entry.event
-        : typeof record?.event === 'string'
-          ? record.event
-          : '';
-    const data = record?.entry?.data ?? {};
+    const eventName = readEventName(record);
+    const data = readEventData(record);
 
     if (eventName === 'selection.jump.detected') {
       if (isInitialPointerSelectionJump(data)) {
         summary.selectionJumpIgnoredInitialPointer += 1;
       } else {
         summary.selectionJumpDetected += 1;
+      }
+    }
+    if (eventName === 'plugin.update.selection-skipped') {
+      const previousSelectionLineFrom = data.previousSelectionLineFrom;
+      const currentSelectionLineFrom = data.currentSelectionLineFrom;
+      if (
+        Number.isFinite(previousSelectionLineFrom) &&
+        Number.isFinite(currentSelectionLineFrom) &&
+        previousSelectionLineFrom !== currentSelectionLineFrom
+      ) {
+        summary.selectionSkipLineMismatch += 1;
       }
     }
     if (eventName === 'cursor.visibility.suspect') {
@@ -173,7 +129,7 @@ async function main() {
     ? (path.isAbsolute(options.explicitFileArg)
       ? options.explicitFileArg
       : path.join(projectRoot, options.explicitFileArg))
-    : await findLatestLogFile();
+    : await findLatestLogFile(logsDir);
 
   if (!logFilePath) {
     console.error('No live debug log found. Run `npm run launch` and reproduce first.');
@@ -190,6 +146,9 @@ async function main() {
   console.log(
     `- selection.jump.detected (ignored initial pointer jump): ${summary.selectionJumpIgnoredInitialPointer}`
   );
+  console.log(
+    `- plugin.update.selection-skipped (line mismatch): ${summary.selectionSkipLineMismatch}`
+  );
   console.log(`- cursor.visibility.suspect: ${summary.cursorVisibilitySuspect}`);
   console.log(`- gutter.visibility.hidden: ${summary.gutterVisibilityHidden}`);
   console.log(`- pointer.map.native: ${summary.pointerMapNative}`);
@@ -201,6 +160,11 @@ async function main() {
   if (summary.selectionJumpDetected > options.maxSelectionJumps) {
     failures.push(
       `selection.jump.detected (${summary.selectionJumpDetected}) > max (${options.maxSelectionJumps})`
+    );
+  }
+  if (summary.selectionSkipLineMismatch > options.maxSelectionSkipLineMismatches) {
+    failures.push(
+      `plugin.update.selection-skipped line mismatch (${summary.selectionSkipLineMismatch}) > max (${options.maxSelectionSkipLineMismatches})`
     );
   }
   if (summary.cursorVisibilitySuspect > options.maxCursorSuspects) {

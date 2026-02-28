@@ -74,7 +74,7 @@ npm run logs:verify
 Useful overrides:
 
 ```bash
-npm run logs:verify -- --max-selection-jumps 0 --max-cursor-suspects 0 --max-gutter-hidden 0 --min-pointer-native 1
+npm run logs:verify -- --max-selection-jumps 0 --max-selection-skip-line-mismatches 0 --max-cursor-suspects 0 --max-gutter-hidden 0 --min-pointer-native 1
 ```
 
 ## Repeatable Iteration Loop
@@ -100,9 +100,15 @@ Core live-preview helper regressions are covered by:
 - `tests/liveBlockHelpers.test.js` (line-overlap and fenced-block detection helpers)
 - `tests/liveActivationHelpers.test.js` (block lookup and activation-bound resolution helpers)
 - `tests/liveBlockIndex.test.js` (block type classification and index lookup)
+- `tests/e2e/live-highlighting-selection.test.js` (same-line selection skip vs cross-line decoration rebuild behavior)
 
 `tests/liveDebugLogger.test.js` covers:
 
 - debug-level resolution and aliases
 - level filtering behavior
 - timeline bounding and subscriptions
+
+`tests/liveDebugScripts.test.js` covers:
+
+- verify/report handling of the initial pointer-driven jump from document start
+- verify guard for `plugin.update.selection-skipped` line mismatch anomalies
