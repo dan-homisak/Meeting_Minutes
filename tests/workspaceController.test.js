@@ -182,3 +182,149 @@ test('pickFolder warns when directory picker is unavailable', async () => {
     asError: true
   });
 });
+
+test('scheduleAutosave replaces pending timer and writes current file on timeout', async () => {
+  const timerCallbacks = new Map();
+  let nextTimerId = 1;
+  const cleared = [];
+
+  let writtenText = null;
+  let writableClosed = false;
+  const currentFileHandle = {
+    async createWritable() {
+      return {
+        async write(value) {
+          writtenText = value;
+        },
+        async close() {
+          writableClosed = true;
+        }
+      };
+    }
+  };
+
+  const { app, controller, statusCalls } = createBaseHarness({
+    app: {
+      currentFileHandle,
+      currentPath: 'notes/autosave.md',
+      hasUnsavedChanges: true,
+      autosaveTimer: 7
+    },
+    windowObject: {
+      setTimeout(callback) {
+        const timerId = nextTimerId;
+        nextTimerId += 1;
+        timerCallbacks.set(timerId, callback);
+        return timerId;
+      },
+      clearTimeout(timerId) {
+        cleared.push(timerId);
+      },
+      prompt() {
+        return null;
+      }
+    },
+    getEditorText: () => 'autosave body',
+    ensureReadWritePermission: async () => true,
+    updateActionButtons: () => {}
+  });
+
+  controller.scheduleAutosave();
+  assert.deepEqual(cleared, [7]);
+  assert.equal(typeof app.autosaveTimer, 'number');
+  const callback = timerCallbacks.get(app.autosaveTimer);
+  assert.equal(typeof callback, 'function');
+
+  callback();
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(writtenText, 'autosave body');
+  assert.equal(writableClosed, true);
+  assert.equal(app.hasUnsavedChanges, false);
+  assert.deepEqual(statusCalls.at(-1), {
+    message: 'Saved notes/autosave.md',
+    asError: false
+  });
+});
+
+test('restoreWorkspaceState loads granted folder and preferred file path', async () => {
+  const handleAlpha = {
+    async getFile() {
+      return {
+        size: 8,
+        async text() {
+          return '# Alpha\n';
+        }
+      };
+    }
+  };
+  const handleBeta = {
+    async getFile() {
+      return {
+        size: 7,
+        async text() {
+          return '# Beta\n';
+        }
+      };
+    }
+  };
+
+  let editorTextSet = null;
+  const { app, controller, statusCalls } = createBaseHarness({
+    app: {
+      viewMode: 'raw'
+    },
+    readWorkspaceFromDb: async () => ({
+      folderHandle: {
+        name: 'vault',
+        async queryPermission() {
+          return 'granted';
+        }
+      },
+      currentPath: 'notes/beta.md'
+    }),
+    walkDirectory: async () => new Map([
+      ['notes/alpha.md', handleAlpha],
+      ['notes/beta.md', handleBeta]
+    ]),
+    setEditorText: (value) => {
+      editorTextSet = value;
+    },
+    liveDebug: { info() {} }
+  });
+
+  await controller.restoreWorkspaceState();
+
+  assert.equal(app.folderHandle.name, 'vault');
+  assert.equal(app.currentPath, 'notes/beta.md');
+  assert.equal(app.currentFileHandle, handleBeta);
+  assert.equal(editorTextSet, '# Beta\n');
+  assert.deepEqual(statusCalls.at(-1), {
+    message: 'Restored folder "vault".',
+    asError: false
+  });
+});
+
+test('restoreWorkspaceState prompts re-open when persisted folder permission is not granted', async () => {
+  const { app, controller, statusCalls } = createBaseHarness({
+    app: {
+      currentPath: 'existing/path.md'
+    },
+    readWorkspaceFromDb: async () => ({
+      folderHandle: {
+        name: 'vault',
+        async queryPermission() {
+          return 'prompt';
+        }
+      },
+      currentPath: 'notes/demo.md'
+    })
+  });
+
+  await controller.restoreWorkspaceState();
+
+  assert.equal(app.currentPath, 'existing/path.md');
+  assert.deepEqual(statusCalls.at(-1), {
+    message: 'Re-open your folder to continue editing local markdown files.',
+    asError: false
+  });
+});
