@@ -44,12 +44,9 @@ function normalizeAttrs(attrs) {
   return { ...attrs };
 }
 
-function readDepth(blockType, attrs = {}) {
+function readDepth(attrs = {}) {
   if (Number.isFinite(attrs.depth)) {
     return Math.max(0, Math.trunc(attrs.depth));
-  }
-  if (blockType === 'heading' && Number.isFinite(attrs.level)) {
-    return Math.max(1, Math.trunc(attrs.level));
   }
   return null;
 }
@@ -107,7 +104,7 @@ export function createLiveDocModel({
         to,
         lineFrom,
         lineTo,
-        depth: readDepth(type, attrs),
+        depth: readDepth(attrs),
         attrs
       };
     })

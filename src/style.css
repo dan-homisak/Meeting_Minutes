@@ -15,6 +15,9 @@
   --code-background: #f3f5f8;
   --code-border: #d8e0ec;
   --blockquote-border: #ced7e6;
+  --list-indent-base: 0.42rem;
+  --list-indent-step: 1rem;
+  --list-content-gap: 0.18rem;
   --selection-background: rgba(63, 111, 217, 0.2);
   --cursor-color: #111827;
   --font-ui: 'Inter', 'Avenir Next', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -332,9 +335,9 @@ button:disabled {
 }
 
 .mm-live-v4-source-heading {
-  font-size: 1.12em;
+  font-size: 1.06em;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .mm-live-v4-source-quote {
@@ -343,33 +346,118 @@ button:disabled {
   padding-left: 0.6rem;
 }
 
+.cm-line.mm-live-v4-source-list-line,
+.cm-line.mm-live-v4-source-task-line {
+  padding-left: var(--list-indent-base);
+}
+
+.cm-line.mm-live-v4-source-list-line[data-mm-list-depth="1"],
+.cm-line.mm-live-v4-source-task-line[data-mm-list-depth="1"] {
+  padding-left: calc(var(--list-indent-base) + var(--list-indent-step));
+}
+
+.cm-line.mm-live-v4-source-list-line[data-mm-list-depth="2"],
+.cm-line.mm-live-v4-source-task-line[data-mm-list-depth="2"] {
+  padding-left: calc(var(--list-indent-base) + (var(--list-indent-step) * 2));
+}
+
+.cm-line.mm-live-v4-source-list-line[data-mm-list-depth="3"],
+.cm-line.mm-live-v4-source-task-line[data-mm-list-depth="3"] {
+  padding-left: calc(var(--list-indent-base) + (var(--list-indent-step) * 3));
+}
+
+.cm-line.mm-live-v4-source-list-line[data-mm-list-depth="4"],
+.cm-line.mm-live-v4-source-task-line[data-mm-list-depth="4"] {
+  padding-left: calc(var(--list-indent-base) + (var(--list-indent-step) * 4));
+}
+
+.mm-live-v4-source-list,
+.mm-live-v4-source-task {
+  padding-left: var(--list-content-gap);
+}
+
 .mm-live-v4-inline-list-prefix,
 .mm-live-v4-inline-task-prefix,
 .mm-live-v4-inline-quote-prefix {
-  display: inline-flex;
+  display: inline-block;
+  box-sizing: border-box;
   font-family: var(--font-text);
   font-size: 1rem;
   line-height: 1.45;
-  margin-left: calc(var(--list-depth, 0) * 1.2rem);
-  margin-right: 0.35rem;
+  position: relative;
   vertical-align: baseline;
 }
 
 .mm-live-v4-inline-list-prefix {
   color: var(--text-muted);
-  min-width: 1.2ch;
 }
 
-.mm-live-v4-inline-task-prefix input[type="checkbox"] {
-  height: 0.95em;
-  margin: 0.18em 0 0;
-  width: 0.95em;
+.mm-live-v4-inline-prefix-sizer {
+  visibility: hidden;
+  white-space: pre;
+}
+
+.mm-live-v4-inline-prefix-display {
+  color: var(--text-muted);
+  inset: 0 auto auto 0;
+  position: absolute;
+  white-space: pre;
+}
+
+.mm-live-v4-inline-task-display {
+  align-items: center;
+  display: inline-flex;
+  inset: 0 auto auto 0;
+  position: absolute;
+  transform: translateX(-0.02rem);
+}
+
+.mm-live-v4-inline-task-prefix input[type="checkbox"],
+.mm-live-v4-block-widget .task-list-control input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--background-primary);
+  border: 1.5px solid var(--background-modifier-border-hover);
+  border-radius: 0.2em;
+  color: var(--interactive-accent-contrast);
+  display: inline-grid;
+  height: 0.88em;
+  line-height: 1;
+  margin: 0;
+  place-content: center;
+  position: relative;
+  width: 0.88em;
+}
+
+.mm-live-v4-inline-task-prefix input[type="checkbox"]::before,
+.mm-live-v4-block-widget .task-list-control input[type="checkbox"]::before {
+  border: solid currentColor;
+  border-width: 0 0.12em 0.12em 0;
+  content: '';
+  display: block;
+  height: 0.46em;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+  width: 0.24em;
+}
+
+.mm-live-v4-inline-task-prefix input[type="checkbox"]:checked,
+.mm-live-v4-block-widget .task-list-control input[type="checkbox"]:checked {
+  background: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+}
+
+.mm-live-v4-inline-task-prefix input[type="checkbox"]:checked::before,
+.mm-live-v4-block-widget .task-list-control input[type="checkbox"]:checked::before {
+  transform: rotate(45deg) scale(1);
 }
 
 .mm-live-v4-inline-quote-prefix {
   border-left: 3px solid var(--blockquote-border);
-  height: 1.1em;
+  height: 1em;
   margin-right: 0.5rem;
+  width: 0;
+  vertical-align: -0.08em;
 }
 
 .mm-live-v4-block-widget {

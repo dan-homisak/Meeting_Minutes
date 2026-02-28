@@ -9,6 +9,7 @@ This rewrite is a big-bang cut to a live-only runtime:
 - Single mode: live preview editing only.
 - New runtime pipeline in `src/live-v4/`.
 - Full-block inactive rendering with one active editable block.
+- Syntax-level source transforms for single-line heading/list/task/blockquote markers.
 - Deterministic source mapping via `data-src-*` and interaction map entries.
 - Legacy source/preview mode wiring removed from the runtime entry path.
 
@@ -28,6 +29,12 @@ Key modules:
 - `src/live-v4/InteractionMap.js`: deterministic source interaction mapping.
 - `src/live-v4/PointerController.js`: pointer activation, task toggle, modifier-link open.
 - `src/live-v4/CursorController.js`: vertical cursor movement.
+
+Operational docs:
+
+- `docs/architecture-plan.md`
+- `docs/live-view-troubleshooting.md`
+- `docs/live-v4-probe.md`
 
 ## Run
 

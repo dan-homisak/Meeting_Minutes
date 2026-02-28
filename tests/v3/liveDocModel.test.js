@@ -50,7 +50,7 @@ test('toLiveDocModel creates strict obsidian-core shape', () => {
   assert.equal(model.meta.dialect, 'obsidian-core');
   assert.equal(model.meta.parser, 'incremental');
   assert.equal(model.blocks.length, 2);
-  assert.equal(model.blocks[0].depth, 1);
+  assert.equal(model.blocks[0].depth, null);
   assert.equal(model.blocks[1].depth, 0);
   assert.equal(model.inlines.length, 1);
   assert.equal(model.inlines[0].type, 'emphasis');

@@ -1,14 +1,28 @@
-# Live-V3 Troubleshooting
+# Live-v4 Troubleshooting
 
-## Runtime Expectations
+## Primary Workflow
 
-1. Live mode is always active.
-2. One block is source-editable (active block).
-3. Other blocks are rendered widgets with `data-src-from` and `data-src-to`.
+Use the probe runner first, not manual debugging:
 
-## Debug Controls
+```bash
+npm run probe:live-v4 -- --fixture lists-and-tasks
+```
 
-Use browser devtools:
+Artifacts:
+
+- `logs/probes/live-v4-probe-<timestamp>/report.json`
+- `logs/probes/live-v4-probe-<timestamp>/important-events.json`
+- `logs/probes/live-v4-probe-<timestamp>/<step>.png`
+
+## What to Check in Each Probe Run
+
+1. Cursor mapping: step snapshots show `selection.head`, active block, and DOM cursor rect.
+2. Syntax reveal boundaries: `cursor-line-*-col-1-syntax` steps should reveal only marker syntax, not full-line markdown.
+3. List/task horizontal stability: compare `sourceContentRect.left` and `inlinePrefixRect` across content-vs-syntax steps.
+4. Gutter stability: `typography.gutters.visibleLineNumberCount` and `gutterLines` should remain stable through cursor steps.
+5. Task toggles: `click-task-source-*` steps should mutate markdown source deterministically.
+
+## Debug Console Controls
 
 ```js
 window.__meetingMinutesLiveDebug.setLevel('trace');
@@ -16,28 +30,14 @@ window.__meetingMinutesLiveDebug.entries();
 window.__meetingMinutesLiveDebug.clear();
 ```
 
-## Common Checks
-
-1. Pointer mapping
-- Confirm clicked widget DOM has `data-src-from` / `data-src-to`.
-- Confirm log event `live-v3.pointer.activate` appears with expected source position.
-
-2. Task toggles
-- Confirm checkbox carries `data-task-source-from`.
-- Confirm source line toggles `[ ]` <-> `[x]`.
-
-3. Cursor movement
-- Confirm `ArrowUp`/`ArrowDown` move line-by-line without jumps.
-
-4. Render budget
-- Confirm `live-v3.projection.built` logs `renderedBlockCount` within budget.
-
-## Regression Suite
-
-Run:
+## Fast Triage Commands
 
 ```bash
 npm test
+npm run build
+npm run probe:live-v4 -- --fixture default-welcome
+npm run probe:live-v4 -- --fixture lists-and-tasks
+npm run probe:live-v4 -- --fixture mixed-inline
 ```
 
-The parity-first suite is under `tests/v3/` and covers parser/model/projection/interaction/pointer/cursor/performance and legacy purge contracts.
+If parity regresses, use the latest probe `report.json` + screenshots as the bug report payload.

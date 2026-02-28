@@ -699,6 +699,42 @@ function buildListFixtureSteps() {
       column: 8
     },
     {
+      id: 'cursor-line-5-col-12',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 12
+    },
+    {
+      id: 'cursor-line-5-col-1-syntax',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 1
+    },
+    {
+      id: 'cursor-line-5-col-12-restore',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 12
+    },
+    {
+      id: 'cursor-line-8-col-12',
+      action: 'set-cursor',
+      lineNumber: 8,
+      column: 12
+    },
+    {
+      id: 'cursor-line-8-col-1-syntax',
+      action: 'set-cursor',
+      lineNumber: 8,
+      column: 1
+    },
+    {
+      id: 'cursor-line-8-col-12-restore',
+      action: 'set-cursor',
+      lineNumber: 8,
+      column: 12
+    },
+    {
       id: 'click-task-source-20',
       action: 'click-task-source',
       sourceFrom: 20

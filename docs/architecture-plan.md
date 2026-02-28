@@ -1,68 +1,49 @@
-# Live-V3 Architecture (Strict Obsidian-Style Cut)
+# Live-v4 Architecture (Obsidian-Style Live Preview)
 
 ## Scope
 
-- Live preview only runtime.
-- Core markdown parity only.
-- Light-theme visual parity focus.
-- No preview mode and no raw mode in runtime path.
+- Single runtime mode: live preview only.
+- Core markdown parity focus (headings, paragraph, emphasis, strong, strike, code, links, wikilinks, blockquotes, lists, tasks, tables, code fences, hr, frontmatter).
+- Light theme visual parity target.
+- No legacy preview/raw pipelines in runtime.
 
-## Canonical Contracts
+## Canonical Runtime Pipeline
 
-### `LiveDocModel`
+`source text -> parser/model -> projection -> CodeMirror decorations -> interaction map`
 
-- `version: number`
-- `text: string`
-- `blocks: LiveBlock[]`
-- `inlines: LiveInline[]`
-- `meta: { dialect: 'obsidian-core', parser: 'full' | 'incremental', reparsedFrom: number | null, reparsedTo: number | null }`
+## Key Runtime Modules
 
-### `LiveBlock`
+- `src/live-v4/createLiveApp.js`: app composition root and probe API.
+- `src/live-v4/LiveRuntime.js`: runtime assembly.
+- `src/live-v4/LiveStateField.js`: state-driven projection lifecycle.
+- `src/live-v4/LiveProjection.js`: active-block selection, virtualization, render budget.
+- `src/live-v4/LiveRenderer.js`: decoration builder (block widgets + source transforms).
+- `src/live-v4/parser/ObsidianCoreParser.js`: canonical markdown parse + stable block IDs.
+- `src/live-v4/model/LiveDocModel.js`: canonical data contract.
+- `src/live-v4/InteractionMap.js`: deterministic click-to-source mapping.
+- `src/live-v4/PointerController.js`: pointer activation, task toggle, modifier-link behavior.
+- `src/live-v4/CursorController.js`: vertical cursor policy.
 
-- `id: string`
-- `type: 'frontmatter' | 'heading' | 'paragraph' | 'blockquote' | 'list' | 'task' | 'table' | 'code' | 'hr'`
-- `from: number`
-- `to: number`
-- `lineFrom: number`
-- `lineTo: number`
-- `depth: number | null`
-- `attrs: Record<string, string | number | boolean>`
+## Source-Transform Strategy (Current Path)
 
-### `RenderProjection`
+- Keep exactly one editable active block.
+- Render inactive multiline regions as block widgets.
+- For single-line syntax-sensitive blocks (`heading`, `list`, `task`, `blockquote`), keep the line in source and apply syntax transforms via marks/widgets.
+- Hide syntax markers when cursor is outside marker ranges; reveal marker source only when cursor enters marker syntax.
+- Use marker-width-aware inline prefix widgets to keep horizontal geometry stable across hidden/visible marker transitions.
 
-- `activeBlockId: string | null`
-- `decorations: DecorationSet`
-- `interactionMap: InteractionMapEntry[]`
-- `metrics: { renderedBlockCount, virtualizedBlockCount, budgetTruncated, renderMs }`
-
-## Runtime Layout
-
-- `src/live-v3/createLiveApp.js`
-- `src/live-v3/LiveRuntime.js`
-- `src/live-v3/LiveStateField.js`
-- `src/live-v3/LiveRenderer.js`
-- `src/live-v3/LiveProjection.js`
-- `src/live-v3/InteractionMap.js`
-- `src/live-v3/PointerController.js`
-- `src/live-v3/CursorController.js`
-- `src/live-v3/parser/ObsidianCoreParser.js`
-- `src/live-v3/model/LiveDocModel.js`
-- `src/live-v3/model/ModelDiff.js`
-- `src/live-v3/render/BlockRenderer.js`
-- `src/live-v3/render/InlineRenderer.js`
-- `src/live-v3/render/WidgetFactory.js`
-
-## Non-Negotiable Behavior
+## Non-Negotiable Runtime Contracts
 
 1. Exactly one active editable block.
-2. Inactive blocks render as full block widgets.
-3. Pointer activation maps to deterministic source ranges.
-4. Task toggles mutate markdown source.
-5. Modifier-click opens links.
-6. Vertical cursor movement is deterministic and line-based.
+2. Deterministic pointer mapping from rendered DOM back to source positions.
+3. Cursor movement does not jump unexpectedly across rendered/source boundaries.
+4. Task toggles mutate markdown source (`[ ]` <-> `[x]`).
+5. No mode switching runtime path.
 
-## Current Acceptance Gates
+## Validation Gates
 
-1. `npm test` (v3 parity suite).
-2. `npm run build`.
-3. Legacy contract check via `npm run check:legacy-contracts`.
+1. `npm test`
+2. `npm run build`
+3. `npm run probe:live-v4 -- --fixture lists-and-tasks`
+
+Probe output is the visual/interaction source of truth for regression triage.

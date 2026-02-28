@@ -179,14 +179,27 @@ export function createLiveApp({
     }
 
     const allLines = [...view.dom.querySelectorAll('.cm-line')];
-    return allLines.slice(0, Math.max(1, Math.trunc(maxLines))).map((lineElement, index) => ({
-      index,
-      text: lineElement.innerText,
-      className: lineElement.className,
-      html: lineElement.innerHTML,
-      hasWidget: Boolean(lineElement.querySelector('.mm-live-v4-block-widget')),
-      rect: toSerializableRect(lineElement.getBoundingClientRect())
-    }));
+    return allLines.slice(0, Math.max(1, Math.trunc(maxLines))).map((lineElement, index) => {
+      const sourceContent = lineElement.querySelector('.mm-live-v4-source-content');
+      const inlinePrefix = lineElement.querySelector(
+        '.mm-live-v4-inline-list-prefix, .mm-live-v4-inline-task-prefix, .mm-live-v4-inline-quote-prefix'
+      );
+
+      return {
+        index,
+        text: lineElement.innerText,
+        className: lineElement.className,
+        html: lineElement.innerHTML,
+        hasWidget: Boolean(lineElement.querySelector('.mm-live-v4-block-widget')),
+        lineListDepth: lineElement.getAttribute('data-mm-list-depth'),
+        lineMarkerChars: lineElement.getAttribute('data-mm-marker-chars'),
+        sourceContentRect: toSerializableRect(sourceContent?.getBoundingClientRect?.() ?? null),
+        sourceContentText: sourceContent?.innerText ?? null,
+        inlinePrefixClass: inlinePrefix?.className ?? null,
+        inlinePrefixRect: toSerializableRect(inlinePrefix?.getBoundingClientRect?.() ?? null),
+        rect: toSerializableRect(lineElement.getBoundingClientRect())
+      };
+    });
   }
 
   function readProbeGutterLines(view, maxLines = 80) {

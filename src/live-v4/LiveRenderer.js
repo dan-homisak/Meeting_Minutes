@@ -73,25 +73,34 @@ function buildWidgetDecorations(state, renderedBlocks) {
 }
 
 class InlineListPrefixWidget extends WidgetType {
-  constructor({ markerLabel = '•', depth = 0 } = {}) {
+  constructor({ markerText = '', markerDisplayText = '' } = {}) {
     super();
-    this.markerLabel = markerLabel;
-    this.depth = Number.isFinite(depth) ? Math.max(0, Math.trunc(depth)) : 0;
+    this.markerText = typeof markerText === 'string' ? markerText : '';
+    this.markerDisplayText = typeof markerDisplayText === 'string' ? markerDisplayText : this.markerText;
   }
 
   eq(other) {
     return (
       other instanceof InlineListPrefixWidget &&
-      this.markerLabel === other.markerLabel &&
-      this.depth === other.depth
+      this.markerText === other.markerText &&
+      this.markerDisplayText === other.markerDisplayText
     );
   }
 
   toDOM() {
     const wrapper = document.createElement('span');
     wrapper.className = 'mm-live-v4-inline-list-prefix';
-    wrapper.textContent = this.markerLabel;
-    wrapper.style.setProperty('--list-depth', String(this.depth));
+
+    const sizer = document.createElement('span');
+    sizer.className = 'mm-live-v4-inline-prefix-sizer';
+    sizer.textContent = this.markerText;
+
+    const display = document.createElement('span');
+    display.className = 'mm-live-v4-inline-prefix-display';
+    display.textContent = this.markerDisplayText;
+
+    wrapper.appendChild(sizer);
+    wrapper.appendChild(display);
     return wrapper;
   }
 
@@ -101,11 +110,11 @@ class InlineListPrefixWidget extends WidgetType {
 }
 
 class InlineTaskPrefixWidget extends WidgetType {
-  constructor({ sourceFrom, checked = false, depth = 0 } = {}) {
+  constructor({ sourceFrom, checked = false, sizerText = '    ' } = {}) {
     super();
     this.sourceFrom = sourceFrom;
     this.checked = Boolean(checked);
-    this.depth = Number.isFinite(depth) ? Math.max(0, Math.trunc(depth)) : 0;
+    this.sizerText = typeof sizerText === 'string' && sizerText.length > 0 ? sizerText : '    ';
   }
 
   eq(other) {
@@ -113,21 +122,30 @@ class InlineTaskPrefixWidget extends WidgetType {
       other instanceof InlineTaskPrefixWidget &&
       this.sourceFrom === other.sourceFrom &&
       this.checked === other.checked &&
-      this.depth === other.depth
+      this.sizerText === other.sizerText
     );
   }
 
   toDOM() {
     const wrapper = document.createElement('span');
     wrapper.className = 'mm-live-v4-inline-task-prefix';
-    wrapper.style.setProperty('--list-depth', String(this.depth));
+
+    const sizer = document.createElement('span');
+    sizer.className = 'mm-live-v4-inline-prefix-sizer';
+    sizer.textContent = this.sizerText;
+
+    const display = document.createElement('span');
+    display.className = 'mm-live-v4-inline-task-display';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = this.checked;
     checkbox.setAttribute('data-task-source-from', String(this.sourceFrom));
 
-    wrapper.appendChild(checkbox);
+    display.appendChild(checkbox);
+
+    wrapper.appendChild(sizer);
+    wrapper.appendChild(display);
     return wrapper;
   }
 
@@ -155,6 +173,25 @@ function normalizeListMarker(marker) {
   return /^\d+\.$/.test(marker) ? marker : '•';
 }
 
+function toListMarkerDisplayText(markerText, listMarker) {
+  const text = typeof markerText === 'string' ? markerText : '';
+  if (!text) {
+    return '';
+  }
+
+  const markerLabel = normalizeListMarker(listMarker);
+  const match = text.match(/^(\s*)([-+*]|\d+\.)(\s+)$/);
+  if (!match) {
+    return text;
+  }
+
+  return `${match[1]}${markerLabel}${match[3]}`;
+}
+
+function buildTaskSizerText() {
+  return '    ';
+}
+
 function resolveLineTransformMeta(state, transform) {
   if (!state?.doc || !transform || !Number.isFinite(transform.sourceFrom) || !Number.isFinite(transform.sourceTo)) {
     return null;
@@ -166,11 +203,12 @@ function resolveLineTransformMeta(state, transform) {
   }
 
   const lineText = state.doc.sliceString(range.from, range.to);
+  const indentation = /^\s*/.exec(lineText)?.[0]?.length ?? 0;
   const depth = Number.isFinite(transform?.depth)
     ? Math.max(0, Math.trunc(transform.depth))
     : Number.isFinite(transform?.attrs?.depth)
       ? Math.max(0, Math.trunc(transform.attrs.depth))
-      : 0;
+      : null;
 
   const base = {
     type: transform.type,
@@ -212,14 +250,19 @@ function resolveLineTransformMeta(state, transform) {
     if (!match || !match[0]) {
       return null;
     }
+    const markerText = match[0];
     const listMarker = /^\s*(\d+\.|[-+*])/.exec(lineText)?.[1] ?? '-';
+    const normalizedDepth = Number.isFinite(depth) ? depth : Math.max(0, Math.floor(indentation / 2));
     return {
       ...base,
       markerFrom: range.from,
-      markerTo: range.from + match[0].length,
-      contentFrom: range.from + match[0].length,
+      markerTo: range.from + markerText.length,
+      contentFrom: range.from + markerText.length,
       checked: String(match[2] ?? '').toLowerCase() === 'x',
+      markerText,
+      markerChars: markerText.length,
       listMarker,
+      depth: normalizedDepth,
       contentClass: 'mm-live-v4-source-content mm-live-v4-source-task'
     };
   }
@@ -229,13 +272,18 @@ function resolveLineTransformMeta(state, transform) {
     if (!match || !match[1]) {
       return null;
     }
+    const markerText = match[1];
     const listMarker = /^\s*(\d+\.|[-+*])/.exec(lineText)?.[1] ?? '-';
+    const normalizedDepth = Number.isFinite(depth) ? depth : Math.max(0, Math.floor(indentation / 2));
     return {
       ...base,
       markerFrom: range.from,
-      markerTo: range.from + match[1].length,
-      contentFrom: range.from + match[1].length,
+      markerTo: range.from + markerText.length,
+      contentFrom: range.from + markerText.length,
+      markerText,
+      markerChars: markerText.length,
       listMarker,
+      depth: normalizedDepth,
       contentClass: 'mm-live-v4-source-content mm-live-v4-source-list'
     };
   }
@@ -258,6 +306,19 @@ function buildSourceLineDecorations(state, sourceTransforms) {
     const meta = resolveLineTransformMeta(state, transform);
     if (!meta) {
       continue;
+    }
+
+    if (meta.type === 'list' || meta.type === 'task') {
+      const lineAttributes = {
+        class: meta.type === 'task' ? 'mm-live-v4-source-task-line' : 'mm-live-v4-source-list-line',
+        'data-mm-list-depth': String(Number.isFinite(meta.depth) ? meta.depth : 0),
+        'data-mm-marker-chars': String(Number.isFinite(meta.markerChars) ? meta.markerChars : 0)
+      };
+      decorations.push(
+        Decoration.line({
+          attributes: lineAttributes
+        }).range(meta.sourceFrom)
+      );
     }
 
     const markerIncludesSelection = (
@@ -298,7 +359,7 @@ function buildSourceLineDecorations(state, sourceTransforms) {
           widget: new InlineTaskPrefixWidget({
             sourceFrom: meta.sourceFrom,
             checked: meta.checked,
-            depth: meta.depth
+            sizerText: buildTaskSizerText()
           }),
           side: -1
         }).range(meta.contentFrom)
@@ -310,8 +371,8 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       decorations.push(
         Decoration.widget({
           widget: new InlineListPrefixWidget({
-            markerLabel: normalizeListMarker(meta.listMarker),
-            depth: meta.depth
+            markerText: meta.markerText,
+            markerDisplayText: toListMarkerDisplayText(meta.markerText, meta.listMarker)
           }),
           side: -1
         }).range(meta.contentFrom)
