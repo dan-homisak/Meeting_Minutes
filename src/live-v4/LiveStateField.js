@@ -68,6 +68,7 @@ export function createLiveStateField({
       return {
         model,
         decorations: projection.decorations,
+        atomicRanges: projection.atomicRanges ?? projection.decorations,
         interactionMap: projection.interactionMap,
         activeBlockId: projection.activeBlockId,
         metrics: projection.metrics,
@@ -102,7 +103,7 @@ export function createLiveStateField({
 
       const selectionLineFrom = transaction.state.doc.lineAt(currentSelection.head).from;
       const selectionLineChanged = selectionSet && selectionLineFrom !== value.lastSelectionLineFrom;
-      const shouldRebuild = transaction.docChanged || refreshRequested || selectionLineChanged;
+      const shouldRebuild = transaction.docChanged || refreshRequested || selectionSet;
       liveDebug?.trace?.('plugin.update', {
         docChanged: Boolean(transaction.docChanged),
         selectionSet,
@@ -111,17 +112,6 @@ export function createLiveStateField({
       });
 
       if (!shouldRebuild) {
-        if (selectionSet) {
-          liveDebug?.trace?.('plugin.update.selection-skipped', {
-            previousSelectionLineFrom: value.lastSelectionLineFrom,
-            currentSelectionLineFrom: selectionLineFrom
-          });
-          return {
-            ...value,
-            model,
-            lastSelectionLineFrom: selectionLineFrom
-          };
-        }
         return value;
       }
 
@@ -141,6 +131,7 @@ export function createLiveStateField({
       return {
         model,
         decorations: projection.decorations,
+        atomicRanges: projection.atomicRanges ?? projection.decorations,
         interactionMap: projection.interactionMap,
         activeBlockId: projection.activeBlockId,
         metrics: projection.metrics,

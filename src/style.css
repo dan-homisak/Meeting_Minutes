@@ -321,6 +321,57 @@ button:disabled {
   background: transparent !important;
 }
 
+.mm-live-v4-syntax-hidden {
+  display: none;
+}
+
+.mm-live-v4-source-content {
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.mm-live-v4-source-heading {
+  font-size: 1.12em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mm-live-v4-source-quote {
+  border-left: 3px solid var(--blockquote-border);
+  margin-left: 0;
+  padding-left: 0.6rem;
+}
+
+.mm-live-v4-inline-list-prefix,
+.mm-live-v4-inline-task-prefix,
+.mm-live-v4-inline-quote-prefix {
+  display: inline-flex;
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.45;
+  margin-left: calc(var(--list-depth, 0) * 1.2rem);
+  margin-right: 0.35rem;
+  vertical-align: baseline;
+}
+
+.mm-live-v4-inline-list-prefix {
+  color: var(--text-muted);
+  min-width: 1.2ch;
+}
+
+.mm-live-v4-inline-task-prefix input[type="checkbox"] {
+  height: 0.95em;
+  margin: 0.18em 0 0;
+  width: 0.95em;
+}
+
+.mm-live-v4-inline-quote-prefix {
+  border-left: 3px solid var(--blockquote-border);
+  height: 1.1em;
+  margin-right: 0.5rem;
+}
+
 .mm-live-v4-block-widget {
   color: var(--text-normal);
   display: block;

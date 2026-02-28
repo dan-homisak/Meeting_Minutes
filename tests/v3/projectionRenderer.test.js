@@ -110,3 +110,32 @@ test('active multi-line paragraph keeps only active line editable and renders in
   assert.equal(projection.renderedBlocks.length > 0, true);
   assert.equal(projection.renderedBlocks.every((entry) => entry.blockId === 'p1'), true);
 });
+
+test('single-line heading/list/task blocks use source transforms for syntax-level live preview', () => {
+  const text = '# H\n- [ ] alpha\n- beta\n';
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: 6 }
+  });
+  const model = createModel(text, [
+    { id: 'h1', type: 'heading', from: 0, to: 3, lineFrom: 1, lineTo: 1, depth: null, attrs: { level: 1 } },
+    { id: 't1', type: 'task', from: 4, to: 15, lineFrom: 2, lineTo: 2, depth: 0, attrs: { checked: false, depth: 0 } },
+    { id: 'l1', type: 'list', from: 16, to: 22, lineFrom: 3, lineTo: 3, depth: 0, attrs: { depth: 0 } }
+  ]);
+
+  const projection = buildLiveProjection({
+    state,
+    model,
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  assert.equal(Array.isArray(projection.sourceTransforms), true);
+  assert.equal(projection.sourceTransforms.length, 3);
+  assert.deepEqual(
+    projection.sourceTransforms.map((entry) => entry.type),
+    ['heading', 'task', 'list']
+  );
+  assert.equal(projection.renderedBlocks.length, 0);
+});

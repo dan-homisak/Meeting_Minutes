@@ -181,12 +181,23 @@ function resolveInlineBlockId(blocks, inlineFrom) {
 }
 
 const ACTIVE_SLICE_TYPES = new Set(['paragraph', 'blockquote', 'list']);
+const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'list', 'task', 'blockquote']);
 
 function canSliceActiveBlock(block) {
   if (!block || typeof block.type !== 'string') {
     return false;
   }
   return ACTIVE_SLICE_TYPES.has(block.type);
+}
+
+function shouldUseSourceTransform(block) {
+  if (!block || typeof block.type !== 'string') {
+    return false;
+  }
+  if (!SOURCE_TRANSFORM_TYPES.has(block.type)) {
+    return false;
+  }
+  return Number.isFinite(block.lineFrom) && Number.isFinite(block.lineTo) && block.lineFrom === block.lineTo;
 }
 
 function sliceActiveBlockIntoInactiveRanges(state, block, selectionHead) {
@@ -235,6 +246,7 @@ export function buildLiveProjection({
     return {
       activeBlockId: null,
       renderedBlocks: [],
+      sourceTransforms: [],
       interactionMap: [],
       metrics: {
         renderedBlockCount: 0,
@@ -271,6 +283,7 @@ export function buildLiveProjection({
   const candidateBlocks = budgeted.blocks;
 
   const renderedBlocks = [];
+  const sourceTransforms = [];
   const interactionEntries = [];
 
   for (const block of blocks) {
@@ -297,6 +310,20 @@ export function buildLiveProjection({
 
   for (const block of candidateBlocks) {
     if (!block) {
+      continue;
+    }
+
+    if (shouldUseSourceTransform(block)) {
+      sourceTransforms.push({
+        blockId: block.id,
+        type: block.type,
+        sourceFrom: block.from,
+        sourceTo: block.to,
+        attrs: block.attrs ?? {},
+        depth: block.depth
+      });
+
+      interactionEntries.push(...collectMarkerEntriesForBlock(state.doc, block));
       continue;
     }
 
@@ -377,6 +404,7 @@ export function buildLiveProjection({
   return {
     activeBlockId,
     renderedBlocks,
+    sourceTransforms,
     interactionMap,
     metrics: {
       renderedBlockCount: renderedBlocks.length,

@@ -60,7 +60,7 @@ export function createLiveRuntime({
   const liveAtomicRanges = EditorView.atomicRanges.of((view) => {
     try {
       const liveState = readLiveState(view.state);
-      return liveState?.decorations ?? Decoration.none;
+      return liveState?.atomicRanges ?? liveState?.decorations ?? Decoration.none;
     } catch {
       return Decoration.none;
     }

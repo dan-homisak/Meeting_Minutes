@@ -467,7 +467,10 @@ function buildWidgetCoordinatesExpression(widgetIndex, xRatio, yRatio) {
 
 function buildCheckboxCoordinatesExpression(checkboxIndex) {
   return `(() => {
-    const checkboxes = [...document.querySelectorAll('.task-list-control input[type="checkbox"]')];
+    const checkboxes = [
+      ...document.querySelectorAll('.task-list-control input[type="checkbox"]'),
+      ...document.querySelectorAll('.mm-live-v4-inline-task-prefix input[type="checkbox"]')
+    ];
     const checkbox = checkboxes[${Math.trunc(checkboxIndex)}];
     if (!checkbox) {
       return { ok: false, reason: 'checkbox-not-found', checkboxIndex: ${Math.trunc(checkboxIndex)} };
@@ -479,6 +482,26 @@ function buildCheckboxCoordinatesExpression(checkboxIndex) {
       x: Math.round(rect.left + Math.max(1, Math.min(rect.width - 1, rect.width / 2))),
       y: Math.round(rect.top + Math.max(1, Math.min(rect.height - 1, rect.height / 2))),
       checkboxIndex: ${Math.trunc(checkboxIndex)}
+    };
+  })()`;
+}
+
+function buildTaskCheckboxCoordinatesBySourceExpression(sourceFrom) {
+  return `(() => {
+    const source = ${Math.trunc(sourceFrom)};
+    const checkbox = document.querySelector(
+      'input[type="checkbox"][data-task-source-from="' + source + '"]'
+    );
+    if (!checkbox) {
+      return { ok: false, reason: 'checkbox-source-not-found', sourceFrom: source };
+    }
+
+    const rect = checkbox.getBoundingClientRect();
+    return {
+      ok: true,
+      x: Math.round(rect.left + Math.max(1, Math.min(rect.width - 1, rect.width / 2))),
+      y: Math.round(rect.top + Math.max(1, Math.min(rect.height - 1, rect.height / 2))),
+      sourceFrom: source
     };
   })()`;
 }
@@ -664,9 +687,21 @@ function buildListFixtureSteps() {
       column: 8
     },
     {
-      id: 'click-checkbox-0',
-      action: 'click-checkbox',
-      checkboxIndex: 0
+      id: 'cursor-line-3-col-1-syntax',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 1
+    },
+    {
+      id: 'cursor-line-3-col-8-restore',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 8
+    },
+    {
+      id: 'click-task-source-20',
+      action: 'click-task-source',
+      sourceFrom: 20
     },
     {
       id: 'cursor-line-6-col-12',
@@ -675,9 +710,9 @@ function buildListFixtureSteps() {
       column: 12
     },
     {
-      id: 'click-checkbox-2',
-      action: 'click-checkbox',
-      checkboxIndex: 2
+      id: 'click-task-source-87',
+      action: 'click-task-source',
+      sourceFrom: 87
     },
     {
       id: 'cursor-line-9-col-7',
@@ -777,6 +812,16 @@ async function runProbe({
         client,
         sessionId,
         buildCheckboxCoordinatesExpression(step.checkboxIndex)
+      );
+      actionResult = coordinates;
+      if (coordinates?.ok) {
+        await dispatchMouseClick(client, sessionId, coordinates.x, coordinates.y);
+      }
+    } else if (step.action === 'click-task-source') {
+      const coordinates = await evaluate(
+        client,
+        sessionId,
+        buildTaskCheckboxCoordinatesBySourceExpression(step.sourceFrom)
       );
       actionResult = coordinates;
       if (coordinates?.ok) {
