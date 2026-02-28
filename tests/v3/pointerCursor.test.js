@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EditorState } from '@codemirror/state';
-import { createPointerController } from '../../src/live-v3/PointerController.js';
-import { createCursorController } from '../../src/live-v3/CursorController.js';
+import { createPointerController } from '../../src/live-v4/PointerController.js';
+import { createCursorController } from '../../src/live-v4/CursorController.js';
 
 function createDoc(text) {
   const lines = text.split('\n');
@@ -196,7 +196,13 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
       }
       return null;
     },
-    closest() {
+    closest(selector) {
+      if (selector === '.mm-live-v4-block-widget') {
+        return this;
+      }
+      if (selector === '[data-src-from][data-src-to], [data-fragment-id]') {
+        return this;
+      }
       return null;
     }
   };
@@ -231,4 +237,38 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
   const moved = cursor.moveCursorVertically(cursorView, 1, 'ArrowDown');
   assert.equal(moved, true);
   assert.equal(activeState.selection.main.head > 0, true);
+});
+
+test('pointer controller passes through non-rendered targets to native editor behavior', () => {
+  const ctx = createPointerView('# One\nTwo\nThree', []);
+  const pointer = createPointerController({
+    liveDebug: { trace() {}, warn() {} },
+    readInteractionMapForView: () => ctx.interactionMap
+  });
+
+  const target = {
+    closest(selector) {
+      if (selector === '[data-task-source-from]') {
+        return null;
+      }
+      if (selector === 'a[href]') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-block-widget') {
+        return null;
+      }
+      if (selector === '[data-src-from][data-src-to], [data-fragment-id]') {
+        return null;
+      }
+      return null;
+    }
+  };
+
+  const handled = pointer.handlePointer(ctx.view, {
+    target,
+    preventDefault() {}
+  }, 'mousedown');
+
+  assert.equal(handled, false);
+  assert.equal(ctx.readSelectionHead(), 0);
 });

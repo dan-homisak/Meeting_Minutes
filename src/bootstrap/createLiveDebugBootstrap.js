@@ -1,3 +1,5 @@
+import { createLauncherDebugBridge } from './createLauncherDebugBridge.js';
+
 const LIVE_DEBUG_STORAGE_KEY = 'meetingMinutes.liveDebugLevel';
 const LEVELS = ['off', 'error', 'warn', 'info', 'trace'];
 const LEVEL_PRIORITY = {
@@ -191,16 +193,27 @@ export function createLiveDebugBootstrap({
 
   setLiveDebugLevel(liveDebug.getLevel());
   attachToWindow(windowObject, liveDebug, setLiveDebugLevel);
+  const launcherDebugBridge = createLauncherDebugBridge({
+    windowObject,
+    liveDebug,
+    scope
+  });
   if (markdownEngineOptions) {
     liveDebug.info('markdown.engine.config', markdownEngineOptions);
   }
   liveDebug.info('live.mode.architecture', {
-    renderer: 'hybrid-v2',
-    sourceOfTruth: 'markdown'
+    renderer: scope,
+    sourceOfTruth: 'source->model->projection'
   });
+  if (launcherDebugBridge.enabled) {
+    liveDebug.info('launcher.bridge.enabled', {
+      sessionId: launcherDebugBridge.sessionId
+    });
+  }
 
   return {
     liveDebug,
+    launcherDebugBridge,
     setLiveDebugLevel,
     configuredLiveDebugLevel,
     initialLiveDebugLevel

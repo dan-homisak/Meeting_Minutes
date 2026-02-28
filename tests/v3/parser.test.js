@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EditorState } from '@codemirror/state';
 import { createMarkdownEngine } from '../../src/markdownConfig.js';
-import { createObsidianCoreParser } from '../../src/live-v3/parser/ObsidianCoreParser.js';
+import { createObsidianCoreParser } from '../../src/live-v4/parser/ObsidianCoreParser.js';
 
 test('createObsidianCoreParser builds core model and applies transactions incrementally', () => {
   const parser = createObsidianCoreParser({

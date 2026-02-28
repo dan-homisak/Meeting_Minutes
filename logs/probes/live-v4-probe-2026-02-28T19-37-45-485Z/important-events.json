@@ -1,0 +1,641 @@
+[
+  {
+    "at": "2026-02-28T19:37:46.201Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 1.9,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:46.210Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.4,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:46.212Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 0,
+      "previousHead": null,
+      "lineNumber": 1,
+      "previousLineNumber": null,
+      "lineFrom": 0,
+      "lineTo": 9,
+      "lineLength": 9,
+      "positionDelta": 0,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": false,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:46.212Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "update",
+      "selectionHead": 0,
+      "selectionLineNumber": 1,
+      "activeBlockId": "heading:0:9",
+      "activeBlockFrom": 0,
+      "activeBlockTo": 9,
+      "activeBlockType": "heading",
+      "activeBlockLength": 9,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:46.213Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "startup",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": null,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.408Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 2,
+      "previousHead": 0,
+      "lineNumber": 1,
+      "previousLineNumber": 1,
+      "lineFrom": 0,
+      "lineTo": 9,
+      "lineLength": 9,
+      "positionDelta": 2,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.408Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 2,
+      "selectionLineNumber": 1,
+      "activeBlockId": "heading:0:9",
+      "activeBlockFrom": 0,
+      "activeBlockTo": 9,
+      "activeBlockType": "heading",
+      "activeBlockLength": 9,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.408Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 0,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.698Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.7,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.699Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 31,
+      "previousHead": 2,
+      "lineNumber": 3,
+      "previousLineNumber": 1,
+      "lineFrom": 11,
+      "lineTo": 60,
+      "lineLength": 49,
+      "positionDelta": 29,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.699Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 31,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 11,
+      "activeBlockTo": 60,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 49,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.699Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.700Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.2,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.993Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:62:99",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.6,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.994Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 74,
+      "previousHead": 31,
+      "lineNumber": 5,
+      "previousLineNumber": 3,
+      "lineFrom": 62,
+      "lineTo": 99,
+      "lineLength": 37,
+      "positionDelta": 43,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.994Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 74,
+      "selectionLineNumber": 5,
+      "activeBlockId": "paragraph:62:99",
+      "activeBlockFrom": 62,
+      "activeBlockTo": 99,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 37,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.994Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:47.994Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:62:99",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.2,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.363Z",
+    "event": "pointer.map.fragment",
+    "data": {
+      "trigger": "mousedown",
+      "fragmentId": null,
+      "sourceFrom": 11,
+      "sourceTo": 60,
+      "mappedPosition": 23,
+      "strategy": "native-with-geometry-correction",
+      "targetTagName": "p"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.363Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.3,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.364Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 23,
+      "previousHead": 74,
+      "lineNumber": 3,
+      "previousLineNumber": 5,
+      "lineFrom": 11,
+      "lineTo": 60,
+      "lineLength": 49,
+      "positionDelta": 51,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.364Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 23,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 11,
+      "activeBlockTo": 60,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 49,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.364Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.364Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.2,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.365Z",
+    "event": "live-v4.pointer.activate",
+    "data": {
+      "trigger": "mousedown",
+      "targetPosition": 23
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.371Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 60,
+      "previousHead": 23,
+      "lineNumber": 3,
+      "previousLineNumber": 3,
+      "lineFrom": 11,
+      "lineTo": 60,
+      "lineLength": 49,
+      "positionDelta": 37,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.371Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 60,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 11,
+      "activeBlockTo": 60,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 49,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.371Z",
+    "event": "pointer.remap.post-activate",
+    "data": {
+      "trigger": "mousedown",
+      "fallbackPosition": 23,
+      "remappedRaw": 61,
+      "remappedPosition": 61,
+      "finalPosition": 60,
+      "sourceFrom": 11,
+      "sourceTo": 60
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.687Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:62:99",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.4,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.687Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 74,
+      "previousHead": 60,
+      "lineNumber": 5,
+      "previousLineNumber": 3,
+      "lineFrom": 62,
+      "lineTo": 99,
+      "lineLength": 37,
+      "positionDelta": 14,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.687Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 74,
+      "selectionLineNumber": 5,
+      "activeBlockId": "paragraph:62:99",
+      "activeBlockFrom": 62,
+      "activeBlockTo": 99,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 37,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.687Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.688Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:62:99",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.2,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.979Z",
+    "event": "pointer.map.fragment",
+    "data": {
+      "trigger": "mousedown",
+      "fragmentId": null,
+      "sourceFrom": 11,
+      "sourceTo": 60,
+      "mappedPosition": 49,
+      "strategy": "native-with-geometry-correction",
+      "targetTagName": "p"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.979Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.5,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.980Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 49,
+      "previousHead": 74,
+      "lineNumber": 3,
+      "previousLineNumber": 5,
+      "lineFrom": 11,
+      "lineTo": 60,
+      "lineLength": 49,
+      "positionDelta": 25,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.980Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 49,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 11,
+      "activeBlockTo": 60,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 49,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.980Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.981Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.2,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.981Z",
+    "event": "live-v4.pointer.activate",
+    "data": {
+      "trigger": "mousedown",
+      "targetPosition": 49
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.987Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 60,
+      "previousHead": 49,
+      "lineNumber": 3,
+      "previousLineNumber": 3,
+      "lineFrom": 11,
+      "lineTo": 60,
+      "lineLength": 49,
+      "positionDelta": 11,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.987Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 60,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 11,
+      "activeBlockTo": 60,
+      "activeBlockType": "paragraph",
+      "activeBlockLength": 49,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:37:48.987Z",
+    "event": "pointer.remap.post-activate",
+    "data": {
+      "trigger": "mousedown",
+      "fallbackPosition": 49,
+      "remappedRaw": 61,
+      "remappedPosition": 61,
+      "finalPosition": 60,
+      "sourceFrom": 11,
+      "sourceTo": 60
+    }
+  }
+]

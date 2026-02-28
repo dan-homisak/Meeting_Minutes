@@ -28,6 +28,7 @@ function isCheckedSourceFile(path) {
 }
 
 const forbiddenPatterns = [
+  /live-v3/g,
   /model\.inline\b/g,
   /data-fragment-from/g,
   /data-source-from/g,
@@ -36,7 +37,10 @@ const forbiddenPatterns = [
   /livePreviewBridge/g,
   /#mode-raw/g,
   /#mode-preview/g,
-  /createPreviewRenderer/g
+  /createPreviewRenderer/g,
+  /core\/document\/DocumentSession/g,
+  /core\/parser\/IncrementalMarkdownParser/g,
+  /core\/model\/DocModel/g
 ];
 
 const sourceFiles = (await walkFiles(SRC_ROOT)).filter(isCheckedSourceFile);

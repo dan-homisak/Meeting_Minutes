@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createLiveRuntime } from '../../src/live-v3/LiveRuntime.js';
+import { createLiveRuntime } from '../../src/live-v4/LiveRuntime.js';
 
-test('createLiveRuntime returns live-v3 state/pointer/cursor contracts', () => {
+test('createLiveRuntime returns live-v4 state/pointer/cursor contracts', () => {
   const runtime = createLiveRuntime({
     app: {},
     liveDebug: { trace() {}, info() {}, warn() {}, error() {} }

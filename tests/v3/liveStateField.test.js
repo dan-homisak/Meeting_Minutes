@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EditorState } from '@codemirror/state';
 import { Decoration } from '@codemirror/view';
-import { createLiveStateField } from '../../src/live-v3/LiveStateField.js';
+import { createLiveStateField } from '../../src/live-v4/LiveStateField.js';
 
 function createModel(text, version = 1) {
   return {

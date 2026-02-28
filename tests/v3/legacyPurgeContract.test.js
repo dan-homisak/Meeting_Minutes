@@ -16,7 +16,7 @@ async function exists(path) {
   }
 }
 
-test('live-v3 is the runtime entrypoint and mode controls are removed from shell', async () => {
+test('live-v4 is the runtime entrypoint and mode controls are removed from shell', async () => {
   const mainPath = join(ROOT, 'src/main.js');
   const htmlPath = join(ROOT, 'index.html');
 
@@ -37,7 +37,11 @@ test('live-v3 is the runtime entrypoint and mode controls are removed from shell
 test('legacy mode and preview runtime modules are removed', async () => {
   const modeControllerPath = join(ROOT, 'src/ui/modeController.js');
   const previewRendererPath = join(ROOT, 'src/core/render/PreviewRenderer.js');
+  const legacyLiveRuntimePath = join(ROOT, 'src/live-v3/LiveRuntime.js');
+  const legacyDocumentSessionPath = join(ROOT, 'src/core/document/DocumentSession.js');
 
   assert.equal(await exists(modeControllerPath), false);
   assert.equal(await exists(previewRendererPath), false);
+  assert.equal(await exists(legacyLiveRuntimePath), false);
+  assert.equal(await exists(legacyDocumentSessionPath), false);
 });

@@ -4,7 +4,7 @@ import {
   createEmptyLiveDocModel,
   normalizeLiveBlockType,
   toLiveDocModel
-} from '../../src/live-v3/model/LiveDocModel.js';
+} from '../../src/live-v4/model/LiveDocModel.js';
 
 test('normalizeLiveBlockType maps unknown and list aliases', () => {
   assert.equal(normalizeLiveBlockType('heading'), 'heading');

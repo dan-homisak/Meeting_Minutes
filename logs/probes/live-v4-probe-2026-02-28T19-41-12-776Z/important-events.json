@@ -1,0 +1,488 @@
+[
+  {
+    "at": "2026-02-28T19:41:13.410Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 1.5,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:13.420Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false,
+      "renderMs": 0.3,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:13.422Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 0,
+      "previousHead": null,
+      "lineNumber": 1,
+      "previousLineNumber": null,
+      "lineFrom": 0,
+      "lineTo": 9,
+      "lineLength": 9,
+      "positionDelta": 0,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": false,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:13.422Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "update",
+      "selectionHead": 0,
+      "selectionLineNumber": 1,
+      "activeBlockId": "heading:0:9",
+      "activeBlockFrom": 0,
+      "activeBlockTo": 9,
+      "activeBlockType": "heading",
+      "activeBlockLength": 9,
+      "blockCount": 3,
+      "renderedBlockCount": 2,
+      "virtualizedBlockCount": 3,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:13.422Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "startup",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": null,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.340Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 3.1,
+      "viewportFrom": 0,
+      "viewportTo": 100
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.343Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 0,
+      "previousHead": 0,
+      "lineNumber": 1,
+      "previousLineNumber": 1,
+      "lineFrom": 0,
+      "lineTo": 18,
+      "lineLength": 18,
+      "positionDelta": 0,
+      "lineDelta": 0,
+      "docChanged": true,
+      "selectionSet": false,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.343Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "doc-changed",
+      "selectionHead": 0,
+      "selectionLineNumber": 1,
+      "activeBlockId": "heading:0:9",
+      "activeBlockFrom": 0,
+      "activeBlockTo": 18,
+      "activeBlockType": "heading",
+      "activeBlockLength": 18,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.343Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "doc-changed",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 0,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.345Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "heading:0:9",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 1.9,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.346Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 0,
+      "previousHead": 0,
+      "lineNumber": 1,
+      "previousLineNumber": 1,
+      "lineFrom": 0,
+      "lineTo": 18,
+      "lineLength": 18,
+      "positionDelta": 0,
+      "lineDelta": 0,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.346Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 0,
+      "selectionLineNumber": 1,
+      "activeBlockId": "heading:0:9",
+      "activeBlockFrom": 0,
+      "activeBlockTo": 18,
+      "activeBlockType": "heading",
+      "activeBlockLength": 18,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.933Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 1.4,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.935Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 28,
+      "previousHead": 0,
+      "lineNumber": 3,
+      "previousLineNumber": 1,
+      "lineFrom": 20,
+      "lineTo": 50,
+      "lineLength": 30,
+      "positionDelta": 28,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.935Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 28,
+      "selectionLineNumber": 3,
+      "activeBlockId": "paragraph:11:60",
+      "activeBlockFrom": 20,
+      "activeBlockTo": 50,
+      "activeBlockType": "task",
+      "activeBlockLength": 30,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.935Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:14.936Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "paragraph:11:60",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 0.9,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.243Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "task:87:117",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 1.2,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.244Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 87,
+      "previousHead": 28,
+      "lineNumber": 5,
+      "previousLineNumber": 3,
+      "lineFrom": 87,
+      "lineTo": 117,
+      "lineLength": 30,
+      "positionDelta": 59,
+      "lineDelta": 2,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.244Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 87,
+      "selectionLineNumber": 5,
+      "activeBlockId": "task:87:117",
+      "activeBlockFrom": 87,
+      "activeBlockTo": 117,
+      "activeBlockType": "task",
+      "activeBlockLength": 30,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.244Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.245Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "task:87:117",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 0.8,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.556Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "task:118:171",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 0.8,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.557Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 130,
+      "previousHead": 87,
+      "lineNumber": 6,
+      "previousLineNumber": 5,
+      "lineFrom": 118,
+      "lineTo": 171,
+      "lineLength": 53,
+      "positionDelta": 43,
+      "lineDelta": 1,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.557Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 130,
+      "selectionLineNumber": 6,
+      "activeBlockId": "task:118:171",
+      "activeBlockFrom": 118,
+      "activeBlockTo": 171,
+      "activeBlockType": "task",
+      "activeBlockLength": 53,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.557Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:15.558Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "task:118:171",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 0.6,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:16.141Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "list:201:230",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 1.1,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:16.142Z",
+    "event": "selection.changed",
+    "data": {
+      "head": 208,
+      "previousHead": 130,
+      "lineNumber": 9,
+      "previousLineNumber": 6,
+      "lineFrom": 201,
+      "lineTo": 230,
+      "lineLength": 29,
+      "positionDelta": 78,
+      "lineDelta": 3,
+      "docChanged": false,
+      "selectionSet": true,
+      "viewportChanged": true
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:16.142Z",
+    "event": "snapshot.editor",
+    "data": {
+      "reason": "selection-change",
+      "selectionHead": 208,
+      "selectionLineNumber": 9,
+      "activeBlockId": "list:201:230",
+      "activeBlockFrom": 201,
+      "activeBlockTo": 230,
+      "activeBlockType": "list",
+      "activeBlockLength": 29,
+      "blockCount": 10,
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:16.142Z",
+    "event": "live-v4.layout.metrics",
+    "data": {
+      "reason": "update",
+      "lineHeightPx": 23.19,
+      "cursorHeightPx": 22,
+      "widgetMarginTopPx": "0px",
+      "widgetMarginBottomPx": "0px",
+      "widgetPaddingTopPx": "0px",
+      "widgetPaddingBottomPx": "0px"
+    }
+  },
+  {
+    "at": "2026-02-28T19:41:16.143Z",
+    "event": "live-v4.projection.built",
+    "data": {
+      "activeBlockId": "list:201:230",
+      "renderedBlockCount": 9,
+      "virtualizedBlockCount": 10,
+      "budgetTruncated": false,
+      "renderMs": 0.9,
+      "viewportFrom": 0,
+      "viewportTo": 364
+    }
+  }
+]

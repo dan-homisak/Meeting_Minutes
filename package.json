@@ -12,7 +12,9 @@
     "test": "npm run check:legacy-contracts && node --test \"tests/v3/**/*.test.js\"",
     "test:watch": "node --test --watch \"tests/v3/**/*.test.js\"",
     "logs:latest": "node scripts/live-debug-report.mjs",
-    "logs:verify": "node scripts/live-debug-verify.mjs"
+    "logs:troubleshoot": "node scripts/live-v4-troubleshoot.mjs",
+    "logs:verify": "node scripts/live-debug-verify.mjs",
+    "probe:live-v4": "node scripts/live-v4-probe-runner.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",

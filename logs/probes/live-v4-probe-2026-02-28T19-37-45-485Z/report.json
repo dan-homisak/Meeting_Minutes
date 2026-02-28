@@ -1,0 +1,2910 @@
+{
+  "generatedAt": "2026-02-28T19:37:49.978Z",
+  "artifactDir": "/Users/danhomisak/Code/Meeting_Minutes/logs/probes/live-v4-probe-2026-02-28T19-37-45-485Z",
+  "launch": {
+    "url": "http://127.0.0.1:5173/?launcherToken=314592e4-53cc-4bc2-b30d-b2061e813ab9",
+    "launcherLogFilePath": "/Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T19-37-45-565Z-314592e4.jsonl",
+    "launcherOutput": [
+      "Starting Meeting Minutes at http://127.0.0.1:5173/?launcherToken=314592e4-53cc-4bc2-b30d-b2061e813ab9",
+      "Heartbeat interval: 4000ms",
+      "Auto-shutdown disabled (LAUNCHER_NO_TIMEOUT=1).",
+      "Live debug log file: /Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T19-37-45-565Z-314592e4.jsonl",
+      "Browser auto-open disabled (LAUNCHER_NO_OPEN=1)."
+    ]
+  },
+  "steps": [
+    {
+      "id": "baseline",
+      "action": "snapshot",
+      "actionResult": null,
+      "screenshot": "00-baseline.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": false,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.27,
+                "right": 730,
+                "bottom": 547.45,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.45,
+                "right": 730,
+                "bottom": 570.64,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-1-col-2",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 2,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 2,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.27,
+                "right": 730,
+                "bottom": 547.45,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.45,
+                "right": 730,
+                "bottom": 570.64,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "01-cursor-line-1-col-2.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 2,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.27,
+                "right": 730,
+                "bottom": 547.45,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.45,
+                "right": 730,
+                "bottom": 570.64,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 90.5,
+            "top": 338.77,
+            "right": 92.5,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-3-col-20",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 31,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 31,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.25,
+                "right": 730,
+                "bottom": 408.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 408.44,
+                "right": 730,
+                "bottom": 431.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.63,
+                "right": 730,
+                "bottom": 454.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 454.81,
+                "right": 730,
+                "bottom": 478,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 478,
+                "right": 730,
+                "bottom": 501.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.38,
+                "right": 730,
+                "bottom": 547.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.56,
+                "right": 730,
+                "bottom": 570.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 501.19,
+                "right": 730,
+                "bottom": 524.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 90.5,
+            "top": 338.77,
+            "right": 92.5,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "02-cursor-line-3-col-20.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 31,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.25,
+                "right": 730,
+                "bottom": 408.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 408.44,
+                "right": 730,
+                "bottom": 431.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.63,
+                "right": 730,
+                "bottom": 454.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 454.81,
+                "right": 730,
+                "bottom": 478,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 478,
+                "right": 730,
+                "bottom": 501.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.38,
+                "right": 730,
+                "bottom": 547.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.56,
+                "right": 730,
+                "bottom": 570.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 501.19,
+                "right": 730,
+                "bottom": 524.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 230.66,
+            "top": 431.63,
+            "right": 232.66,
+            "bottom": 453.63,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-5-col-12",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 74,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 385.25,
+                "right": 730,
+                "bottom": 408.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 408.44,
+                "right": 730,
+                "bottom": 431.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 431.63,
+                "right": 730,
+                "bottom": 454.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 478,
+                "right": 730,
+                "bottom": 501.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 501.19,
+                "right": 730,
+                "bottom": 524.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 524.38,
+                "right": 730,
+                "bottom": 547.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 547.56,
+                "right": 730,
+                "bottom": 570.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 454.81,
+                "right": 730,
+                "bottom": 478,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 230.66,
+            "top": 431.63,
+            "right": 232.66,
+            "bottom": 453.63,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "03-cursor-line-5-col-12.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 303.25,
+                "right": 730,
+                "bottom": 326.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 326.44,
+                "right": 730,
+                "bottom": 349.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 349.63,
+                "right": 730,
+                "bottom": 372.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 396,
+                "right": 730,
+                "bottom": 419.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 419.19,
+                "right": 730,
+                "bottom": 442.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 442.38,
+                "right": 730,
+                "bottom": 465.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 465.56,
+                "right": 730,
+                "bottom": 488.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 372.81,
+                "right": 730,
+                "bottom": 396,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 154.34,
+            "top": 442.38,
+            "right": 156.34,
+            "bottom": 464.38,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "click-source-11-60-left",
+      "action": "click-source-range",
+      "actionResult": {
+        "ok": true,
+        "x": 230,
+        "y": 384,
+        "sourceFrom": 11,
+        "sourceTo": 60
+      },
+      "screenshot": "04-click-source-11-60-left.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 60,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 303.25,
+                "right": 730,
+                "bottom": 326.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 326.44,
+                "right": 730,
+                "bottom": 349.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 349.63,
+                "right": 730,
+                "bottom": 372.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 372.81,
+                "right": 730,
+                "bottom": 396,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 396,
+                "right": 730,
+                "bottom": 419.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 442.38,
+                "right": 730,
+                "bottom": 465.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 465.56,
+                "right": 730,
+                "bottom": 488.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 419.19,
+                "right": 730,
+                "bottom": 442.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 436.78,
+            "top": 349.63,
+            "right": 438.78,
+            "bottom": 371.63,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-5-col-12-reset",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 74,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 303.25,
+                "right": 730,
+                "bottom": 326.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 326.44,
+                "right": 730,
+                "bottom": 349.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 349.63,
+                "right": 730,
+                "bottom": 372.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 396,
+                "right": 730,
+                "bottom": 419.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 419.19,
+                "right": 730,
+                "bottom": 442.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 442.38,
+                "right": 730,
+                "bottom": 465.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 465.56,
+                "right": 730,
+                "bottom": 488.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 372.81,
+                "right": 730,
+                "bottom": 396,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 436.78,
+            "top": 349.63,
+            "right": 438.78,
+            "bottom": 371.63,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "05-cursor-line-5-col-12-reset.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 303.25,
+                "right": 730,
+                "bottom": 326.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 326.44,
+                "right": 730,
+                "bottom": 349.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 349.63,
+                "right": 730,
+                "bottom": 372.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 396,
+                "right": 730,
+                "bottom": 419.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 419.19,
+                "right": 730,
+                "bottom": 442.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 442.38,
+                "right": 730,
+                "bottom": 465.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 465.56,
+                "right": 730,
+                "bottom": 488.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 72.39,
+                "top": 372.81,
+                "right": 730,
+                "bottom": 396,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 154.34,
+            "top": 442.38,
+            "right": 156.34,
+            "bottom": 464.38,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "click-source-11-60-right",
+      "action": "click-source-range",
+      "actionResult": {
+        "ok": true,
+        "x": 585,
+        "y": 384,
+        "sourceFrom": 11,
+        "sourceTo": 60
+      },
+      "screenshot": "06-click-source-11-60-right.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 60,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 303.25,
+                "right": 730,
+                "bottom": 326.44,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 326.44,
+                "right": 730,
+                "bottom": 349.63,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 349.63,
+                "right": 730,
+                "bottom": 372.81,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 372.81,
+                "right": 730,
+                "bottom": 396,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 396,
+                "right": 730,
+                "bottom": 419.19,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 442.38,
+                "right": 730,
+                "bottom": 465.56,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "hasWidget": false,
+              "rect": {
+                "left": 72.39,
+                "top": 465.56,
+                "right": 730,
+                "bottom": 488.75,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-heading:0:9-0-9",
+              "blockId": "heading:0:9",
+              "sourceFrom": 0,
+              "sourceTo": 9,
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 72.39,
+                "top": 419.19,
+                "right": 730,
+                "bottom": 442.38,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 436.78,
+            "top": 349.63,
+            "right": 438.78,
+            "bottom": 371.63,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "monospace",
+              "fontSize": "16px",
+              "lineHeight": "22.4px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 256.77,
+                "right": 730,
+                "bottom": 279.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 279.95,
+                "right": 730,
+                "bottom": 303.25,
+                "width": 657.61,
+                "height": 23.3
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    }
+  ],
+  "eventSummary": {
+    "pointer": {
+      "fragment": 2,
+      "fragmentMiss": 0,
+      "native": 0,
+      "activate": 2,
+      "activateMiss": 0
+    },
+    "cursor": {
+      "vertical": 0,
+      "verticalSkipped": 0,
+      "verticalBoundary": 0
+    },
+    "rendering": {
+      "projectionBuilt": 12,
+      "activeBlockLarge": 0
+    }
+  },
+  "assertions": {
+    "pointerActivationObserved": true,
+    "noPointerActivateMiss": true,
+    "fragmentMappingObserved": true
+  }
+}

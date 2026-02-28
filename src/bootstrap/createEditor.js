@@ -1,18 +1,17 @@
 import { EditorState } from '@codemirror/state';
-import { autocompletion } from '@codemirror/autocomplete';
-import { indentWithTab } from '@codemirror/commands';
+import { autocompletion, completionKeymap } from '@codemirror/autocomplete';
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
 import { markdown, insertNewlineContinueMarkup } from '@codemirror/lang-markdown';
-import { EditorView, keymap } from '@codemirror/view';
-import { basicSetup } from 'codemirror';
-import { highlightSelectionMatches } from '@codemirror/search';
+import {
+  EditorView,
+  drawSelection,
+  dropCursor,
+  keymap,
+  lineNumbers
+} from '@codemirror/view';
 
 export const DEFAULT_EDITOR_DOC =
   '# Welcome\n\nChoose a folder and start editing markdown files.\n\nType `/` for quick markdown snippets.\n';
-
-const selectionMatchHighlighter = highlightSelectionMatches()[1];
-const livePreviewBasicSetup = basicSetup.filter(
-  (extension) => !(Array.isArray(extension) && extension.includes(selectionMatchHighlighter))
-);
 
 export function createEditor({
   parent,
@@ -37,13 +36,8 @@ export function createEditor({
   const createUpdateListenerExtension =
     factories.createUpdateListenerExtension ??
     ((listener) => EditorView.updateListener.of(listener));
-  const lineWrappingExtension = factories.lineWrappingExtension ?? EditorView.lineWrapping;
-  const indentWithTabCommand = factories.indentWithTabCommand ?? indentWithTab;
-  const insertNewlineCommand = factories.insertNewlineCommand ?? insertNewlineContinueMarkup;
-  const basicSetupExtension = factories.basicSetupExtension ?? livePreviewBasicSetup;
 
   const keyBindings = [
-    indentWithTabCommand,
     {
       key: 'ArrowDown',
       run: (view) => moveLiveCursorVertically?.(view, 1, 'ArrowDown') ?? false
@@ -54,17 +48,24 @@ export function createEditor({
     },
     {
       key: 'Enter',
-      run: insertNewlineCommand
-    }
+      run: insertNewlineContinueMarkup
+    },
+    ...defaultKeymap,
+    ...historyKeymap,
+    ...completionKeymap,
+    indentWithTab
   ];
 
   const state = createEditorState({
     doc: initialDoc,
     selection: { anchor: 0 },
     extensions: [
-      basicSetupExtension,
+      drawSelection(),
+      dropCursor(),
+      history(),
       createMarkdownExtension(),
-      lineWrappingExtension,
+      lineNumbers(),
+      EditorView.lineWrapping,
       createKeymapExtension(keyBindings),
       livePreviewStateField,
       createDecorationsExtension(livePreviewStateField, (stateValue) => stateValue.decorations),

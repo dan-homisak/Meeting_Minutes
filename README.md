@@ -7,7 +7,7 @@ A local-first markdown editor focused on a single live preview workflow.
 This rewrite is a big-bang cut to a live-only runtime:
 
 - Single mode: live preview editing only.
-- New runtime pipeline in `src/live-v3/`.
+- New runtime pipeline in `src/live-v4/`.
 - Full-block inactive rendering with one active editable block.
 - Deterministic source mapping via `data-src-*` and interaction map entries.
 - Legacy source/preview mode wiring removed from the runtime entry path.
@@ -18,16 +18,16 @@ This rewrite is a big-bang cut to a live-only runtime:
 
 Key modules:
 
-- `src/live-v3/createLiveApp.js`: live-only app composition root.
-- `src/live-v3/LiveRuntime.js`: runtime assembly (parser, renderer, state, pointer/cursor).
-- `src/live-v3/parser/ObsidianCoreParser.js`: core parser/session adapter.
-- `src/live-v3/model/LiveDocModel.js`: canonical live document model.
-- `src/live-v3/LiveStateField.js`: CodeMirror state field for live projection updates.
-- `src/live-v3/LiveRenderer.js`: projection + decorations renderer.
-- `src/live-v3/LiveProjection.js`: active block selection, virtualization, render budgeting.
-- `src/live-v3/InteractionMap.js`: deterministic source interaction mapping.
-- `src/live-v3/PointerController.js`: pointer activation, task toggle, modifier-link open.
-- `src/live-v3/CursorController.js`: vertical cursor movement.
+- `src/live-v4/createLiveApp.js`: live-only app composition root.
+- `src/live-v4/LiveRuntime.js`: runtime assembly (parser, renderer, state, pointer/cursor).
+- `src/live-v4/parser/ObsidianCoreParser.js`: core parser/session adapter.
+- `src/live-v4/model/LiveDocModel.js`: canonical live document model.
+- `src/live-v4/LiveStateField.js`: CodeMirror state field for live projection updates.
+- `src/live-v4/LiveRenderer.js`: projection + decorations renderer.
+- `src/live-v4/LiveProjection.js`: active block selection, virtualization, render budgeting.
+- `src/live-v4/InteractionMap.js`: deterministic source interaction mapping.
+- `src/live-v4/PointerController.js`: pointer activation, task toggle, modifier-link open.
+- `src/live-v4/CursorController.js`: vertical cursor movement.
 
 ## Run
 
@@ -51,6 +51,16 @@ Watch mode:
 ```bash
 npm run test:watch
 ```
+
+## Automated Live Preview Probe
+
+The project includes an automated troubleshooting runner that places cursors at exact positions, clicks rendered widgets, and captures screenshots + diagnostics:
+
+```bash
+npm run probe:live-v4
+```
+
+See `docs/live-v4-probe.md` for flags and artifact details.
 
 ## Build
 

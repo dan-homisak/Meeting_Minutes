@@ -4,7 +4,7 @@ import {
   buildInteractionMap,
   findInteractionEntriesAtPosition,
   resolveInteractionSourceFromTarget
-} from '../../src/live-v3/InteractionMap.js';
+} from '../../src/live-v4/InteractionMap.js';
 
 test('buildInteractionMap normalizes and deduplicates entries', () => {
   const map = buildInteractionMap([

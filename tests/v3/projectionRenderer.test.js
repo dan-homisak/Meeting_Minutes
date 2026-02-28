@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EditorState } from '@codemirror/state';
-import { createLiveRenderer } from '../../src/live-v3/LiveRenderer.js';
-import { buildLiveProjection } from '../../src/live-v3/LiveProjection.js';
+import { createLiveRenderer } from '../../src/live-v4/LiveRenderer.js';
+import { buildLiveProjection } from '../../src/live-v4/LiveProjection.js';
 
 function createModel(text, blocks, inlines = []) {
   return {
@@ -77,4 +77,36 @@ test('createLiveRenderer enforces render budget for large docs', () => {
   const projection = renderer.buildRenderProjection(state, createModel(lines, blocks));
   assert.equal(projection.metrics.renderedBlockCount <= 120, true);
   assert.equal(typeof projection.metrics.budgetTruncated, 'boolean');
+});
+
+test('active multi-line paragraph keeps only active line editable and renders inactive slices', () => {
+  const text = 'line one\nline two\nline three\n';
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: 2 }
+  });
+  const model = createModel(text, [
+    {
+      id: 'p1',
+      type: 'paragraph',
+      from: 0,
+      to: text.length - 1,
+      lineFrom: 1,
+      lineTo: 3,
+      depth: null,
+      attrs: {}
+    }
+  ]);
+
+  const projection = buildLiveProjection({
+    state,
+    model,
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  assert.equal(projection.activeBlockId, 'p1');
+  assert.equal(projection.renderedBlocks.length > 0, true);
+  assert.equal(projection.renderedBlocks.every((entry) => entry.blockId === 'p1'), true);
 });

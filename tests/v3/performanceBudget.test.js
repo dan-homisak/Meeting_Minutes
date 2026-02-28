@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { EditorState } from '@codemirror/state';
-import { createLiveRenderer } from '../../src/live-v3/LiveRenderer.js';
+import { createLiveRenderer } from '../../src/live-v4/LiveRenderer.js';
 
 function buildModelFromState(state) {
   const text = state.doc.toString();
@@ -33,7 +33,7 @@ function buildModelFromState(state) {
   };
 }
 
-test('live-v3 render stays bounded for 5k, 20k, and 50k line documents', () => {
+test('live-v4 render stays bounded for 5k, 20k, and 50k line documents', () => {
   const renderer = createLiveRenderer({
     liveDebug: { trace() {} },
     renderMarkdownHtml(source) {
