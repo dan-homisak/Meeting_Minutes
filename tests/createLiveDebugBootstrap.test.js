@@ -23,9 +23,6 @@ test('createLiveDebugBootstrap resolves level, persists, attaches, and logs star
       }
     },
     isDevBuild: true,
-    sourceFirstMode: true,
-    sourceFirstFromQuery: false,
-    sourceFirstFromStorage: true,
     markdownEngineOptions: {
       breaks: true
     },
@@ -82,6 +79,9 @@ test('createLiveDebugBootstrap resolves level, persists, attaches, and logs star
     calls.info.map((entry) => entry.event),
     ['markdown.engine.config', 'live.mode.architecture']
   );
+  assert.deepEqual(calls.info[1].data, {
+    sourceFirst: true
+  });
 
   const nextLevel = bootstrap.setLiveDebugLevel('debug');
   assert.equal(nextLevel, 'debug');

@@ -74,6 +74,5 @@ test('readLivePreviewState/liveBlocksForView/emitFenceVisibilityState delegate w
   });
   assert.equal(missingBridge.readLivePreviewState({ id: 'state-x' }), null);
   assert.deepEqual(missingBridge.liveBlocksForView({ id: 'view-x' }), []);
-  assert.deepEqual(missingBridge.liveBlockIndexForView({ id: 'view-x' }), []);
   assert.deepEqual(missingBridge.liveSourceMapIndexForView({ id: 'view-x' }), []);
 });

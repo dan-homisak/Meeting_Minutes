@@ -5,15 +5,6 @@ import { createPointerInputHelpers } from '../src/live/pointerInputHelpers.js';
 class ElementMock {}
 class NodeMock {}
 
-test('distanceToBlockBounds reports in-block and out-of-block distances', () => {
-  const helpers = createPointerInputHelpers();
-
-  assert.equal(helpers.distanceToBlockBounds(Number.NaN, { from: 1, to: 5 }), null);
-  assert.equal(helpers.distanceToBlockBounds(3, { from: 1, to: 5 }), 0);
-  assert.equal(helpers.distanceToBlockBounds(0, { from: 1, to: 5 }), 1);
-  assert.equal(helpers.distanceToBlockBounds(7, { from: 1, to: 5 }), 3);
-});
-
 test('normalizePointerTarget returns element or node parent element', () => {
   const helpers = createPointerInputHelpers({
     elementConstructor: ElementMock,

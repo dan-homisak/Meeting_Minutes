@@ -9,9 +9,6 @@ import {
 export function createLiveDebugBootstrap({
   windowObject = window,
   isDevBuild = false,
-  sourceFirstMode = true,
-  sourceFirstFromQuery = null,
-  sourceFirstFromStorage = null,
   markdownEngineOptions = null,
   scope = 'live-preview',
   factories = {}
@@ -50,9 +47,7 @@ export function createLiveDebugBootstrap({
     liveDebug.info('markdown.engine.config', markdownEngineOptions);
   }
   liveDebug.info('live.mode.architecture', {
-    sourceFirst: sourceFirstMode,
-    queryOverride: sourceFirstFromQuery,
-    storedOverride: sourceFirstFromStorage
+    sourceFirst: true
   });
 
   return {

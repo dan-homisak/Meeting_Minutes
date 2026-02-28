@@ -1,6 +1,5 @@
 export function createModeController({
   app,
-  sourceFirstMode = true,
   liveDebug,
   editorElement,
   previewElement,
@@ -22,7 +21,7 @@ export function createModeController({
     liveDebug.info('mode.changed', {
       from: previousMode,
       to: mode,
-      sourceFirst: sourceFirstMode
+      sourceFirst: true
     });
 
     const showEditor = mode !== 'preview';

@@ -4,9 +4,9 @@ This document defines how to iterate on live mode without cursor drift, gutter c
 
 ## Shipped Architecture
 
-1. Live mode defaults to source-first architecture (`LIVE_SOURCE_FIRST_MODE`).
+1. Live mode runs in source-first architecture.
 2. Source-first mode preserves CodeMirror source lines and renders markdown presentation using line/token decorations.
-3. Legacy rendered-block architecture is still available as opt-out via `?liveSourceFirst=false` for comparison.
+3. Live mode architecture is fixed to source-first in runtime (no URL/storage architecture override).
 4. Pointer clicks in source-first mode stay native and are logged (`pointer.map.native`).
 5. A block index is rebuilt on document changes for deterministic diagnostics (`block.index.rebuilt`, `block.index.delta`).
 6. Fence marker state is logged on selection changes (`fence.visibility.state`).
@@ -45,20 +45,11 @@ Source-first compatibility event:
 - `decorations.source-first-built`
 - includes per-class counters (`headingLineCount`, `paragraphLineCount`, `listLineCount`, `taskLineCount`, `quoteLineCount`, `tableLineCount`, `hrLineCount`)
 
-Legacy rendered-block events still exist behind non-default paths and for historical log analysis:
-
-- `block.activate.rendered-*`
-- `block.activate.fallback`
-- `block.position.mapped*`
-
 ## Debug Controls
 
 1. In-app **Live Debug** panel: choose level, clear entries, copy JSON.
 2. URL query level override: `?debugLive=trace` (`off|error|warn|info|trace`).
-3. Optional live architecture override:
-   - `?liveSourceFirst=true`
-   - `?liveSourceFirst=false` (legacy rendered-block path)
-4. Browser API:
+3. Browser API:
 
 ```js
 window.__meetingMinutesLiveDebug.setLevel('trace');
@@ -66,8 +57,7 @@ window.__meetingMinutesLiveDebug.entries();
 window.__meetingMinutesLiveDebug.clear();
 ```
 
-5. Persisted debug level key: `meetingMinutes.liveDebugLevel`.
-6. Persisted architecture key: `meetingMinutes.liveSourceFirst`.
+4. Persisted debug level key: `meetingMinutes.liveDebugLevel`.
 
 ## Log Workflow
 
@@ -78,6 +68,8 @@ window.__meetingMinutesLiveDebug.clear();
 ```bash
 npm run logs:verify
 ```
+
+`logs:verify` ignores the initial pointer-driven selection jump from `head=0` (document start) to the first clicked location.
 
 Useful overrides:
 
@@ -101,15 +93,13 @@ npm run logs:verify -- --max-selection-jumps 0 --max-cursor-suspects 0 --max-gut
 
 ## Regression Coverage
 
-`tests/livePreviewCore.test.js` covers:
+Core live-preview helper regressions are covered by:
 
-- block collection and overlap handling
-- source range annotation
-- active-line split behavior
-- block selection clamping
-- block type classification
-- block index generation and position lookup
-- fenced marker visibility state reporting
+- `tests/blockRangeCollector.test.js` (block collection and overlap handling)
+- `tests/sourceRangeMapper.test.js` (source range annotation)
+- `tests/liveBlockHelpers.test.js` (line-overlap and fenced-block detection helpers)
+- `tests/liveActivationHelpers.test.js` (block lookup and activation-bound resolution helpers)
+- `tests/liveBlockIndex.test.js` (block type classification and index lookup)
 
 `tests/liveDebugLogger.test.js` covers:
 

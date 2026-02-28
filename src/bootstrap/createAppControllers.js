@@ -15,7 +15,6 @@ export function createAppControllers({
   readDocumentModel,
   renderPreview,
   liveDebug,
-  sourceFirstMode,
   editorElement,
   previewElement,
   rawModeButton,
@@ -74,7 +73,6 @@ export function createAppControllers({
 
   const modeController = createModeController({
     app,
-    sourceFirstMode,
     liveDebug,
     editorElement,
     previewElement,

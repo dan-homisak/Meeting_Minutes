@@ -44,11 +44,8 @@ function createFactorySpy(returnValue) {
 
 test('createLiveControllers wires factories and preserves selection/update delegation', () => {
   const selectionUpdates = [];
-  const liveDebugTraceCalls = [];
   const liveDebug = {
-    trace(event, data) {
-      liveDebugTraceCalls.push({ event, data });
-    }
+    trace() {}
   };
   const runtime = {
     windowObject: { id: 'window' },
@@ -63,9 +60,6 @@ test('createLiveControllers wires factories and preserves selection/update deleg
   };
   const sentinels = {
     liveViewportProbe: { id: 'viewport' },
-    pointerProbeGeometry: { id: 'probe-geometry' },
-    pointerSourceMapping: { id: 'source-mapping' },
-    pointerMappingProbe: { id: 'mapping-probe' },
     pointerActivationController: { id: 'pointer-activation' },
     cursorVisibilityController: { id: 'cursor-visibility' },
     cursorNavigationController: { id: 'cursor-navigation' },
@@ -80,9 +74,6 @@ test('createLiveControllers wires factories and preserves selection/update deleg
   };
 
   const viewportFactory = createFactorySpy(sentinels.liveViewportProbe);
-  const probeGeometryFactory = createFactorySpy(sentinels.pointerProbeGeometry);
-  const sourceMappingFactory = createFactorySpy(sentinels.pointerSourceMapping);
-  const mappingProbeFactory = createFactorySpy(sentinels.pointerMappingProbe);
   const activationFactory = createFactorySpy(sentinels.pointerActivationController);
   const visibilityFactory = createFactorySpy(sentinels.cursorVisibilityController);
   const navigationFactory = createFactorySpy(sentinels.cursorNavigationController);
@@ -94,15 +85,11 @@ test('createLiveControllers wires factories and preserves selection/update deleg
     app: { viewMode: 'live' },
     liveDebug,
     liveDebugDiagnostics: { id: 'diagnostics-state' },
-    sourceFirstMode: true,
     config: createConfig(),
     helpers: createHelpers(),
     runtime,
     factories: {
       createLiveViewportProbe: viewportFactory.factory,
-      createPointerProbeGeometry: probeGeometryFactory.factory,
-      createPointerSourceMapping: sourceMappingFactory.factory,
-      createPointerMappingProbe: mappingProbeFactory.factory,
       createPointerActivationController: activationFactory.factory,
       createCursorVisibilityController: visibilityFactory.factory,
       createCursorNavigationController: navigationFactory.factory,
@@ -113,9 +100,6 @@ test('createLiveControllers wires factories and preserves selection/update deleg
   });
 
   assert.equal(viewportFactory.calls.length, 1);
-  assert.equal(probeGeometryFactory.calls.length, 1);
-  assert.equal(sourceMappingFactory.calls.length, 1);
-  assert.equal(mappingProbeFactory.calls.length, 1);
   assert.equal(activationFactory.calls.length, 1);
   assert.equal(visibilityFactory.calls.length, 1);
   assert.equal(navigationFactory.calls.length, 1);
@@ -124,8 +108,8 @@ test('createLiveControllers wires factories and preserves selection/update deleg
   assert.equal(editorUpdateFactory.calls.length, 1);
   assert.deepEqual(controllers, sentinels);
 
-  assert.equal(activationFactory.calls[0].requestAnimationFrameFn, runtime.requestAnimationFrameFn);
   assert.equal(visibilityFactory.calls[0].createCursorSelection, runtime.createCursorSelection);
+  assert.equal(visibilityFactory.calls[0].requestAnimationFrameFn, runtime.requestAnimationFrameFn);
   assert.equal(
     diagnosticsFactory.calls[0].performanceObserverClass,
     runtime.performanceObserverClass
@@ -139,19 +123,9 @@ test('createLiveControllers wires factories and preserves selection/update deleg
   const updatePayload = { id: 'selection-update' };
   editorUpdateFactory.calls[0].handleSelectionUpdate(updatePayload);
   assert.deepEqual(selectionUpdates, [updatePayload]);
-
-  sourceMappingFactory.calls[0].traceDomPosFailure(new Error('dom-pos-fail'));
-  assert.deepEqual(liveDebugTraceCalls, [
-    {
-      event: 'block.activate.dom-pos-failed',
-      data: {
-        message: 'dom-pos-fail'
-      }
-    }
-  ]);
 });
 
-test('createLiveControllers uses runtime fallbacks for raf and cursor selection', () => {
+test('createLiveControllers uses runtime fallbacks for cursor selection and raf consumers', () => {
   const activationFactory = createFactorySpy({ id: 'pointer-activation' });
   const visibilityFactory = createFactorySpy({ id: 'cursor-visibility' });
 
@@ -161,14 +135,10 @@ test('createLiveControllers uses runtime fallbacks for raf and cursor selection'
       trace() {}
     },
     liveDebugDiagnostics: {},
-    sourceFirstMode: true,
     config: createConfig(),
     helpers: createHelpers(),
     factories: {
       createLiveViewportProbe: () => ({ id: 'viewport' }),
-      createPointerProbeGeometry: () => ({ id: 'probe-geometry' }),
-      createPointerSourceMapping: () => ({ id: 'source-mapping' }),
-      createPointerMappingProbe: () => ({ id: 'mapping-probe' }),
       createPointerActivationController: activationFactory.factory,
       createCursorVisibilityController: visibilityFactory.factory,
       createCursorNavigationController: () => ({ id: 'cursor-navigation' }),
@@ -179,10 +149,11 @@ test('createLiveControllers uses runtime fallbacks for raf and cursor selection'
   });
 
   let rafCalled = false;
-  activationFactory.calls[0].requestAnimationFrameFn(() => {
+  visibilityFactory.calls[0].requestAnimationFrameFn(() => {
     rafCalled = true;
   });
   assert.equal(rafCalled, true);
+  assert.equal(activationFactory.calls[0].requestAnimationFrameFn, undefined);
   assert.deepEqual(visibilityFactory.calls[0].createCursorSelection(9, -1), {
     position: 9,
     assoc: -1

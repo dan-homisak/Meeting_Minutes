@@ -30,13 +30,6 @@ test('requestLivePreviewRefresh emits trace and dispatches refresh effect', () =
         return [];
       }
     },
-    renderMarkdownHtml() {
-      return '';
-    },
-    normalizeLogString(value) {
-      return String(value);
-    },
-    sourceFirstMode: true,
     refreshLivePreviewEffect
   });
 
@@ -56,9 +49,7 @@ test('requestLivePreviewRefresh emits trace and dispatches refresh effect', () =
   assert.equal(traceCalls[0].data.reason, 'manual');
   assert.equal(dispatched.length, 1);
   assert.equal(dispatched[0].effects.is(refreshLivePreviewEffect), true);
-  assert.equal(dispatched[0].effects.value.reason, 'manual');
-  assert.equal(dispatched[0].effects.value.viewport, null);
-  assert.deepEqual(dispatched[0].effects.value.visibleRanges, []);
+  assert.equal(dispatched[0].effects.value, 'manual');
 });
 
 test('emitFenceVisibilityState is a no-op when not in live mode', () => {
@@ -70,13 +61,6 @@ test('emitFenceVisibilityState is a no-op when not in live mode', () => {
         return [];
       }
     },
-    renderMarkdownHtml() {
-      return '';
-    },
-    normalizeLogString(value) {
-      return String(value);
-    },
-    sourceFirstMode: true,
     refreshLivePreviewEffect: StateEffect.define()
   });
 
@@ -137,13 +121,6 @@ test('livePreviewStateField applies docChanged updates via documentSession witho
         };
       }
     },
-    renderMarkdownHtml() {
-      return '';
-    },
-    normalizeLogString(value) {
-      return String(value);
-    },
-    sourceFirstMode: true,
     refreshLivePreviewEffect
   });
 

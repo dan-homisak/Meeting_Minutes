@@ -44,7 +44,6 @@ test('setViewMode preview toggles UI and renders preview content', () => {
 
   const modeController = createModeController({
     app,
-    sourceFirstMode: true,
     liveDebug: { info() {} },
     editorElement,
     previewElement,
@@ -98,7 +97,6 @@ test('setViewMode live refreshes editor and emits fence visibility state', () =>
 
   const modeController = createModeController({
     app,
-    sourceFirstMode: true,
     liveDebug: { info() {} },
     editorElement,
     previewElement,

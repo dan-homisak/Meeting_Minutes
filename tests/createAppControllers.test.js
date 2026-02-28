@@ -52,7 +52,6 @@ test('createAppControllers wires workspace/mode controllers and delegates runtim
     setEditorText: () => {},
     renderPreview: () => {},
     liveDebug: { trace() {} },
-    sourceFirstMode: true,
     editorElement: { id: 'editor' },
     previewElement: { id: 'preview' },
     rawModeButton: { id: 'raw' },

@@ -132,34 +132,25 @@ window.__meetingMinutesLiveDebug.entries();
 - `src/bootstrap/createExtensions.js`: live preview + editor extension composition (state field, pointer handlers, atomic ranges)
 - `src/bootstrap/createLiveControllerOptions.js`: helper/runtime option composition for live controller factory wiring
 - `src/bootstrap/liveConstants.js`: shared live-mode timing/threshold constants and keylog key sets
-- `src/livePreviewCore.js`: testable live-preview block/cursor utilities
 - `src/liveDebugLogger.js`: structured live-view logger with persistent levels
-- `src/liveArchitecture.js`: live-mode architecture flag parsing/resolution
 - `src/live/logString.js`: shared log-safe string normalization helper
 - `src/live/livePreviewController.js`: live-preview state field and decoration orchestration
 - `src/live/livePreviewBridge.js`: live-preview controller/view adapter for refresh/state/block access
 - `src/live/editorUpdateController.js`: editor update-listener doc/selection handling and autosave flow
-- `src/live/pointerActivationController.js`: compatibility export for core pointer activation controller
-- `src/live/cursorNavigationController.js`: compatibility export for core vertical cursor navigation controller
+- `src/core/render/MarkdownRenderer.js`: markdown-to-HTML render + sanitized preview output
+- `src/core/render/LiveSourceRenderer.js`: source-first line/token classification and decoration plan builders
 - `src/core/selection/ActivationController.js`: live pointer activation context resolution and block selection
 - `src/core/selection/CursorNavigator.js`: live vertical cursor navigation and assoc-correction policy
 - `src/core/selection/SelectionPolicy.js`: shared source-map lookup/clamping policy for activation and cursor movement
-- `src/core/viewport/ViewportWindow.js`: visible-range and buffered viewport source-window resolution
-- `src/core/viewport/BlockVirtualizer.js`: viewport-aware block filtering with active-block safety inclusion
-- `src/core/viewport/RenderBudget.js`: render-budget capping for viewport block workloads
 - `src/live/liveDiagnosticsController.js`: runtime/editor input diagnostics hooks and instrumentation
 - `src/live/liveDiagnosticsLogHelpers.js`: shared DOM/selection log serialization helpers for diagnostics
 - `src/live/liveLineMappingHelpers.js`: shared numeric clamp and source line/bounds diagnostics readers
-- `src/live/pointerInputHelpers.js`: pointer target normalization, coordinate extraction, and block-distance helpers
+- `src/live/pointerInputHelpers.js`: pointer target normalization and coordinate extraction helpers
 - `src/live/liveSnapshotController.js`: input signal tracking and editor snapshot telemetry payloads
 - `src/live/selectionDiagnosticsController.js`: selection-change/jump diagnostics and transaction summary logging
 - `src/live/cursorVisibilityController.js`: cursor visibility probing, recovery, and gutter/cursor anomaly signals
 - `src/live/liveViewportProbe.js`: cursor/gutter viewport geometry readers for live diagnostics
-- `src/live/pointerProbeGeometry.js`: rendered pointer probe geometry and coordinate sampling helpers
-- `src/live/pointerMappingProbe.js`: rendered/fallback pointer-to-source mapping probe builders
-- `src/live/pointerSourceMapping.js`: source-range extraction and DOM/coord-to-position mapping helpers
 - `src/editor/slashCommands.js`: slash command catalog + completion provider
-- `src/render/markdownRenderer.js`: markdown-to-HTML render + sanitized preview output
 - `src/ui/modeController.js`: raw/live/preview mode transitions and UI state
 - `src/ui/themeController.js`: theme state and browser preference syncing
 - `src/ui/workspaceView.js`: status/action/file-list UI rendering helpers

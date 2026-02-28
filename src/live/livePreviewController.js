@@ -14,84 +14,18 @@ export function createLivePreviewController({
   liveDebug,
   markdownEngine,
   documentSession = null,
-  renderMarkdownHtml,
-  normalizeLogString,
-  sourceFirstMode = true,
   refreshLivePreviewEffect,
-  fragmentCacheMax = 2500,
-  slowBuildWarnMs = 12,
-  viewportLineBuffer = 8,
-  viewportMinimumLineSpan = 24,
-  maxViewportBlocks = 160,
-  maxViewportCharacters = 24000
 } = {}) {
-  function normalizeRefreshRequestValue(value) {
-    if (value && typeof value === 'object' && !Array.isArray(value)) {
-      const reason =
-        typeof value.reason === 'string' && value.reason.trim().length > 0
-          ? value.reason
-          : 'manual';
-      const viewport =
-        Number.isFinite(value.viewport?.from) && Number.isFinite(value.viewport?.to)
-          ? {
-            from: Math.trunc(value.viewport.from),
-            to: Math.trunc(value.viewport.to)
-          }
-          : null;
-      const visibleRanges = Array.isArray(value.visibleRanges)
-        ? value.visibleRanges
-          .filter((range) => Number.isFinite(range?.from) && Number.isFinite(range?.to))
-          .map((range) => ({
-            from: Math.trunc(range.from),
-            to: Math.trunc(range.to)
-          }))
-        : [];
-      return {
-        reason,
-        viewport,
-        visibleRanges
-      };
-    }
-
+  function normalizeRefreshReason(value) {
     if (typeof value === 'string' && value.trim().length > 0) {
-      return {
-        reason: value,
-        viewport: null,
-        visibleRanges: []
-      };
+      return value;
     }
 
-    return {
-      reason: 'manual',
-      viewport: null,
-      visibleRanges: []
-    };
-  }
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      return normalizeRefreshReason(value.reason);
+    }
 
-  function buildRefreshRequest(view, reason = 'manual') {
-    const normalizedReason =
-      typeof reason === 'string' && reason.trim().length > 0 ? reason : 'manual';
-    const viewport =
-      Number.isFinite(view?.viewport?.from) && Number.isFinite(view?.viewport?.to)
-        ? {
-          from: Math.trunc(view.viewport.from),
-          to: Math.trunc(view.viewport.to)
-        }
-        : null;
-    const visibleRanges = Array.isArray(view?.visibleRanges)
-      ? view.visibleRanges
-        .filter((range) => Number.isFinite(range?.from) && Number.isFinite(range?.to))
-        .map((range) => ({
-          from: Math.trunc(range.from),
-          to: Math.trunc(range.to)
-        }))
-      : [];
-
-    return {
-      reason: normalizedReason,
-      viewport,
-      visibleRanges
-    };
+    return 'manual';
   }
 
   function collectTopLevelBlocksSafe(doc, transaction = null, reason = 'state-read') {
@@ -144,24 +78,14 @@ export function createLivePreviewController({
   }
   const liveHybridRenderer = createLiveHybridRenderer({
     app,
-    liveDebug,
-    renderMarkdownHtml,
-    normalizeLogString,
-    sourceFirstMode,
-    fragmentCacheMax,
-    slowBuildWarnMs,
-    viewportLineBuffer,
-    viewportMinimumLineSpan,
-    maxViewportBlocks,
-    maxViewportCharacters
+    liveDebug
   });
 
   const livePreviewStateField = StateField.define({
     create(state) {
       const blocks = collectTopLevelBlocksSafe(state.doc, null, 'state-create');
       const blockIndex = buildLiveBlockIndex(state.doc, blocks);
-      const fragmentHtmlCache = new Map();
-      const initialRender = liveHybridRenderer.buildDecorations(state, blocks, fragmentHtmlCache);
+      const initialRender = liveHybridRenderer.buildDecorations(state, blocks);
       const lastSelectionLineFrom = state.doc.lineAt(state.selection.main.head).from;
       liveDebug.trace('block.index.rebuilt', {
         reason: 'create',
@@ -173,14 +97,12 @@ export function createLivePreviewController({
         blockIndex,
         decorations: initialRender.decorations,
         sourceMapIndex: initialRender.sourceMapIndex,
-        fragmentHtmlCache,
         lastSelectionLineFrom
       };
     },
     update(value, transaction) {
       let blocks = value.blocks;
       let blockIndex = Array.isArray(value.blockIndex) ? value.blockIndex : [];
-      let fragmentHtmlCache = value.fragmentHtmlCache;
 
       if (transaction.docChanged) {
         blocks = collectTopLevelBlocksSafe(transaction.state.doc, transaction, 'transaction-doc-changed');
@@ -211,17 +133,13 @@ export function createLivePreviewController({
           removedCount
         });
         blockIndex = nextBlockIndex;
-        fragmentHtmlCache = new Map();
       }
 
       const refreshRequests = transaction.effects
         .filter((effect) => effect.is(refreshLivePreviewEffect))
-        .map((effect) => normalizeRefreshRequestValue(effect.value));
-      const refreshReasons = refreshRequests.map((request) => request.reason);
+        .map((effect) => normalizeRefreshReason(effect.value));
+      const refreshReasons = refreshRequests;
       const refreshRequested = refreshReasons.length > 0;
-      const latestRefreshRequest = refreshRequests.length > 0
-        ? refreshRequests[refreshRequests.length - 1]
-        : null;
 
       const previousSelection = transaction.startState.selection.main;
       const currentSelection = transaction.state.selection.main;
@@ -233,38 +151,25 @@ export function createLivePreviewController({
       const selectionLineChanged =
         selectionSet && currentSelectionLineFrom !== value.lastSelectionLineFrom;
       const shouldRebuildDecorations =
-        sourceFirstMode
-          ? (transaction.docChanged || refreshRequested || selectionLineChanged)
-          : (transaction.docChanged || refreshRequested || selectionLineChanged);
+        transaction.docChanged || refreshRequested || selectionLineChanged;
 
       if (shouldRebuildDecorations) {
         liveDebug.trace('plugin.update', {
           docChanged: transaction.docChanged,
-          viewportChanged: refreshReasons.includes('viewport-changed'),
           selectionSet,
           selectionLineChanged,
           previousSelectionLineFrom: value.lastSelectionLineFrom,
           currentSelectionLineFrom,
           refreshRequested,
-          refreshReasons,
-          viewportRangeCount: latestRefreshRequest?.visibleRanges?.length ?? 0
+          refreshReasons
         });
 
-        const renderResult = liveHybridRenderer.buildDecorations(
-          transaction.state,
-          blocks,
-          fragmentHtmlCache,
-          {
-            viewport: latestRefreshRequest?.viewport ?? null,
-            visibleRanges: latestRefreshRequest?.visibleRanges ?? []
-          }
-        );
+        const renderResult = liveHybridRenderer.buildDecorations(transaction.state, blocks);
         return {
           blocks,
           blockIndex,
           decorations: renderResult.decorations,
           sourceMapIndex: renderResult.sourceMapIndex,
-          fragmentHtmlCache,
           lastSelectionLineFrom: currentSelectionLineFrom
         };
       }
@@ -275,7 +180,7 @@ export function createLivePreviewController({
           currentSelectionLineFrom
         });
 
-        if (sourceFirstMode && currentSelectionLineFrom !== value.lastSelectionLineFrom) {
+        if (currentSelectionLineFrom !== value.lastSelectionLineFrom) {
           return {
             ...value,
             blocks,
@@ -331,16 +236,13 @@ export function createLivePreviewController({
   }
 
   function requestLivePreviewRefresh(view, reason = 'manual') {
-    const refreshRequest = buildRefreshRequest(view, reason);
+    const refreshReason = normalizeRefreshReason(reason);
     liveDebug.trace('refresh.requested', {
       mode: app.viewMode,
-      reason: refreshRequest.reason,
-      viewportFrom: refreshRequest.viewport?.from ?? null,
-      viewportTo: refreshRequest.viewport?.to ?? null,
-      viewportRangeCount: refreshRequest.visibleRanges.length
+      reason: refreshReason
     });
     view.dispatch({
-      effects: refreshLivePreviewEffect.of(refreshRequest)
+      effects: refreshLivePreviewEffect.of(refreshReason)
     });
   }
 
@@ -349,7 +251,6 @@ export function createLivePreviewController({
     requestLivePreviewRefresh,
     readLivePreviewState,
     liveBlocksForView,
-    liveBlockIndexForView,
     liveSourceMapIndexForView,
     emitFenceVisibilityState
   };

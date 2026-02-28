@@ -96,9 +96,30 @@ function parseJsonLines(content) {
     .filter(Boolean);
 }
 
+function isInitialPointerSelectionJump(data) {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
+  const previousHead = data.previousHead;
+  const currentHead = data.currentHead;
+  const previousLineNumber = data.previousLineNumber;
+  const recentInputKind = data.recentInputKind;
+  return (
+    recentInputKind === 'pointer' &&
+    Number.isFinite(previousHead) &&
+    previousHead === 0 &&
+    Number.isFinite(previousLineNumber) &&
+    previousLineNumber === 1 &&
+    Number.isFinite(currentHead) &&
+    currentHead > 0
+  );
+}
+
 function countKeyEvents(records) {
   const summary = {
     selectionJumpDetected: 0,
+    selectionJumpIgnoredInitialPointer: 0,
     cursorVisibilitySuspect: 0,
     gutterVisibilityHidden: 0,
     pointerMapNative: 0,
@@ -117,7 +138,11 @@ function countKeyEvents(records) {
     const data = record?.entry?.data ?? {};
 
     if (eventName === 'selection.jump.detected') {
-      summary.selectionJumpDetected += 1;
+      if (isInitialPointerSelectionJump(data)) {
+        summary.selectionJumpIgnoredInitialPointer += 1;
+      } else {
+        summary.selectionJumpDetected += 1;
+      }
     }
     if (eventName === 'cursor.visibility.suspect') {
       summary.cursorVisibilitySuspect += 1;
@@ -162,6 +187,9 @@ async function main() {
   console.log(`Live debug verify log: ${logFilePath}`);
   console.log(`Total records: ${records.length}`);
   console.log(`- selection.jump.detected: ${summary.selectionJumpDetected}`);
+  console.log(
+    `- selection.jump.detected (ignored initial pointer jump): ${summary.selectionJumpIgnoredInitialPointer}`
+  );
   console.log(`- cursor.visibility.suspect: ${summary.cursorVisibilitySuspect}`);
   console.log(`- gutter.visibility.hidden: ${summary.gutterVisibilityHidden}`);
   console.log(`- pointer.map.native: ${summary.pointerMapNative}`);

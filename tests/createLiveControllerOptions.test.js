@@ -7,22 +7,13 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
     normalizeLogString: () => {},
     liveRuntimeHelpers: {
       readLineInfoForPosition: () => {},
-      clampNumber: () => {},
       readBlockLineBoundsForLog: () => {},
-      buildCoordSamples: () => {},
       resolvePointerPosition: () => {},
-      summarizeRectForLog: () => {},
-      readComputedStyleSnapshotForLog: () => {},
       liveBlocksForView: () => {},
       normalizePointerTarget: () => {},
       readPointerCoordinates: () => {},
       describeElementForLog: () => {},
       recordInputSignal: () => {},
-      findRenderedSourceRangeTarget: () => {},
-      resolvePositionFromRenderedSourceRange: () => {},
-      distanceToBlockBounds: () => {},
-      buildRenderedPointerProbe: () => {},
-      summarizeLineNumbersForCoordSamples: () => {},
       readCursorVisibilityForLog: () => {},
       readDomSelectionForLog: () => {},
       readGutterVisibilityForLog: () => {},
@@ -36,14 +27,6 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
       emitFenceVisibilityState: () => {}
     },
     resolveActivationBlockBounds: () => {},
-    resolveLiveBlockSelection: () => {},
-    findBlockContainingPosition: () => {},
-    findNearestBlockForPosition: () => {},
-    isFencedCodeBlock: () => {},
-    parseSourceFromAttribute: () => {},
-    shouldPreferRenderedDomAnchorPosition: () => {},
-    shouldPreferSourceFromForRenderedFencedClick: () => {},
-    shouldPreferSourceFromForRenderedBoundaryClick: () => {},
     isRefreshEffect: () => {},
     renderPreview: () => {},
     updateActionButtons: () => {},
@@ -62,21 +45,10 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
     app: { id: 'app' },
     liveDebug: { id: 'live-debug' },
     liveDebugDiagnostics: { id: 'diagnostics' },
-    sourceFirstMode: false,
     config: { id: 'config' },
     normalizeLogString: sentinel.normalizeLogString,
     liveRuntimeHelpers: sentinel.liveRuntimeHelpers,
     resolveActivationBlockBounds: sentinel.resolveActivationBlockBounds,
-    resolveLiveBlockSelection: sentinel.resolveLiveBlockSelection,
-    findBlockContainingPosition: sentinel.findBlockContainingPosition,
-    findNearestBlockForPosition: sentinel.findNearestBlockForPosition,
-    isFencedCodeBlock: sentinel.isFencedCodeBlock,
-    parseSourceFromAttribute: sentinel.parseSourceFromAttribute,
-    shouldPreferRenderedDomAnchorPosition: sentinel.shouldPreferRenderedDomAnchorPosition,
-    shouldPreferSourceFromForRenderedFencedClick:
-      sentinel.shouldPreferSourceFromForRenderedFencedClick,
-    shouldPreferSourceFromForRenderedBoundaryClick:
-      sentinel.shouldPreferSourceFromForRenderedBoundaryClick,
     isRefreshEffect: sentinel.isRefreshEffect,
     renderPreview: sentinel.renderPreview,
     updateActionButtons: sentinel.updateActionButtons,
@@ -97,13 +69,11 @@ test('createLiveControllerOptions composes config, helper delegates, and runtime
   assert.equal(options.app.id, 'app');
   assert.equal(options.liveDebug.id, 'live-debug');
   assert.equal(options.liveDebugDiagnostics.id, 'diagnostics');
-  assert.equal(options.sourceFirstMode, false);
   assert.equal(options.config.id, 'config');
 
   assert.equal(options.helpers.normalizeLogString, sentinel.normalizeLogString);
   assert.equal(options.helpers.readLineInfoForPosition, sentinel.liveRuntimeHelpers.readLineInfoForPosition);
-  assert.equal(options.helpers.findBlockContainingPosition, sentinel.findBlockContainingPosition);
-  assert.equal(options.helpers.shouldPreferRenderedDomAnchorPosition, sentinel.shouldPreferRenderedDomAnchorPosition);
+  assert.equal(options.helpers.resolveActivationBlockBounds, sentinel.resolveActivationBlockBounds);
   assert.equal(options.helpers.isRefreshEffect, sentinel.isRefreshEffect);
   assert.equal(options.helpers.renderPreview, sentinel.renderPreview);
   assert.equal(options.helpers.scheduleAutosave, sentinel.scheduleAutosave);

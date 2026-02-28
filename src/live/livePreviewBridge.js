@@ -36,15 +36,6 @@ export function createLivePreviewBridge({
     return controller.liveBlocksForView(view);
   }
 
-  function liveBlockIndexForView(view) {
-    const controller = readController();
-    if (!controller || typeof controller.liveBlockIndexForView !== 'function') {
-      return [];
-    }
-
-    return controller.liveBlockIndexForView(view);
-  }
-
   function liveSourceMapIndexForView(view) {
     const controller = readController();
     if (!controller || typeof controller.liveSourceMapIndexForView !== 'function') {
@@ -67,7 +58,6 @@ export function createLivePreviewBridge({
     requestLivePreviewRefresh,
     readLivePreviewState,
     liveBlocksForView,
-    liveBlockIndexForView,
     liveSourceMapIndexForView,
     emitFenceVisibilityState
   };

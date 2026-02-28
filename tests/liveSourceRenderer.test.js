@@ -5,7 +5,7 @@ import {
   buildSourceFirstDecorationPlan,
   classifyLiveSourceLine,
   computeFenceStateByLine
-} from '../src/liveSourceRenderer.js';
+} from '../src/core/render/LiveSourceRenderer.js';
 
 function docFrom(text) {
   return EditorState.create({ doc: text }).doc;

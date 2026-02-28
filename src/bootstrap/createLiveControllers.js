@@ -4,16 +4,12 @@ import { createEditorUpdateController as createEditorUpdateControllerFactory } f
 import { createLiveDiagnosticsController as createLiveDiagnosticsControllerFactory } from '../live/liveDiagnosticsController.js';
 import { createLiveViewportProbe as createLiveViewportProbeFactory } from '../live/liveViewportProbe.js';
 import { createPointerActivationController as createPointerActivationControllerFactory } from '../core/selection/ActivationController.js';
-import { createPointerMappingProbe as createPointerMappingProbeFactory } from '../live/pointerMappingProbe.js';
-import { createPointerProbeGeometry as createPointerProbeGeometryFactory } from '../live/pointerProbeGeometry.js';
-import { createPointerSourceMapping as createPointerSourceMappingFactory } from '../live/pointerSourceMapping.js';
 import { createSelectionDiagnosticsController as createSelectionDiagnosticsControllerFactory } from '../live/selectionDiagnosticsController.js';
 
 export function createLiveControllers({
   app,
   liveDebug,
   liveDebugDiagnostics,
-  sourceFirstMode = true,
   config,
   helpers,
   runtime = {},
@@ -21,12 +17,6 @@ export function createLiveControllers({
 } = {}) {
   const createLiveViewportProbe =
     factories.createLiveViewportProbe ?? createLiveViewportProbeFactory;
-  const createPointerProbeGeometry =
-    factories.createPointerProbeGeometry ?? createPointerProbeGeometryFactory;
-  const createPointerSourceMapping =
-    factories.createPointerSourceMapping ?? createPointerSourceMappingFactory;
-  const createPointerMappingProbe =
-    factories.createPointerMappingProbe ?? createPointerMappingProbeFactory;
   const createPointerActivationController =
     factories.createPointerActivationController ?? createPointerActivationControllerFactory;
   const createCursorVisibilityController =
@@ -58,54 +48,10 @@ export function createLiveControllers({
     windowObject: runtime.windowObject
   });
 
-  const pointerProbeGeometry = createPointerProbeGeometry({
-    normalizeLogString: helpers.normalizeLogString,
-    readLineInfoForPosition: helpers.readLineInfoForPosition,
-    windowObject: runtime.windowObject,
-    elementConstructor: runtime.elementConstructor
-  });
-
-  const pointerSourceMapping = createPointerSourceMapping({
-    clampNumber: helpers.clampNumber,
-    traceDomPosFailure: (error) => {
-      liveDebug.trace('block.activate.dom-pos-failed', {
-        message: error instanceof Error ? error.message : String(error)
-      });
-    },
-    elementConstructor: runtime.elementConstructor
-  });
-
-  const pointerMappingProbe = createPointerMappingProbe({
-    clampNumber: helpers.clampNumber,
-    readBlockLineBoundsForLog: helpers.readBlockLineBoundsForLog,
-    buildCoordSamples: helpers.buildCoordSamples,
-    readLineInfoForPosition: helpers.readLineInfoForPosition,
-    resolvePointerPosition: helpers.resolvePointerPosition,
-    summarizeRectForLog: helpers.summarizeRectForLog,
-    readComputedStyleSnapshotForLog: helpers.readComputedStyleSnapshotForLog,
-    normalizeLogString: helpers.normalizeLogString
-  });
-
   const pointerActivationController = createPointerActivationController({
     app,
     liveDebug,
-    sourceFirstMode,
-    livePreviewRenderedDomAnchorStickyMaxPosDelta:
-      config.livePreviewRenderedDomAnchorStickyMaxPosDelta,
-    livePreviewRenderedFencedStickyMaxPosDelta: config.livePreviewRenderedFencedStickyMaxPosDelta,
-    livePreviewRenderedFencedStickyMaxLineDelta: config.livePreviewRenderedFencedStickyMaxLineDelta,
-    livePreviewRenderedBoundaryStickyMaxPosDelta:
-      config.livePreviewRenderedBoundaryStickyMaxPosDelta,
-    livePreviewRenderedBoundaryStickyMaxLineDelta:
-      config.livePreviewRenderedBoundaryStickyMaxLineDelta,
-    livePreviewRenderedBoundaryStickyMaxDistanceFromBottomPx:
-      config.livePreviewRenderedBoundaryStickyMaxDistanceFromBottomPx,
-    livePreviewRenderedBoundaryStickyMinRatioY: config.livePreviewRenderedBoundaryStickyMinRatioY,
-    liveDebugBlockMapLargeDeltaPos: config.liveDebugBlockMapLargeDeltaPos,
-    liveDebugBlockMapLargeDeltaLines: config.liveDebugBlockMapLargeDeltaLines,
-    requestAnimationFrameFn,
     liveBlocksForView: helpers.liveBlocksForView,
-    liveSourceMapIndexForView: helpers.liveSourceMapIndexForView,
     normalizePointerTarget: helpers.normalizePointerTarget,
     readPointerCoordinates: helpers.readPointerCoordinates,
     describeElementForLog: helpers.describeElementForLog,
@@ -113,22 +59,7 @@ export function createLiveControllers({
     resolvePointerPosition: helpers.resolvePointerPosition,
     readLineInfoForPosition: helpers.readLineInfoForPosition,
     readBlockLineBoundsForLog: helpers.readBlockLineBoundsForLog,
-    resolveActivationBlockBounds: helpers.resolveActivationBlockBounds,
-    resolveLiveBlockSelection: helpers.resolveLiveBlockSelection,
-    findBlockContainingPosition: helpers.findBlockContainingPosition,
-    findNearestBlockForPosition: helpers.findNearestBlockForPosition,
-    isFencedCodeBlock: helpers.isFencedCodeBlock,
-    parseSourceFromAttribute: helpers.parseSourceFromAttribute,
-    findRenderedSourceRangeTarget: helpers.findRenderedSourceRangeTarget,
-    resolvePositionFromRenderedSourceRange: helpers.resolvePositionFromRenderedSourceRange,
-    distanceToBlockBounds: helpers.distanceToBlockBounds,
-    shouldPreferRenderedDomAnchorPosition: helpers.shouldPreferRenderedDomAnchorPosition,
-    shouldPreferSourceFromForRenderedFencedClick: helpers.shouldPreferSourceFromForRenderedFencedClick,
-    shouldPreferSourceFromForRenderedBoundaryClick:
-      helpers.shouldPreferSourceFromForRenderedBoundaryClick,
-    buildRenderedPointerProbe: helpers.buildRenderedPointerProbe,
-    summarizeLineNumbersForCoordSamples: helpers.summarizeLineNumbersForCoordSamples,
-    normalizeLogString: helpers.normalizeLogString
+    resolveActivationBlockBounds: helpers.resolveActivationBlockBounds
   });
 
   const cursorVisibilityController = createCursorVisibilityController({
@@ -209,15 +140,11 @@ export function createLiveControllers({
     updateActionButtons: helpers.updateActionButtons,
     setStatus: helpers.setStatus,
     scheduleAutosave: helpers.scheduleAutosave,
-    readDocumentModel: helpers.readDocumentModel,
-    requestLivePreviewRefresh: helpers.requestLivePreviewRefresh
+    readDocumentModel: helpers.readDocumentModel
   });
 
   return {
     liveViewportProbe,
-    pointerProbeGeometry,
-    pointerSourceMapping,
-    pointerMappingProbe,
     pointerActivationController,
     cursorVisibilityController,
     cursorNavigationController,

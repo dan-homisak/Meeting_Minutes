@@ -66,14 +66,14 @@ Current checkpoint:
 
 - Completed: live preview state now builds a deterministic source-map index (`src/core/mapping/SourceMapIndex.js`) from block + rendered-fragment ranges.
 - Completed: source-map index is stored alongside live preview decorations and exposed via bridge/runtime helper delegates for downstream selection/mapping hardening.
-- Completed: extracted hybrid-decoration assembly into `src/core/render/LiveHybridRenderer.js` and widget rendering into `src/core/render/RenderedBlockWidget.js`; `src/live/livePreviewController.js` now delegates phase-3 rendering to shared core modules.
-- Completed: extracted preview/model rendering to `src/core/render/PreviewRenderer.js` and markdown render composition to `src/core/render/MarkdownRenderer.js`; legacy `src/render/markdownRenderer.js` now forwards to the core module.
-- Completed: extracted source-first line/token classification into `src/core/render/LiveSourceRenderer.js`; legacy `src/liveSourceRenderer.js` now forwards to the core module.
-- Completed: extracted live block fragment/fence helpers into `src/core/render/LiveBlockHelpers.js`; `src/livePreviewCore.js` now re-exports these compatibility APIs.
-- Completed: extracted block typing/indexing/fence visibility logic into `src/core/render/LiveBlockIndex.js`; `src/livePreviewCore.js` now forwards these APIs to the core module.
-- Completed: extracted markdown token source-range mapping utilities into `src/core/mapping/SourceRangeMapper.js`; `src/livePreviewCore.js` now forwards those mapping APIs.
-- Completed: extracted top-level markdown block range collection into `src/core/parser/BlockRangeCollector.js`; `src/livePreviewCore.js` now forwards `collectTopLevelBlocks*` and `lineIndexToPos` compatibility APIs.
-- Completed: runtime consumers now import hybrid renderer helpers directly from `src/core/*` modules (for example `createApp` and `livePreviewController`); `src/livePreviewCore.js` remains a compatibility re-export boundary.
+- Completed: extracted hybrid-decoration assembly into `src/core/render/LiveHybridRenderer.js`; `src/live/livePreviewController.js` now delegates phase-3 rendering to shared core modules.
+- Completed: extracted preview/model rendering to `src/core/render/PreviewRenderer.js` and markdown render composition to `src/core/render/MarkdownRenderer.js`.
+- Completed: extracted source-first line/token classification into `src/core/render/LiveSourceRenderer.js`.
+- Completed: extracted live block fragment/fence helpers into `src/core/render/LiveBlockHelpers.js`.
+- Completed: extracted block typing/indexing/fence visibility logic into `src/core/render/LiveBlockIndex.js`.
+- Completed: extracted markdown token source-range mapping utilities into `src/core/mapping/SourceRangeMapper.js`.
+- Completed: extracted top-level markdown block range collection into `src/core/parser/BlockRangeCollector.js`.
+- Completed: runtime consumers now import hybrid renderer helpers directly from `src/core/*` modules (for example `createApp` and `livePreviewController`).
 
 ### Phase 4: Selection and mapping hardening (completed)
 
@@ -87,8 +87,8 @@ Current checkpoint:
 - Completed: rendered click resolution can clamp to deterministic source fragment bounds (`source-map-fragment` origin) when token/source-range attributes are unavailable.
 - Completed: vertical cursor navigation now reads `SourceMapIndex` and applies bounded target clamping when arrow movement resolves outside deterministic block boundaries.
 - Completed: centralized vertical cursor move target/boundary/source-map clamp policy in `src/core/selection/SelectionPolicy.js` (`resolveVerticalCursorMoveContext`) and reduced branching in `CursorNavigator`.
-- Completed: extracted rendered-activation heuristics and block/selection clamp helpers into `src/core/selection/LiveActivationHelpers.js`; `src/livePreviewCore.js` now forwards these compatibility APIs.
-- Completed: extracted live pointer and vertical cursor controllers into `src/core/selection/ActivationController.js` and `src/core/selection/CursorNavigator.js`; `src/live/pointerActivationController.js` and `src/live/cursorNavigationController.js` now provide compatibility re-exports.
+- Completed: extracted rendered-activation heuristics and block/selection clamp helpers into `src/core/selection/LiveActivationHelpers.js`.
+- Completed: extracted live pointer and vertical cursor controllers into `src/core/selection/ActivationController.js` and `src/core/selection/CursorNavigator.js`.
 - Completed: centralized source-map selection lookup/clamping policy in `src/core/selection/SelectionPolicy.js` and wired both core controllers to consume it.
 - Completed: centralized rendered source-position precedence (`source-range` -> `source-map-fragment` -> sticky/fallback DOM anchors) in `src/core/selection/SelectionPolicy.js` and reduced policy branching inside `ActivationController`.
 - Completed: centralized rendered boundary/fenced rebound and preferred-selection policy in `src/core/selection/SelectionPolicy.js` (`resolveRenderedBoundaryPolicy`, `resolveRenderedSelectionPreference`) and removed duplicate decision branches from `ActivationController`.
@@ -127,15 +127,38 @@ Current checkpoint:
 
 Current checkpoint:
 
-- Completed: added viewport range/window resolution, block virtualization, and render budget policy modules under `src/core/viewport/*`.
-- Completed: `src/core/render/LiveHybridRenderer.js` now virtualizes rendered blocks to viewport + active-line safety ranges and applies render budgets before widget decoration assembly.
-- Completed: live editor updates now trigger `viewport-changed` refresh effects so live preview rebuilds consume current viewport/visible range data.
-- Completed: added regression coverage for viewport windowing, block virtualization, render budget policy, and hybrid renderer viewport/budget telemetry.
+- Completed (historical): added viewport range/window resolution, block virtualization, and render budget policy modules under `src/core/viewport/*`.
+- Completed (historical): `src/core/render/LiveHybridRenderer.js` virtualized rendered blocks to viewport + active-line safety ranges and applied render budgets before widget decoration assembly.
+- Completed (historical): live editor updates emitted `viewport-changed` refresh reasons so live preview rebuilds could consume viewport/visible range data.
+- Completed (historical): added regression coverage for viewport windowing, block virtualization, render budget policy, and hybrid renderer viewport/budget telemetry.
+- Note: this viewport/budget path was removed in Phase 6 when runtime shifted to source-first-only decoration flow.
 
 ### Phase 6: E2E validation and cleanup
 
 - Add interaction-focused E2E tests.
 - Remove legacy code paths after parity.
+
+Current checkpoint:
+
+- Completed: added interaction-flow E2E coverage for pointer click mapping in `tests/e2e/live-click-mapping.test.js` (source-first native mapping pass-through through editor pointer handlers).
+- Completed: added interaction-flow E2E coverage for root keydown vertical navigation in `tests/e2e/live-cursor-navigation.test.js` (diagnostics interception + source-map clamp behavior).
+- Completed: shifted controller regression imports to core selection modules (`tests/pointerActivationController.test.js`, `tests/cursorNavigationController.test.js`) to reduce compatibility-wrapper dependency in the test surface.
+- Completed: removed compatibility wrapper modules (`src/livePreviewCore.js`, `src/liveSourceRenderer.js`, `src/render/markdownRenderer.js`, `src/live/pointerActivationController.js`, `src/live/cursorNavigationController.js`) after moving all internal imports/tests to core modules.
+- Completed: removed runtime live-architecture override path (`liveSourceFirst` query/storage resolution) by hard-wiring app bootstrap to source-first mode and deleting `src/liveArchitecture.js`.
+- Completed: removed rendered-block pointer activation dispatch from runtime flow by simplifying `ActivationController` and source-first pointer preflight/intent policy in `SelectionPolicy`.
+- Completed: removed dead rendered-pointer config plumbing from bootstrap (`liveConstants`, `createApp`, `createLiveControllerOptions`, `createLiveControllers`) after runtime pointer flow became source-first-only.
+- Completed: removed unreachable rendered-activation helper exports and logic from `src/core/selection/SelectionPolicy.js`, keeping only runtime-used vertical-cursor and source-first pointer policy APIs.
+- Completed: removed dead rendered-pointer probe/source-mapping runtime helpers and modules (`pointerProbeGeometry`, `pointerMappingProbe`, `pointerSourceMapping`) from bootstrap wiring, and dropped their direct unit suites after source-first pointer mapping was inlined in `createLiveRuntimeHelpers`.
+- Completed: removed remaining source-first feature-flag plumbing from app/bootstrap/UI/debug composition (`createApp`, `createExtensions`, `createAppControllers`, `createModeController`, `createLiveDebugBootstrap`, `createLivePreviewController`) now that runtime is source-first-only.
+- Completed: simplified `src/core/render/LiveHybridRenderer.js` to source-first-only decoration building, and removed dead live-renderer tuning constants (`LIVE_PREVIEW_FRAGMENT_CACHE_MAX`, `LIVE_PREVIEW_SLOW_BUILD_WARN_MS`, viewport/budget constants) from bootstrap constants/config wiring.
+- Completed: removed now-unreferenced viewport/budget policy modules (`src/core/viewport/ViewportWindow.js`, `src/core/viewport/BlockVirtualizer.js`, `src/core/viewport/RenderBudget.js`) and their standalone unit suites after source-first-only live decoration flow no longer consumed them.
+- Completed: pruned dead rendered-era helper exports from `src/core/render/LiveBlockHelpers.js` and `src/core/selection/LiveActivationHelpers.js`, keeping only runtime-used source-first APIs and slimming their unit coverage accordingly.
+- Completed: removed unused refresh viewport payload + fragment-cache plumbing from `src/live/livePreviewController.js` and aligned `LiveHybridRenderer.buildDecorations` to the minimal source-first runtime signature.
+- Completed: removed obsolete `viewport-changed` live-refresh dispatch from `src/live/editorUpdateController.js` now that viewport virtualization is gone and live decorations are no longer viewport-scoped.
+- Completed: removed dead live-preview bridge/runtime helper surface (`liveBlockIndexForView` bridge passthrough and `distanceToBlockBounds` pointer helper delegates) that no longer had runtime callers.
+- Completed: reduced `src/core/selection/SelectionPolicy.js` export surface to runtime-consumed APIs only, internalizing test-only helpers while preserving behavior coverage through public controller-facing policy functions.
+- Completed: simplified `scripts/live-debug-report.mjs` to source-first runtime telemetry, removing stale rendered-era anomaly counters from the default log summary output.
+- Completed: updated live-debug verification/reporting to ignore the initial pointer-driven selection jump from document-start baseline (`head=0`) while keeping strict checks for subsequent unexpected jumps.
 
 ## Target File/Module Layout
 
@@ -178,7 +201,6 @@ Current checkpoint:
 - `src/core/render/LiveBlockIndex.js`
 - `src/core/render/LiveSourceRenderer.js`
 - `src/core/render/PreviewRenderer.js`
-- `src/core/render/RenderedBlockWidget.js`
 - `src/core/mapping/SourceMapIndex.js`
 - `src/core/mapping/SourceRangeMapper.js`
 - `src/core/mapping/DomSourceMap.js`
@@ -189,9 +211,6 @@ Current checkpoint:
 - `src/core/selection/SelectionPolicy.js`
 - `src/core/layout/LineMetricsStore.js`
 - `src/core/layout/ScrollInvariantController.js`
-- `src/core/viewport/ViewportWindow.js`
-- `src/core/viewport/BlockVirtualizer.js`
-- `src/core/viewport/RenderBudget.js`
 
 ### Workspace, UI, telemetry
 
@@ -211,6 +230,5 @@ Current checkpoint:
 - `tests/unit/parser/IncrementalMarkdownParser.test.js`
 - `tests/unit/mapping/SourceMapIndex.test.js`
 - `tests/unit/selection/ActivationController.test.js`
-- `tests/unit/viewport/BlockVirtualizer.test.js`
-- `tests/e2e/live-click-mapping.spec.js`
-- `tests/e2e/live-cursor-navigation.spec.js`
+- `tests/e2e/live-click-mapping.test.js`
+- `tests/e2e/live-cursor-navigation.test.js`

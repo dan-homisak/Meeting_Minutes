@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCursorNavigationController } from '../src/live/cursorNavigationController.js';
+import { createCursorNavigationController } from '../src/core/selection/CursorNavigator.js';
 
 function createDoc(text) {
   const lines = text.split('\n');

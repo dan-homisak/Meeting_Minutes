@@ -6,9 +6,6 @@ export function createLiveRuntimeHelpers({
   liveLineMappingHelpers = null,
   pointerInputHelpers = null,
   getLiveViewportProbe = () => null,
-  getPointerProbeGeometry = () => null,
-  getPointerSourceMapping = () => null,
-  getPointerMappingProbe = () => null,
   getLivePreviewBridge = () => null,
   getLiveSnapshotController = () => null,
   getCursorVisibilityController = () => null,
@@ -97,28 +94,12 @@ export function createLiveRuntimeHelpers({
     getLiveSnapshotController()?.captureLiveDebugSnapshot(reason);
   }
 
-  function distanceToBlockBounds(position, blockBounds) {
-    return pointerInputHelpers?.distanceToBlockBounds(position, blockBounds) ?? null;
-  }
-
   function normalizePointerTarget(target) {
     return pointerInputHelpers?.normalizePointerTarget(target) ?? null;
   }
 
   function readPointerCoordinates(event) {
     return pointerInputHelpers?.readPointerCoordinates(event) ?? null;
-  }
-
-  function clampNumber(value, min, max) {
-    return liveLineMappingHelpers?.clampNumber(value, min, max) ?? null;
-  }
-
-  function summarizeRectForLog(rect) {
-    return getPointerProbeGeometry()?.summarizeRectForLog(rect) ?? null;
-  }
-
-  function readComputedStyleSnapshotForLog(element) {
-    return getPointerProbeGeometry()?.readComputedStyleSnapshotForLog(element) ?? null;
   }
 
   function readLineInfoForPosition(doc, position) {
@@ -129,62 +110,26 @@ export function createLiveRuntimeHelpers({
     return liveLineMappingHelpers?.readBlockLineBoundsForLog(doc, blockBounds) ?? null;
   }
 
-  function buildCoordSamples(view, samples) {
-    return getPointerProbeGeometry()?.buildCoordSamples(view, samples) ?? [];
-  }
-
-  function summarizeLineNumbersForCoordSamples(samples) {
-    return getPointerProbeGeometry()?.summarizeLineNumbersForCoordSamples(samples) ?? [];
-  }
-
-  function buildRenderedPointerProbe(
-    view,
-    renderedBlock,
-    targetElement,
-    coordinates,
-    blockBounds,
-    sourcePos,
-    sourceFromBlockBounds = null,
-    sourcePosBlockBounds = null
-  ) {
-    return (
-      getPointerMappingProbe()?.buildRenderedPointerProbe(
-        view,
-        renderedBlock,
-        targetElement,
-        coordinates,
-        blockBounds,
-        sourcePos,
-        sourceFromBlockBounds,
-        sourcePosBlockBounds
-      ) ?? null
-    );
-  }
-
-  function findRenderedSourceRangeTarget(targetElement, renderedBlock) {
-    return getPointerSourceMapping()?.findRenderedSourceRangeTarget(targetElement, renderedBlock) ?? null;
-  }
-
-  function resolvePositionFromRenderedSourceRange(
-    doc,
-    sourceRange,
-    sourceRangeElement,
-    coordinates,
-    fallbackPosition = null
-  ) {
-    return (
-      getPointerSourceMapping()?.resolvePositionFromRenderedSourceRange(
-        doc,
-        sourceRange,
-        sourceRangeElement,
-        coordinates,
-        fallbackPosition
-      ) ?? null
-    );
-  }
-
   function resolvePointerPosition(view, targetElement, coordinates = null) {
-    return getPointerSourceMapping()?.resolvePointerPosition(view, targetElement, coordinates) ?? null;
+    if (coordinates && typeof view?.posAtCoords === 'function') {
+      const mappedPos = view.posAtCoords(coordinates);
+      if (Number.isFinite(mappedPos)) {
+        return mappedPos;
+      }
+    }
+
+    try {
+      if (typeof view?.posAtDOM === 'function') {
+        const domPos = view.posAtDOM(targetElement, 0);
+        if (Number.isFinite(domPos)) {
+          return domPos;
+        }
+      }
+    } catch {
+      // Ignore DOM mapping failures and preserve native pointer behavior.
+    }
+
+    return null;
   }
 
   function requestLivePreviewRefresh(reason = 'manual') {
@@ -225,19 +170,10 @@ export function createLiveRuntimeHelpers({
     recordInputSignal,
     readRecentInputSignal,
     captureLiveDebugSnapshot,
-    distanceToBlockBounds,
     normalizePointerTarget,
     readPointerCoordinates,
-    clampNumber,
-    summarizeRectForLog,
-    readComputedStyleSnapshotForLog,
     readLineInfoForPosition,
     readBlockLineBoundsForLog,
-    buildCoordSamples,
-    summarizeLineNumbersForCoordSamples,
-    buildRenderedPointerProbe,
-    findRenderedSourceRangeTarget,
-    resolvePositionFromRenderedSourceRange,
     resolvePointerPosition,
     requestLivePreviewRefresh,
     readLivePreviewState,

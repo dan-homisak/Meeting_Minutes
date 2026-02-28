@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createMarkdownRenderer } from '../src/render/markdownRenderer.js';
+import { createMarkdownRenderer } from '../src/core/render/MarkdownRenderer.js';
 
 function createMarkdownEngineSpy() {
   const calls = {

@@ -10,6 +10,7 @@ node_modules/
 
 # Logs
 *.log
+logs/live-debug-*.jsonl
 
 # Editor configs
 .vscode/

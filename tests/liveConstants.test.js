@@ -4,13 +4,11 @@ import {
   LAUNCHER_HEARTBEAT_MS,
   LIVE_DEBUG_INPUT_TTL_MS,
   LIVE_DEBUG_KEYLOG_KEYS,
-  LIVE_PREVIEW_FRAGMENT_CACHE_MAX,
   NAVIGATION_KEYS
 } from '../src/bootstrap/liveConstants.js';
 
 test('live constants expose expected key timings and key sets', () => {
   assert.equal(LAUNCHER_HEARTBEAT_MS, 4000);
-  assert.equal(LIVE_PREVIEW_FRAGMENT_CACHE_MAX, 2500);
   assert.equal(LIVE_DEBUG_INPUT_TTL_MS, 900);
 
   assert.equal(NAVIGATION_KEYS.has('ArrowUp'), true);

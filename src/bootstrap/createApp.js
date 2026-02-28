@@ -1,15 +1,9 @@
 import { EditorSelection, Transaction } from '@codemirror/state';
 import {
   findNearestBlockForPosition,
-  parseSourceFromAttribute,
   resolveActivationBlockBounds,
-  resolveLiveBlockSelection,
-  shouldPreferRenderedDomAnchorPosition,
-  shouldPreferSourceFromForRenderedBoundaryClick,
-  shouldPreferSourceFromForRenderedFencedClick
 } from '../core/selection/LiveActivationHelpers.js';
 import { findBlockContainingPosition } from '../core/render/LiveBlockIndex.js';
-import { isFencedCodeBlock } from '../core/render/LiveBlockHelpers.js';
 import { annotateMarkdownTokensWithSourceRanges } from '../core/mapping/SourceRangeMapper.js';
 import { MARKDOWN_ENGINE_OPTIONS, createMarkdownEngine } from '../markdownConfig.js';
 import { createDocumentSession } from '../core/document/DocumentSession.js';
@@ -18,10 +12,9 @@ import { createLivePreviewBridge } from '../live/livePreviewBridge.js';
 import { createLiveDiagnosticsLogHelpers } from '../live/liveDiagnosticsLogHelpers.js';
 import { createPointerInputHelpers } from '../live/pointerInputHelpers.js';
 import { normalizeLogString } from '../live/logString.js';
-import { resolveLiveSourceFirstMode } from '../liveArchitecture.js';
 import { createLiveControllers } from './createLiveControllers.js';
 import { slashCommandCompletion } from '../editor/slashCommands.js';
-import { createMarkdownRenderer } from '../render/markdownRenderer.js';
+import { createMarkdownRenderer } from '../core/render/MarkdownRenderer.js';
 import { createThemeController } from '../ui/themeController.js';
 import { createWorkspaceView } from '../ui/workspaceView.js';
 import { ensureReadWritePermission, isMarkdownFile, walkDirectory } from '../workspace/fileSystem.js';
@@ -38,8 +31,6 @@ import { createLiveControllerOptions } from './createLiveControllerOptions.js';
 import { createExtensions } from './createExtensions.js';
 import {
   LAUNCHER_HEARTBEAT_MS,
-  LIVE_DEBUG_BLOCK_MAP_LARGE_DELTA_LINES,
-  LIVE_DEBUG_BLOCK_MAP_LARGE_DELTA_POS,
   LIVE_DEBUG_CURSOR_ACTIVE_LINE_MISSING_THROTTLE_MS,
   LIVE_DEBUG_CURSOR_MAX_EXPECTED_HEIGHT_PX,
   LIVE_DEBUG_CURSOR_MAX_EXPECTED_WIDTH_PX,
@@ -56,20 +47,7 @@ import {
   LIVE_DEBUG_SELECTION_JUMP_WARN_POS_DELTA,
   LIVE_DEBUG_UPLOAD_DEBOUNCE_MS,
   LIVE_DEBUG_UPLOAD_MAX_BATCH,
-  LIVE_DEBUG_UPLOAD_MAX_QUEUE,
-  LIVE_PREVIEW_FRAGMENT_CACHE_MAX,
-  LIVE_PREVIEW_MAX_VIEWPORT_BLOCKS,
-  LIVE_PREVIEW_MAX_VIEWPORT_CHARACTERS,
-  LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_DISTANCE_FROM_BOTTOM_PX,
-  LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_LINE_DELTA,
-  LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_POS_DELTA,
-  LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MIN_RATIO_Y,
-  LIVE_PREVIEW_RENDERED_DOM_ANCHOR_STICKY_MAX_POS_DELTA,
-  LIVE_PREVIEW_RENDERED_FENCED_STICKY_MAX_LINE_DELTA,
-  LIVE_PREVIEW_RENDERED_FENCED_STICKY_MAX_POS_DELTA,
-  LIVE_PREVIEW_SLOW_BUILD_WARN_MS,
-  LIVE_PREVIEW_VIEWPORT_LINE_BUFFER,
-  LIVE_PREVIEW_VIEWPORT_MINIMUM_LINE_SPAN
+  LIVE_DEBUG_UPLOAD_MAX_QUEUE
 } from './liveConstants.js';
 
 
@@ -104,11 +82,7 @@ export function createApp({
     documentObject: document
   });
   
-  const liveSourceFirstMode = resolveLiveSourceFirstMode(window.location.search, window.localStorage);
-  const LIVE_SOURCE_FIRST_MODE = liveSourceFirstMode.value;
-  const sourceFirstFromQuery = liveSourceFirstMode.sourceFirstFromQuery;
-  const sourceFirstFromStorage = liveSourceFirstMode.sourceFirstFromStorage;
-  const urlParams = liveSourceFirstMode.urlParams;
+  const urlParams = new URLSearchParams(window.location.search);
   const launcherToken = urlParams.get('launcherToken');
   
   const markdownEngine = createMarkdownEngine();
@@ -120,7 +94,7 @@ export function createApp({
     previewElement,
     annotateMarkdownTokensWithSourceRanges
   });
-  const { renderMarkdownHtml, renderPreview } = markdownRenderer;
+  const { renderPreview } = markdownRenderer;
   const workspaceView = createWorkspaceView({
     statusElement,
     fileCountElement,
@@ -138,9 +112,6 @@ export function createApp({
   const { liveDebug, setLiveDebugLevel } = createLiveDebugBootstrap({
     windowObject: window,
     isDevBuild,
-    sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
-    sourceFirstFromQuery,
-    sourceFirstFromStorage,
     markdownEngineOptions: MARKDOWN_ENGINE_OPTIONS
   });
   
@@ -163,9 +134,6 @@ export function createApp({
   let livePreviewAtomicRanges = null;
   let pointerActivationController = null;
   let liveViewportProbe = null;
-  let pointerProbeGeometry = null;
-  let pointerMappingProbe = null;
-  let pointerSourceMapping = null;
   let cursorVisibilityController = null;
   let cursorNavigationController = null;
   let liveDiagnosticsController = null;
@@ -204,9 +172,6 @@ export function createApp({
     liveLineMappingHelpers,
     pointerInputHelpers,
     getLiveViewportProbe: () => liveViewportProbe,
-    getPointerProbeGeometry: () => pointerProbeGeometry,
-    getPointerSourceMapping: () => pointerSourceMapping,
-    getPointerMappingProbe: () => pointerMappingProbe,
     getLivePreviewBridge: () => livePreviewBridge,
     getLiveSnapshotController: () => liveSnapshotController,
     getCursorVisibilityController: () => cursorVisibilityController,
@@ -245,7 +210,6 @@ export function createApp({
     readDocumentModel: () => documentSession.getModel(),
     renderPreview,
     liveDebug,
-    sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
     editorElement,
     previewElement,
     rawModeButton,
@@ -301,15 +265,6 @@ export function createApp({
     liveDebug,
     markdownEngine,
     documentSession,
-    renderMarkdownHtml,
-    normalizeLogString,
-    sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
-    fragmentCacheMax: LIVE_PREVIEW_FRAGMENT_CACHE_MAX,
-    slowBuildWarnMs: LIVE_PREVIEW_SLOW_BUILD_WARN_MS,
-    viewportLineBuffer: LIVE_PREVIEW_VIEWPORT_LINE_BUFFER,
-    viewportMinimumLineSpan: LIVE_PREVIEW_VIEWPORT_MINIMUM_LINE_SPAN,
-    maxViewportBlocks: LIVE_PREVIEW_MAX_VIEWPORT_BLOCKS,
-    maxViewportCharacters: LIVE_PREVIEW_MAX_VIEWPORT_CHARACTERS,
     liveDebugKeylogKeys: LIVE_DEBUG_KEYLOG_KEYS,
     liveRuntimeHelpers
   }));
@@ -328,39 +283,17 @@ export function createApp({
     liveDebugSelectionJumpSuppressAfterProgrammaticMs:
       LIVE_DEBUG_SELECTION_JUMP_SUPPRESS_AFTER_PROGRAMMATIC_MS,
     liveDebugDomSelectionThrottleMs: LIVE_DEBUG_DOM_SELECTION_THROTTLE_MS,
-    liveDebugBlockMapLargeDeltaPos: LIVE_DEBUG_BLOCK_MAP_LARGE_DELTA_POS,
-    liveDebugBlockMapLargeDeltaLines: LIVE_DEBUG_BLOCK_MAP_LARGE_DELTA_LINES,
-    liveDebugKeylogKeys: LIVE_DEBUG_KEYLOG_KEYS,
-    livePreviewRenderedDomAnchorStickyMaxPosDelta:
-      LIVE_PREVIEW_RENDERED_DOM_ANCHOR_STICKY_MAX_POS_DELTA,
-    livePreviewRenderedFencedStickyMaxPosDelta: LIVE_PREVIEW_RENDERED_FENCED_STICKY_MAX_POS_DELTA,
-    livePreviewRenderedFencedStickyMaxLineDelta: LIVE_PREVIEW_RENDERED_FENCED_STICKY_MAX_LINE_DELTA,
-    livePreviewRenderedBoundaryStickyMaxPosDelta:
-      LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_POS_DELTA,
-    livePreviewRenderedBoundaryStickyMaxLineDelta:
-      LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_LINE_DELTA,
-    livePreviewRenderedBoundaryStickyMaxDistanceFromBottomPx:
-      LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MAX_DISTANCE_FROM_BOTTOM_PX,
-    livePreviewRenderedBoundaryStickyMinRatioY: LIVE_PREVIEW_RENDERED_BOUNDARY_STICKY_MIN_RATIO_Y
+    liveDebugKeylogKeys: LIVE_DEBUG_KEYLOG_KEYS
   };
   
   const liveControllerOptions = createLiveControllerOptions({
     app,
     liveDebug,
     liveDebugDiagnostics,
-    sourceFirstMode: LIVE_SOURCE_FIRST_MODE,
     config: liveControllerConfig,
     normalizeLogString,
     liveRuntimeHelpers,
     resolveActivationBlockBounds,
-    resolveLiveBlockSelection,
-    findBlockContainingPosition,
-    findNearestBlockForPosition,
-    isFencedCodeBlock,
-    parseSourceFromAttribute,
-    shouldPreferRenderedDomAnchorPosition,
-    shouldPreferSourceFromForRenderedFencedClick,
-    shouldPreferSourceFromForRenderedBoundaryClick,
     isRefreshEffect: (effect) => effect?.is(refreshLivePreviewEffect),
     renderPreview,
     updateActionButtons,
@@ -380,9 +313,6 @@ export function createApp({
   
   ({
     liveViewportProbe,
-    pointerProbeGeometry,
-    pointerSourceMapping,
-    pointerMappingProbe,
     pointerActivationController,
     cursorVisibilityController,
     cursorNavigationController,
