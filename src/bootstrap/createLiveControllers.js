@@ -1,9 +1,9 @@
-import { createCursorNavigationController as createCursorNavigationControllerFactory } from '../live/cursorNavigationController.js';
+import { createCursorNavigationController as createCursorNavigationControllerFactory } from '../core/selection/CursorNavigator.js';
 import { createCursorVisibilityController as createCursorVisibilityControllerFactory } from '../live/cursorVisibilityController.js';
 import { createEditorUpdateController as createEditorUpdateControllerFactory } from '../live/editorUpdateController.js';
 import { createLiveDiagnosticsController as createLiveDiagnosticsControllerFactory } from '../live/liveDiagnosticsController.js';
 import { createLiveViewportProbe as createLiveViewportProbeFactory } from '../live/liveViewportProbe.js';
-import { createPointerActivationController as createPointerActivationControllerFactory } from '../live/pointerActivationController.js';
+import { createPointerActivationController as createPointerActivationControllerFactory } from '../core/selection/ActivationController.js';
 import { createPointerMappingProbe as createPointerMappingProbeFactory } from '../live/pointerMappingProbe.js';
 import { createPointerProbeGeometry as createPointerProbeGeometryFactory } from '../live/pointerProbeGeometry.js';
 import { createPointerSourceMapping as createPointerSourceMappingFactory } from '../live/pointerSourceMapping.js';
@@ -209,7 +209,8 @@ export function createLiveControllers({
     updateActionButtons: helpers.updateActionButtons,
     setStatus: helpers.setStatus,
     scheduleAutosave: helpers.scheduleAutosave,
-    readDocumentModel: helpers.readDocumentModel
+    readDocumentModel: helpers.readDocumentModel,
+    requestLivePreviewRefresh: helpers.requestLivePreviewRefresh
   });
 
   return {

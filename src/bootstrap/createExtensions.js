@@ -12,6 +12,10 @@ export function createExtensions({
   sourceFirstMode = true,
   fragmentCacheMax = 2500,
   slowBuildWarnMs = 12,
+  viewportLineBuffer = 8,
+  viewportMinimumLineSpan = 24,
+  maxViewportBlocks = 160,
+  maxViewportCharacters = 24000,
   liveDebugKeylogKeys,
   liveRuntimeHelpers,
   factories = {}
@@ -34,7 +38,11 @@ export function createExtensions({
     sourceFirstMode,
     refreshLivePreviewEffect,
     fragmentCacheMax,
-    slowBuildWarnMs
+    slowBuildWarnMs,
+    viewportLineBuffer,
+    viewportMinimumLineSpan,
+    maxViewportBlocks,
+    maxViewportCharacters
   });
   const livePreviewStateField = livePreviewController.livePreviewStateField;
   const { livePreviewPointerHandlers, livePreviewAtomicRanges } = createLiveEditorExtensions({

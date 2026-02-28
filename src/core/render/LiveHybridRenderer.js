@@ -8,6 +8,9 @@ import {
 } from './LiveBlockHelpers.js';
 import { buildSourceFirstDecorationPlan } from './LiveSourceRenderer.js';
 import { RenderedBlockWidget } from './RenderedBlockWidget.js';
+import { buildViewportWindow } from '../viewport/ViewportWindow.js';
+import { virtualizeBlocksForViewport } from '../viewport/BlockVirtualizer.js';
+import { applyRenderBudget } from '../viewport/RenderBudget.js';
 
 export function createLiveHybridRenderer({
   app,
@@ -16,9 +19,13 @@ export function createLiveHybridRenderer({
   normalizeLogString,
   sourceFirstMode = true,
   fragmentCacheMax = 2500,
-  slowBuildWarnMs = 12
+  slowBuildWarnMs = 12,
+  viewportLineBuffer = 8,
+  viewportMinimumLineSpan = 24,
+  maxViewportBlocks = 160,
+  maxViewportCharacters = 24000
 } = {}) {
-  function buildDecorations(state, blocks, fragmentHtmlCache = null) {
+  function buildDecorations(state, blocks, fragmentHtmlCache = null, renderContext = {}) {
     if (app.viewMode !== 'live') {
       return {
         decorations: Decoration.none,
@@ -114,6 +121,26 @@ export function createLiveHybridRenderer({
     let skippedActiveFencedCodeBlocks = 0;
     let cacheHits = 0;
     let cacheMisses = 0;
+    const viewportWindow = buildViewportWindow({
+      doc,
+      viewport: renderContext?.viewport ?? null,
+      visibleRanges: renderContext?.visibleRanges ?? [],
+      activeLineNumber: activeLine.number,
+      lineBuffer: viewportLineBuffer,
+      minimumLineSpan: viewportMinimumLineSpan
+    });
+    const virtualizedBlocks = virtualizeBlocksForViewport({
+      blocks,
+      viewportWindow,
+      activeLineFrom: activeLine.from
+    });
+    const budgetedBlocks = applyRenderBudget({
+      blocks: virtualizedBlocks.blocks,
+      maxBlocks: maxViewportBlocks,
+      maxCharacters: maxViewportCharacters,
+      activeLineFrom: activeLine.from
+    });
+    const renderBlocks = budgetedBlocks.blocks;
 
     const renderFragmentMarkdown = (source, from, to) => {
       if (!(fragmentHtmlCache instanceof Map)) {
@@ -147,7 +174,7 @@ export function createLiveHybridRenderer({
       return html;
     };
 
-    for (const block of blocks) {
+    for (const block of renderBlocks) {
       const activeLineInsideBlock = blockContainsLine(block, activeLine);
       const blockIsFencedCode = isFencedCodeBlock(doc, block);
       if (activeLineInsideBlock && blockIsFencedCode) {
@@ -239,6 +266,16 @@ export function createLiveHybridRenderer({
       activeLineFrom: activeLine.from,
       activeLineTo: activeLine.to,
       blockCount: blocks.length,
+      windowedBlockCount: virtualizedBlocks.stats.outputBlockCount,
+      budgetedBlockCount: budgetedBlocks.stats.outputBlockCount,
+      budgetDroppedBlockCount: budgetedBlocks.stats.droppedBlockCount,
+      budgetConsumedCharacters: budgetedBlocks.stats.consumedCharacters,
+      budgetLimitHit: budgetedBlocks.stats.limitHit,
+      viewportLineFrom: viewportWindow.lineFrom,
+      viewportLineTo: viewportWindow.lineTo,
+      viewportSourceFrom: viewportWindow.sourceFrom,
+      viewportSourceTo: viewportWindow.sourceTo,
+      viewportRangeCount: viewportWindow.rangeCount,
       skippedEmptyActiveLineBlocks,
       skippedEmptyBoundaryBlocks,
       skippedActiveFencedCodeBlocks,

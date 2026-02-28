@@ -139,8 +139,14 @@ window.__meetingMinutesLiveDebug.entries();
 - `src/live/livePreviewController.js`: live-preview state field and decoration orchestration
 - `src/live/livePreviewBridge.js`: live-preview controller/view adapter for refresh/state/block access
 - `src/live/editorUpdateController.js`: editor update-listener doc/selection handling and autosave flow
-- `src/live/pointerActivationController.js`: live pointer activation context resolution and block selection
-- `src/live/cursorNavigationController.js`: live vertical cursor navigation and assoc-correction policy
+- `src/live/pointerActivationController.js`: compatibility export for core pointer activation controller
+- `src/live/cursorNavigationController.js`: compatibility export for core vertical cursor navigation controller
+- `src/core/selection/ActivationController.js`: live pointer activation context resolution and block selection
+- `src/core/selection/CursorNavigator.js`: live vertical cursor navigation and assoc-correction policy
+- `src/core/selection/SelectionPolicy.js`: shared source-map lookup/clamping policy for activation and cursor movement
+- `src/core/viewport/ViewportWindow.js`: visible-range and buffered viewport source-window resolution
+- `src/core/viewport/BlockVirtualizer.js`: viewport-aware block filtering with active-block safety inclusion
+- `src/core/viewport/RenderBudget.js`: render-budget capping for viewport block workloads
 - `src/live/liveDiagnosticsController.js`: runtime/editor input diagnostics hooks and instrumentation
 - `src/live/liveDiagnosticsLogHelpers.js`: shared DOM/selection log serialization helpers for diagnostics
 - `src/live/liveLineMappingHelpers.js`: shared numeric clamp and source line/bounds diagnostics readers

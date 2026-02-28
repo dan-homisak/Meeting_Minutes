@@ -227,6 +227,33 @@ test('resolveLiveActivationContext returns null for invalid rendered block sourc
   assert.equal(debugSpy.calls.warn[0].event, 'block.activate.skipped');
 });
 
+test('resolveLiveActivationContext returns null without pass-through log for non-rendered target', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy
+  });
+  const nonRenderedTarget = {
+    tagName: 'P',
+    className: 'para',
+    closest() {
+      return null;
+    }
+  };
+
+  const activation = controller.resolveLiveActivationContext(
+    { state: { doc: createDoc(40) } },
+    nonRenderedTarget,
+    null,
+    'mousedown'
+  );
+
+  assert.equal(activation, null);
+  const passThroughLog = debugSpy.calls.trace.find(
+    (entry) => entry.event === 'block.activate.pass-through-native'
+  );
+  assert.equal(passThroughLog, undefined);
+});
+
 test('activateLiveBlock dispatches and skips coordinate remap when disabled', () => {
   const rafCalls = [];
   const controller = createController({
@@ -304,6 +331,148 @@ test('handleLivePointerActivation in source-first mode passes through native han
   assert.equal(handled, false);
   assert.equal(defaultPrevented, false);
   assert.equal(dispatched.length, 0);
+});
+
+test('handleLivePointerActivation logs miss when pointer target is unavailable', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy
+  });
+  const { view, dispatched } = createView({ docLength: 40, mappedPos: 12 });
+
+  const handled = controller.handleLivePointerActivation(
+    view,
+    {
+      target: null,
+      clientX: 30,
+      clientY: 40,
+      preventDefault() {}
+    },
+    'mousedown'
+  );
+
+  assert.equal(handled, false);
+  assert.equal(dispatched.length, 0);
+  const missLog = debugSpy.calls.trace.find((entry) => entry.event === 'block.activate.miss');
+  assert.ok(missLog);
+  assert.equal(missLog.data.reason, 'no-element-target');
+});
+
+test('handleLivePointerActivation logs pass-through for non-rendered targets in rendered mode', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy,
+    sourceFirstMode: false
+  });
+  const { view, dispatched } = createView({ docLength: 40, mappedPos: 12 });
+  const nonRenderedTarget = {
+    tagName: 'P',
+    className: 'para',
+    closest() {
+      return null;
+    }
+  };
+
+  const handled = controller.handleLivePointerActivation(
+    view,
+    {
+      target: nonRenderedTarget,
+      clientX: 30,
+      clientY: 40,
+      preventDefault() {}
+    },
+    'mousedown'
+  );
+
+  assert.equal(handled, false);
+  assert.equal(dispatched.length, 0);
+  const passThroughLog = debugSpy.calls.trace.find(
+    (entry) => entry.event === 'block.activate.pass-through-native'
+  );
+  assert.ok(passThroughLog);
+  assert.equal(passThroughLog.data.reason, 'not-rendered-block-target');
+  assert.equal(passThroughLog.data.tagName, 'P');
+});
+
+test('handleLivePointerActivation records pointer signal and traces input event payload', () => {
+  const debugSpy = createLiveDebugSpy();
+  const recordedSignals = [];
+  const controller = createController({
+    liveDebug: debugSpy,
+    sourceFirstMode: true,
+    recordInputSignal: (kind, payload) => {
+      recordedSignals.push({ kind, payload });
+      return {
+        ...payload,
+        kind,
+        signalId: 'sig-1'
+      };
+    }
+  });
+  const { view } = createView({ docLength: 40, mappedPos: 12 });
+  const { targetElement } = createRenderedTarget('10');
+
+  controller.handleLivePointerActivation(
+    view,
+    {
+      target: targetElement,
+      clientX: 30,
+      clientY: 40,
+      preventDefault() {}
+    },
+    'mousedown'
+  );
+
+  assert.equal(recordedSignals.length, 1);
+  assert.equal(recordedSignals[0].kind, 'pointer');
+  assert.equal(recordedSignals[0].payload.trigger, 'mousedown');
+  assert.equal(recordedSignals[0].payload.x, 30);
+  assert.equal(recordedSignals[0].payload.y, 40);
+  assert.equal(recordedSignals[0].payload.targetTag, 'DIV');
+  const pointerTrace = debugSpy.calls.trace.find((entry) => entry.event === 'input.pointer');
+  assert.ok(pointerTrace);
+  assert.equal(pointerTrace.data.signalId, 'sig-1');
+  assert.equal(pointerTrace.data.kind, 'pointer');
+  assert.equal(pointerTrace.data.target.tagName, 'DIV');
+});
+
+test('handleLivePointerActivation logs failed activation when block dispatch throws', () => {
+  const debugSpy = createLiveDebugSpy();
+  const controller = createController({
+    liveDebug: debugSpy
+  });
+  const { view } = createView({ docLength: 40, mappedPos: 12 });
+  view.dispatch = () => {
+    throw new Error('dispatch exploded');
+  };
+  const { targetElement } = createRenderedTarget('10');
+  let defaultPrevented = false;
+
+  const handled = controller.handleLivePointerActivation(
+    view,
+    {
+      target: targetElement,
+      clientX: 30,
+      clientY: 40,
+      preventDefault() {
+        defaultPrevented = true;
+      }
+    },
+    'mousedown'
+  );
+
+  assert.equal(handled, false);
+  assert.equal(defaultPrevented, true);
+  const dispatchFailed = debugSpy.calls.error.find(
+    (entry) => entry.event === 'block.activate.dispatch-failed'
+  );
+  assert.ok(dispatchFailed);
+  assert.equal(dispatchFailed.data.message, 'dispatch exploded');
+  const failed = debugSpy.calls.error.find(
+    (entry) => entry.event === 'block.activate.failed'
+  );
+  assert.ok(failed);
+  assert.equal(failed.data.message, 'dispatch exploded');
 });
 
 test('resolveLiveActivationContext prefers source-map fragment clamping before heuristic fallback', () => {

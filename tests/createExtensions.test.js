@@ -32,6 +32,10 @@ test('createExtensions composes refresh effect, live preview controller, and edi
     sourceFirstMode: false,
     fragmentCacheMax: 123,
     slowBuildWarnMs: 9,
+    viewportLineBuffer: 4,
+    viewportMinimumLineSpan: 18,
+    maxViewportBlocks: 44,
+    maxViewportCharacters: 5555,
     liveDebugKeylogKeys,
     liveRuntimeHelpers,
     factories: {
@@ -66,6 +70,10 @@ test('createExtensions composes refresh effect, live preview controller, and edi
   assert.equal(calls.createLivePreviewController[0].refreshLivePreviewEffect, refreshLivePreviewEffect);
   assert.equal(calls.createLivePreviewController[0].fragmentCacheMax, 123);
   assert.equal(calls.createLivePreviewController[0].slowBuildWarnMs, 9);
+  assert.equal(calls.createLivePreviewController[0].viewportLineBuffer, 4);
+  assert.equal(calls.createLivePreviewController[0].viewportMinimumLineSpan, 18);
+  assert.equal(calls.createLivePreviewController[0].maxViewportBlocks, 44);
+  assert.equal(calls.createLivePreviewController[0].maxViewportCharacters, 5555);
   assert.equal(calls.createLiveEditorExtensions[0].app, app);
   assert.equal(calls.createLiveEditorExtensions[0].liveDebug, liveDebug);
   assert.equal(calls.createLiveEditorExtensions[0].liveDebugKeylogKeys, liveDebugKeylogKeys);

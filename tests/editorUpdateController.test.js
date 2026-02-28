@@ -46,6 +46,30 @@ test('handleEditorUpdate forwards live selection updates', () => {
   assert.equal(selectionUpdates[0], update);
 });
 
+test('handleEditorUpdate requests viewport refresh when the live viewport changes', () => {
+  const app = {
+    viewMode: 'live',
+    isLoadingFile: false,
+    hasUnsavedChanges: false,
+    lastSavedText: '',
+    currentPath: 'notes/demo.md'
+  };
+  const refreshCalls = [];
+  const controller = createEditorUpdateController({
+    app,
+    liveDebug: createLiveDebugSpy(),
+    requestLivePreviewRefresh: (reason) => refreshCalls.push(reason)
+  });
+
+  controller.handleEditorUpdate({
+    selectionSet: false,
+    viewportChanged: true,
+    docChanged: false
+  });
+
+  assert.deepEqual(refreshCalls, ['viewport-changed']);
+});
+
 test('handleEditorUpdate processes doc changes, preview render, and autosave scheduling', () => {
   const app = {
     viewMode: 'preview',

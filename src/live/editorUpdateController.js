@@ -6,7 +6,8 @@ export function createEditorUpdateController({
   updateActionButtons,
   setStatus,
   scheduleAutosave,
-  readDocumentModel
+  readDocumentModel,
+  requestLivePreviewRefresh
 } = {}) {
   const runSelectionUpdate =
     typeof handleSelectionUpdate === 'function' ? handleSelectionUpdate : () => {};
@@ -18,6 +19,8 @@ export function createEditorUpdateController({
     typeof scheduleAutosave === 'function' ? scheduleAutosave : () => {};
   const runReadDocumentModel =
     typeof readDocumentModel === 'function' ? readDocumentModel : null;
+  const runRequestLivePreviewRefresh =
+    typeof requestLivePreviewRefresh === 'function' ? requestLivePreviewRefresh : () => {};
 
   function readSharedDocumentModel() {
     if (!runReadDocumentModel) {
@@ -50,6 +53,10 @@ export function createEditorUpdateController({
   function handleEditorUpdate(update) {
     if (app.viewMode === 'live' && update.selectionSet) {
       runSelectionUpdate(update);
+    }
+
+    if (app.viewMode === 'live' && update.viewportChanged) {
+      runRequestLivePreviewRefresh('viewport-changed');
     }
 
     if (!update.docChanged) {
