@@ -119,6 +119,34 @@ function buildFallbackBlockRanges(source, offset = 0) {
   return normalizeBlockRanges(ranges, offset + text.length);
 }
 
+function extractFrontmatterRange(source, offset = 0) {
+  const text = typeof source === 'string' ? source : '';
+  const absoluteOffset = Math.max(0, Math.trunc(offset));
+  if (!text.startsWith('---\n')) {
+    return null;
+  }
+
+  const closingFencePattern = /\n---(?:\n|$)/g;
+  closingFencePattern.lastIndex = 4;
+  const closingMatch = closingFencePattern.exec(text);
+  if (!closingMatch || !Number.isFinite(closingMatch.index)) {
+    return null;
+  }
+
+  const from = absoluteOffset;
+  const to = absoluteOffset + closingMatch.index + closingMatch[0].length;
+  if (to <= from) {
+    return null;
+  }
+
+  return {
+    from,
+    to,
+    sourceFrom: 0,
+    sourceTo: closingMatch.index + closingMatch[0].length
+  };
+}
+
 function collectTokenBlockRanges(tokens, source, offset = 0) {
   if (!Array.isArray(tokens) || tokens.length === 0) {
     return [];
@@ -178,15 +206,41 @@ export function buildBlockRangesFromMarkdown({
     return [];
   }
 
+  const frontmatterRange = extractFrontmatterRange(text, absoluteOffset);
+  const sourceWithoutFrontmatter = frontmatterRange
+    ? text.slice(frontmatterRange.sourceTo)
+    : text;
+  const sourceOffset = frontmatterRange ? frontmatterRange.to : absoluteOffset;
+
   if (!markdownEngine || typeof markdownEngine.parse !== 'function') {
-    return buildFallbackBlockRanges(text, absoluteOffset);
+    const fallbackRanges = buildFallbackBlockRanges(sourceWithoutFrontmatter, sourceOffset);
+    if (!frontmatterRange) {
+      return fallbackRanges;
+    }
+    return normalizeBlockRanges(
+      [{ from: frontmatterRange.from, to: frontmatterRange.to }, ...fallbackRanges],
+      absoluteOffset + text.length
+    );
   }
 
-  const tokens = markdownEngine.parse(text, {});
-  const ranges = collectTokenBlockRanges(tokens, text, absoluteOffset);
+  const tokens = markdownEngine.parse(sourceWithoutFrontmatter, {});
+  const ranges = collectTokenBlockRanges(tokens, sourceWithoutFrontmatter, sourceOffset);
   if (ranges.length > 0) {
-    return ranges;
+    if (!frontmatterRange) {
+      return ranges;
+    }
+    return normalizeBlockRanges(
+      [{ from: frontmatterRange.from, to: frontmatterRange.to }, ...ranges],
+      absoluteOffset + text.length
+    );
   }
 
-  return buildFallbackBlockRanges(text, absoluteOffset);
+  const fallbackRanges = buildFallbackBlockRanges(sourceWithoutFrontmatter, sourceOffset);
+  if (!frontmatterRange) {
+    return fallbackRanges;
+  }
+  return normalizeBlockRanges(
+    [{ from: frontmatterRange.from, to: frontmatterRange.to }, ...fallbackRanges],
+    absoluteOffset + text.length
+  );
 }

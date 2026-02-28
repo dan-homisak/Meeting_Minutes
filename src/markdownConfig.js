@@ -3,8 +3,8 @@ import MarkdownIt from 'markdown-it';
 export const MARKDOWN_ENGINE_OPTIONS = Object.freeze({
   html: true,
   linkify: true,
-  typographer: true,
-  breaks: true
+  typographer: false,
+  breaks: false
 });
 
 export function createMarkdownEngine(overrides = {}) {

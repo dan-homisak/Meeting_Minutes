@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { MARKDOWN_ENGINE_OPTIONS, createMarkdownEngine } from '../src/markdownConfig.js';
 
-test('markdown engine enables soft line breaks for live rendering', () => {
-  assert.equal(MARKDOWN_ENGINE_OPTIONS.breaks, true);
+test('markdown engine keeps hard line breaks disabled for Obsidian-like rendering', () => {
+  assert.equal(MARKDOWN_ENGINE_OPTIONS.breaks, false);
 
   const engine = createMarkdownEngine();
   const html = engine.render('First paragraph line.\nSecond paragraph line.\nThird paragraph line.');
   const breakTags = html.match(/<br\s*\/?>/gi) ?? [];
 
-  assert.equal(breakTags.length, 2);
+  assert.equal(breakTags.length, 0);
 });
 
 test('markdown engine preserves paragraph boundaries on blank lines', () => {

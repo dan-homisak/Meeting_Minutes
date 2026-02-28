@@ -23,15 +23,25 @@ test('DocumentSession seeds and incrementally updates model from editor transact
     changes: {
       from: source.indexOf('two'),
       to: source.indexOf('two') + 3,
-      insert: 'TWO'
+      insert: 'two (edited)'
     }
   });
+  const seededEditedBlock = seeded.model.blocks.find((block) => (
+    source.slice(block.from, block.to).includes('Paragraph two.')
+  ));
   const updated = session.applyEditorTransaction(editTransaction);
+  const updatedEditedBlock = updated.model.blocks.find((block) => (
+    updated.model.text.slice(block.from, block.to).includes('Paragraph two (edited).')
+  ));
 
   assert.equal(updated.classification.docChanged, true);
   assert.equal(updated.model.meta.parser, 'incremental');
   assert.equal(updated.model.text, editTransaction.state.doc.toString());
   assert.equal(updated.diff.textChanged, true);
+  assert.ok(seededEditedBlock?.id);
+  assert.equal(updatedEditedBlock?.id, seededEditedBlock?.id);
+  assert.ok(Array.isArray(updated.diff.changedBlockIds));
+  assert.ok(updated.diff.changedBlockIds.includes(seededEditedBlock.id));
 });
 
 test('DocumentSession ensureText avoids unnecessary reparses', () => {

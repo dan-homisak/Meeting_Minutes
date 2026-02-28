@@ -78,6 +78,42 @@ function pushInlineLinkSpans(line, spans, blockedRanges) {
   }
 }
 
+function pushWikiLinkSpans(line, spans, blockedRanges) {
+  const pattern = /(!)?\[\[([^[\]\n|]+)(?:\|([^[\]\n]+))?\]\]/g;
+  for (const match of line.matchAll(pattern)) {
+    const full = match[0] ?? '';
+    const isEmbed = match[1] === '!';
+    const target = match[2] ?? '';
+    const alias = match[3] ?? '';
+    const index = Number(match.index);
+    if (!full || !target || !Number.isFinite(index)) {
+      continue;
+    }
+
+    const from = index;
+    const to = from + full.length;
+    if (to <= from || intersectsAnyRange(blockedRanges, from, to)) {
+      continue;
+    }
+
+    blockedRanges.push({ from, to });
+
+    // ![[target|alias]]
+    // 0123456789...
+    // target starts after ![[ (or [[), alias starts after '|'
+    const tokenOffset = isEmbed ? 3 : 2;
+    const targetFrom = from + tokenOffset;
+    const targetTo = targetFrom + target.length;
+    pushInlineSpan(spans, targetFrom, targetTo, isEmbed ? 'embed-target' : 'wikilink-target');
+    if (alias) {
+      const aliasFrom = targetTo + 1;
+      const aliasTo = aliasFrom + alias.length;
+      pushInlineSpan(spans, aliasFrom, aliasTo, isEmbed ? 'embed-alias' : 'wikilink-alias');
+    }
+    pushInlineSpan(spans, from, to, isEmbed ? 'embed' : 'wikilink');
+  }
+}
+
 function pushInlineStrongSpans(line, spans, blockedRanges) {
   const patterns = [/\*\*([^\n*]+)\*\*/g, /__([^\n_]+)__/g];
   for (const pattern of patterns) {
@@ -137,6 +173,7 @@ function buildInlineSpansForSource(source, offset = 0) {
 
   const spans = [];
   const blockedRanges = [];
+  pushWikiLinkSpans(text, spans, blockedRanges);
   pushInlineCodeSpans(text, spans, blockedRanges);
   pushInlineLinkSpans(text, spans, blockedRanges);
   pushInlineStrongSpans(text, spans, blockedRanges);

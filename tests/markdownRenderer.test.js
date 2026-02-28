@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createMarkdownRenderer } from '../src/core/render/MarkdownRenderer.js';
+import { createMarkdownEngine } from '../src/markdownConfig.js';
 
 function createMarkdownEngineSpy() {
   const calls = {
@@ -78,4 +79,63 @@ test('renderPreview falls back to full markdown render when model text is out of
   });
 
   assert.deepEqual(markdownEngine.calls.render, ['alpha']);
+});
+
+test('renderPreview transforms wikilinks and embeds before markdown render', () => {
+  const markdownEngine = createMarkdownEngineSpy();
+  const previewElement = {
+    innerHTML: ''
+  };
+  const renderer = createMarkdownRenderer({
+    markdownEngine,
+    previewElement,
+    annotateMarkdownTokensWithSourceRanges() {}
+  });
+
+  renderer.renderPreview('See [[My Note|Alias]] and ![[diagram.png]].');
+
+  assert.equal(markdownEngine.calls.render.length, 1);
+  assert.match(markdownEngine.calls.render[0], /\[Alias\]\(#My%20Note\)/);
+  assert.match(markdownEngine.calls.render[0], /!\[diagram\.png\]\(diagram\.png\)/);
+});
+
+test('renderPreview augments task list markers with interactive checkbox markup', () => {
+  const previewElement = {
+    innerHTML: ''
+  };
+  const renderer = createMarkdownRenderer({
+    markdownEngine: createMarkdownEngine(),
+    previewElement,
+    annotateMarkdownTokensWithSourceRanges() {}
+  });
+
+  const html = renderer.renderMarkdownHtml('- [ ] open task', {
+    sourceFrom: 12,
+    sourceTo: 26
+  });
+
+  assert.match(html, /input type="checkbox"/);
+  assert.match(html, /data-task-source-from="12"/);
+  assert.match(html, /task-list-control/);
+});
+
+test('renderPreview preserves nested list structure when task items have children', () => {
+  const previewElement = {
+    innerHTML: ''
+  };
+  const renderer = createMarkdownRenderer({
+    markdownEngine: createMarkdownEngine(),
+    previewElement,
+    annotateMarkdownTokensWithSourceRanges() {}
+  });
+
+  const html = renderer.renderPreview([
+    '- [x] Parent task',
+    '  - Nested item'
+  ].join('\n'));
+
+  assert.match(html, /class="task-list-item"/);
+  assert.match(html, /<label class="task-list-control">/);
+  assert.match(html, /<ul>/);
+  assert.match(html, /<\/span><\/label>\s*<ul>/);
 });
