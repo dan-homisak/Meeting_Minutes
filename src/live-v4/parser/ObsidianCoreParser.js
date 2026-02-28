@@ -173,10 +173,10 @@ function classifyBlockSource(source, { isFirstBlock = false, hint = '' } = {}) {
   if (/^\s*([`~]{3,})/.test(trimmed) && /([`~]{3,})\s*$/.test(trimmed)) {
     return 'code';
   }
-  if (/^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\]\s+/.test(trimmed)) {
+  if (/^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\](?:\s+|$)/.test(trimmed)) {
     return 'task';
   }
-  if (/^\s*(?:[-+*]|\d+\.)\s+/.test(trimmed) || hint === 'list_item_open') {
+  if (/^\s*(?:[-+*]|\d+\.)(?:\s+|$)/.test(trimmed) || hint === 'list_item_open') {
     return 'list';
   }
 
@@ -583,8 +583,8 @@ function collectUncoveredListTaskBlocks(source, lineOffsets, existingBlocks, min
       continue;
     }
 
-    const looksLikeTask = /^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\]\s+/.test(trimmedRight);
-    const looksLikeList = /^\s*(?:[-+*]|\d+\.)\s+/.test(trimmedRight);
+    const looksLikeTask = /^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\](?:\s+|$)/.test(trimmedRight);
+    const looksLikeList = /^\s*(?:[-+*]|\d+\.)(?:\s+|$)/.test(trimmedRight);
     if (!looksLikeTask && !looksLikeList) {
       continue;
     }

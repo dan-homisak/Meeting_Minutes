@@ -2,12 +2,17 @@
 
 Use `npm run probe:live-v4` to run automated live-preview troubleshooting with cursor placement and rendered-click scenarios.
 
+Companion docs:
+
+- `docs/live-v4-screenshot-method.md`
+- `docs/live-v4-visual-regression-history.md`
+
 ## What It Does
 
 1. Starts the launcher in no-open mode (unless `--url` is provided).
 2. Opens a headless Chrome debugging session.
 3. Runs deterministic probe steps:
-   - fixture load (`default-welcome`, `lists-and-tasks`, or `mixed-inline`)
+   - fixture load (`default-welcome`, `lists-and-tasks`, `mixed-inline`, or `empty-markers`)
    - baseline snapshot
    - cursor placement by line/column
    - list/task marker reveal checks (content column vs syntax column on top-level and nested items)

@@ -1,0 +1,4899 @@
+{
+  "generatedAt": "2026-02-28T21:31:13.421Z",
+  "artifactDir": "/Users/danhomisak/Code/Meeting_Minutes/logs/probes/default-refine-2026-02-28T21-18/live-v4-probe-2026-02-28T21-31-08-345Z",
+  "launch": {
+    "url": "http://127.0.0.1:5176/?launcherToken=82622d48-4950-46d0-a3c0-76c55610aa57",
+    "launcherLogFilePath": "/Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T21-31-08-435Z-82622d48.jsonl",
+    "launcherOutput": [
+      "Port 5173 is in use, trying another one...",
+      "Port 5174 is in use, trying another one...",
+      "Port 5175 is in use, trying another one...",
+      "Starting Meeting Minutes at http://127.0.0.1:5176/?launcherToken=82622d48-4950-46d0-a3c0-76c55610aa57",
+      "Heartbeat interval: 4000ms",
+      "Auto-shutdown disabled (LAUNCHER_NO_TIMEOUT=1).",
+      "Live debug log file: /Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T21-31-08-435Z-82622d48.jsonl",
+      "Browser auto-open disabled (LAUNCHER_NO_OPEN=1)."
+    ]
+  },
+  "fixture": "default-welcome",
+  "steps": [
+    {
+      "id": "load-fixture-default-welcome",
+      "action": "load-fixture",
+      "actionResult": {
+        "ok": true,
+        "length": 100,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 168.22,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        },
+        "fixtureName": "default-welcome"
+      },
+      "screenshot": "00-load-fixture-default-welcome.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 168.22,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "baseline",
+      "action": "snapshot",
+      "actionResult": null,
+      "screenshot": "01-baseline.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 168.22,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-1-col-2",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 2,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 2,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 168.22,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "02-cursor-line-1-col-2.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 2,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 9,
+            "lineLength": 9
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:9",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 9,
+            "activeBlockType": "heading",
+            "activeBlockLength": 9,
+            "blockCount": 3,
+            "renderedBlockCount": 2,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Welcome",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 168.22,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 90.7,
+            "top": 337.77,
+            "right": 92.7,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 23
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-3-col-20",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 31,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 31,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 90.7,
+            "top": 337.77,
+            "right": 92.7,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 23
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "03-cursor-line-3-col-20.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 31,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 230.66,
+            "top": 385.14,
+            "right": 232.66,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-5-col-12",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 74,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type `/` for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 230.66,
+            "top": 385.14,
+            "right": 232.66,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "04-cursor-line-5-col-12.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type `/` for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 154.34,
+            "top": 431.52,
+            "right": 156.34,
+            "bottom": 453.52,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "click-source-11-60-left",
+      "action": "click-source-range",
+      "actionResult": {
+        "ok": true,
+        "x": 234,
+        "y": 397,
+        "sourceFrom": 11,
+        "sourceTo": 60
+      },
+      "screenshot": "05-click-source-11-60-left.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 23,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 169.52,
+            "top": 385.14,
+            "right": 171.52,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-5-col-12-reset",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 74,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type `/` for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 169.52,
+            "top": 385.14,
+            "right": 171.52,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      },
+      "screenshot": "06-cursor-line-5-col-12-reset.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 74,
+            "lineNumber": 5,
+            "lineFrom": 62,
+            "lineTo": 99,
+            "lineLength": 37
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:62:99",
+            "activeBlockFrom": 62,
+            "activeBlockTo": 99,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 37,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:11:60-11-60\" data-block-id=\"paragraph:11:60\" data-src-from=\"11\" data-src-to=\"60\" contenteditable=\"false\"><p data-src-from=\"11\" data-src-to=\"60\">Choose a folder and start editing markdown files.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type `/` for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "Type `/` for quick markdown snippets.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:11:60-11-60",
+              "blockId": "paragraph:11:60",
+              "sourceFrom": 11,
+              "sourceTo": 60,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 154.34,
+            "top": 431.52,
+            "right": 156.34,
+            "bottom": 453.52,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "click-source-11-60-right",
+      "action": "click-source-range",
+      "actionResult": {
+        "ok": true,
+        "x": 585,
+        "y": 397,
+        "sourceFrom": 11,
+        "sourceTo": 60
+      },
+      "screenshot": "07-click-source-11-60-right.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 49,
+            "lineNumber": 3,
+            "lineFrom": 11,
+            "lineTo": 60,
+            "lineLength": 49
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:11:60",
+            "activeBlockFrom": 11,
+            "activeBlockTo": 60,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 49,
+            "blockCount": 3,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 3,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 9,
+              "text": "# Welcome"
+            },
+            {
+              "number": 2,
+              "from": 10,
+              "to": 10,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 11,
+              "to": 60,
+              "text": "Choose a folder and start editing markdown files."
+            },
+            {
+              "number": 4,
+              "from": 61,
+              "to": 61,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 62,
+              "to": 99,
+              "text": "Type `/` for quick markdown snippets."
+            },
+            {
+              "number": 6,
+              "from": 100,
+              "to": 100,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Welcome",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Welcome</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 155.31,
+                "bottom": 360.77,
+                "width": 76.92,
+                "height": 23
+              },
+              "sourceContentText": "Welcome",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Choose a folder and start editing markdown files.",
+              "className": "cm-line",
+              "html": "Choose a folder and start editing markdown files.",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "Type / for quick markdown snippets.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:62:99-62-99\" data-block-id=\"paragraph:62:99\" data-src-from=\"62\" data-src-to=\"99\" contenteditable=\"false\"><p data-src-from=\"62\" data-src-to=\"99\">Type <code>/</code> for quick markdown snippets.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:62:99-62-99",
+              "blockId": "paragraph:62:99",
+              "sourceFrom": 62,
+              "sourceTo": 99,
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 358.42,
+            "top": 385.14,
+            "right": 360.42,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 431.52,
+                "right": 728,
+                "bottom": 454.7,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 7
+            }
+          }
+        }
+      }
+    }
+  ],
+  "eventSummary": {
+    "pointer": {
+      "fragment": 2,
+      "fragmentMiss": 0,
+      "native": 0,
+      "activate": 2,
+      "activateMiss": 0
+    },
+    "cursor": {
+      "vertical": 0,
+      "verticalSkipped": 0,
+      "verticalBoundary": 0
+    },
+    "rendering": {
+      "projectionBuilt": 14,
+      "activeBlockLarge": 0
+    }
+  },
+  "assertions": {
+    "pointerActivationObserved": true,
+    "noPointerActivateMiss": true,
+    "fragmentMappingObserved": true
+  }
+}

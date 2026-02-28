@@ -406,6 +406,43 @@ export function createLiveApp({
         const line = editorView.state.doc.line(normalizedLine);
         const position = Math.min(line.to, line.from + normalizedColumn);
         return this.setCursor(position);
+      },
+      moveCursorHorizontal(direction, repeat = 1) {
+        if (!editorView || !runtime?.moveCursorHorizontally) {
+          return {
+            ok: false,
+            reason: 'editor-not-ready'
+          };
+        }
+
+        const normalizedDirection = Number.isFinite(direction) ? Math.trunc(direction) : 0;
+        if (normalizedDirection !== -1 && normalizedDirection !== 1) {
+          return {
+            ok: false,
+            reason: 'invalid-direction',
+            direction
+          };
+        }
+
+        const iterations = Math.max(1, Math.min(10, Math.trunc(repeat)));
+        let movedCount = 0;
+        for (let index = 0; index < iterations; index += 1) {
+          const moved = runtime.moveCursorHorizontally(
+            editorView,
+            normalizedDirection,
+            'probe-horizontal'
+          );
+          if (!moved) {
+            break;
+          }
+          movedCount += 1;
+        }
+
+        return {
+          ok: true,
+          movedCount,
+          snapshot: this.getStateSnapshot({ maxLines: 120 })
+        };
       }
     };
   }
@@ -571,6 +608,7 @@ export function createLiveApp({
     livePreviewPointerHandlers: runtime.livePointerHandlers,
     slashCommandCompletion,
     moveLiveCursorVertically: runtime.moveCursorVertically,
+    moveLiveCursorHorizontally: runtime.moveCursorHorizontally,
     handleEditorUpdate(update) {
       liveDebug.trace('plugin.update', {
         docChanged: Boolean(update.docChanged),

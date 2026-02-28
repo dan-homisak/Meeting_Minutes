@@ -35,6 +35,8 @@ Operational docs:
 - `docs/architecture-plan.md`
 - `docs/live-view-troubleshooting.md`
 - `docs/live-v4-probe.md`
+- `docs/live-v4-screenshot-method.md`
+- `docs/live-v4-visual-regression-history.md`
 
 ## Run
 

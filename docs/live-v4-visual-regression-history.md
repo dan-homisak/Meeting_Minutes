@@ -1,0 +1,58 @@
+# Live-v4 Visual Regression Matrix + History
+
+## Required Fixture Matrix
+
+Every visual/runtime change must run these fixtures:
+
+1. `default-welcome`
+- Baseline rendering and pointer mapping.
+- Required screenshot steps: `01-baseline`, click-source steps.
+
+2. `lists-and-tasks`
+- Bullet/task/numbered rendering, nesting, syntax reveal, task toggles.
+- Required screenshot steps:
+  - `01-baseline`
+  - `03-cursor-line-3-col-1-syntax`
+  - `09-cursor-line-5-col-1-syntax`
+  - `15-cursor-line-8-col-1-syntax`
+  - `05-arrow-right-line-3-gap`
+  - `06-arrow-left-line-3-gap`
+  - `17-arrow-right-line-8-gap`
+  - `18-arrow-left-line-8-gap`
+  - `20-click-task-source-20`
+  - `22-click-task-source-87`
+
+3. `mixed-inline`
+- Bullet/task interaction with mixed inline markdown and paragraph context.
+- Required screenshot steps: `01-baseline`, cursor steps.
+
+4. `empty-markers`
+- Empty bullet/task/numbered markers to verify depth/indent updates before line content is typed.
+- Required screenshot steps: `01-baseline`, all cursor-line steps for lines 3-8.
+
+## Required Gates
+
+1. `npm test -- --runInBand`
+2. `npm run build`
+3. Probe runs for all three fixtures with explicit output dirs.
+4. Probe run for `empty-markers` fixture with explicit output dir.
+
+## Run History
+
+| Date (UTC) | Purpose | Fixtures | Artifact Root |
+|---|---|---|---|
+| 2026-02-28 | Syntax-transform + gutter stabilization | default-welcome, lists-and-tasks, mixed-inline | `logs/probes/live-v4-probe-2026-02-28T20-35-34-600Z`, `logs/probes/live-v4-probe-2026-02-28T20-38-03-460Z`, `logs/probes/live-v4-probe-2026-02-28T20-36-22-871Z` |
+| 2026-02-28 | List/checkbox spacing refinement | lists-and-tasks, mixed-inline | `logs/probes/lists-refine-2026-02-28T20-58/live-v4-probe-2026-02-28T20-56-19-026Z`, `logs/probes/mixed-refine-2026-02-28T20-58/live-v4-probe-2026-02-28T20-56-19-026Z` |
+| 2026-02-28 | Empty-marker depth detection + checkbox vertical centering + numbered-list indent tune | default-welcome, lists-and-tasks, mixed-inline | `logs/probes/default-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z`, `logs/probes/lists-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z`, `logs/probes/mixed-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z` |
+| 2026-02-28 | Empty-marker fixture baseline for pre-content indent depth checks | empty-markers | `logs/probes/empty-markers-2026-02-28T21-13/live-v4-probe-2026-02-28T21-12-36-663Z` |
+| 2026-02-28 | Horizontal marker-gap cursor traversal + spacing parity tune (ordered/task vs bullet) | lists-and-tasks, mixed-inline, empty-markers | `logs/probes/lists-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-34-13-611Z`, `logs/probes/mixed-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-34-56-969Z`, `logs/probes/empty-gap-pass-2026-02-28T22-05/live-v4-probe-2026-02-28T21-35-04-434Z` |
+| 2026-02-28 | Final list parity tuning: task/ordered spacing rebalance + marker trailing-space visibility while syntax is active | lists-and-tasks, mixed-inline, empty-markers | `logs/probes/lists-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-44-53-276Z`, `logs/probes/mixed-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-998Z`, `logs/probes/empty-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-999Z` |
+| 2026-02-28 | User-reported list spacing cleanup from screenshot (bullet/task marker-text separation retune) | lists-and-tasks, mixed-inline | `logs/probes/lists-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z`, `logs/probes/mixed-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z` |
+
+## How To Extend History
+
+For every new run:
+
+1. Add a new row with date, intent, fixtures, and artifact paths.
+2. Keep prior rows unchanged for auditability.
+3. Note any intentional visual delta in the change summary.

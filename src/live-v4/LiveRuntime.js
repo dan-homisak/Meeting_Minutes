@@ -76,6 +76,8 @@ export function createLiveRuntime({
     requestRefresh,
     readLiveState,
     moveCursorVertically: (view, direction, trigger) =>
-      cursorController.moveCursorVertically(view, direction, trigger)
+      cursorController.moveCursorVertically(view, direction, trigger),
+    moveCursorHorizontally: (view, direction, trigger) =>
+      cursorController.moveCursorHorizontally(view, direction, trigger)
   };
 }

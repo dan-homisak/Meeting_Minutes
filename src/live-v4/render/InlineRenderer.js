@@ -16,8 +16,8 @@ function clampRange(from, to, maxLength) {
 
 const MARKER_PATTERNS = [
   { markerType: 'heading-marker', regex: /^\s{0,3}#{1,6}\s+/ },
-  { markerType: 'list-marker', regex: /^\s*(?:[-+*]|\d+\.)\s+/ },
-  { markerType: 'task-marker', regex: /^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\]\s+/ },
+  { markerType: 'list-marker', regex: /^\s*(?:[-+*]|\d+\.)(?:\s+|$)/ },
+  { markerType: 'task-marker', regex: /^\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\](?:\s+|$)/ },
   { markerType: 'quote-marker', regex: /^\s*>\s?/ },
   { markerType: 'fence-marker', regex: /^\s*[`~]{3,}/ }
 ];

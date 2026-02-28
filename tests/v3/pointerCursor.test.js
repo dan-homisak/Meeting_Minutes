@@ -239,6 +239,56 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
   assert.equal(activeState.selection.main.head > 0, true);
 });
 
+test('cursor controller skips list/task marker gap positions horizontally', () => {
+  let activeState = EditorState.create({
+    doc: '- [ ] Task item\n1. Numbered item\n- Bullet item',
+    selection: { anchor: 0 }
+  });
+
+  const cursor = createCursorController({
+    liveDebug: { trace() {} }
+  });
+  const cursorView = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {}
+  };
+
+  function setCursorByLineColumn(lineNumber, column) {
+    const line = activeState.doc.line(lineNumber);
+    const position = Math.min(line.to, line.from + Math.max(0, Math.trunc(column)));
+    activeState = activeState.update({
+      selection: {
+        anchor: position,
+        head: position
+      }
+    }).state;
+    return position;
+  }
+
+  setCursorByLineColumn(1, 5);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 6);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 5);
+
+  setCursorByLineColumn(2, 2);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 3);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 2);
+
+  setCursorByLineColumn(3, 1);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 2);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
+});
+
 test('pointer controller passes through non-rendered targets to native editor behavior', () => {
   const ctx = createPointerView('# One\nTwo\nThree', []);
   const pointer = createPointerController({

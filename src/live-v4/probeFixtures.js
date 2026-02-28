@@ -26,6 +26,15 @@ Paragraph with **bold**, *emphasis*, ~~strike~~, \`inline code\`, [link](https:/
 - Bullet one
 - Bullet two with [ ] text and a task below
 - [ ] Real task item
+`,
+  'empty-markers': `# Empty Marker Depth
+
+-
+  -
+- [ ]
+  - [ ]
+1.
+  1.
 `
 });
 

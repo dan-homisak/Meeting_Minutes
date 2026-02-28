@@ -20,6 +20,7 @@ export function createEditor({
   livePreviewPointerHandlers,
   slashCommandCompletion,
   moveLiveCursorVertically,
+  moveLiveCursorHorizontally,
   handleEditorUpdate,
   initialDoc = DEFAULT_EDITOR_DOC,
   factories = {}
@@ -45,6 +46,14 @@ export function createEditor({
     {
       key: 'ArrowUp',
       run: (view) => moveLiveCursorVertically?.(view, -1, 'ArrowUp') ?? false
+    },
+    {
+      key: 'ArrowRight',
+      run: (view) => moveLiveCursorHorizontally?.(view, 1, 'ArrowRight') ?? false
+    },
+    {
+      key: 'ArrowLeft',
+      run: (view) => moveLiveCursorHorizontally?.(view, -1, 'ArrowLeft') ?? false
     },
     {
       key: 'Enter',

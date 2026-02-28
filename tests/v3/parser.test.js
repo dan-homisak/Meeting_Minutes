@@ -42,3 +42,27 @@ test('parser preserves frontmatter as source-backed block range', () => {
   assert.equal(frontmatter.from, 0);
   assert.equal(frontmatter.to > frontmatter.from, true);
 });
+
+test('parser recognizes empty list/task marker lines with stable depth metadata', () => {
+  const parser = createObsidianCoreParser({
+    markdownEngine: createMarkdownEngine()
+  });
+
+  const source = '-\n  -\n- [ ]\n  - [ ]\n1.\n  1.\n';
+  const result = parser.setText(source, 'empty-list-markers');
+
+  const summary = result.model.blocks.map((block) => ({
+    type: block.type,
+    depth: block.depth,
+    text: source.slice(block.from, block.to)
+  }));
+
+  assert.deepEqual(summary, [
+    { type: 'list', depth: 0, text: '-' },
+    { type: 'list', depth: 1, text: '  -' },
+    { type: 'task', depth: 0, text: '- [ ]' },
+    { type: 'task', depth: 1, text: '  - [ ]' },
+    { type: 'list', depth: 0, text: '1.' },
+    { type: 'list', depth: 1, text: '  1.' }
+  ]);
+});

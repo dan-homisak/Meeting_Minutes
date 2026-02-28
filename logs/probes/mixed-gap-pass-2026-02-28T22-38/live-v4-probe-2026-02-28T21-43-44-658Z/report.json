@@ -1,0 +1,3415 @@
+{
+  "generatedAt": "2026-02-28T21:43:48.284Z",
+  "artifactDir": "/Users/danhomisak/Code/Meeting_Minutes/logs/probes/mixed-gap-pass-2026-02-28T22-38/live-v4-probe-2026-02-28T21-43-44-658Z",
+  "launch": {
+    "url": "http://127.0.0.1:5173/?launcherToken=9187b483-ba56-40c6-8c02-ac0c5860fffc",
+    "launcherLogFilePath": "/Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T21-43-44-749Z-9187b483.jsonl",
+    "launcherOutput": [
+      "Starting Meeting Minutes at http://127.0.0.1:5173/?launcherToken=9187b483-ba56-40c6-8c02-ac0c5860fffc",
+      "Heartbeat interval: 4000ms",
+      "Auto-shutdown disabled (LAUNCHER_NO_TIMEOUT=1).",
+      "Live debug log file: /Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T21-43-44-749Z-9187b483.jsonl",
+      "Browser auto-open disabled (LAUNCHER_NO_OPEN=1)."
+    ]
+  },
+  "fixture": "mixed-inline",
+  "steps": [
+    {
+      "id": "load-fixture-mixed-inline",
+      "action": "load-fixture",
+      "actionResult": {
+        "ok": true,
+        "length": 206,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 14,
+            "lineLength": 14
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:14",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 14,
+            "activeBlockType": "heading",
+            "activeBlockLength": 14,
+            "blockCount": 5,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Mixed Inline",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 194.14,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with bold, emphasis, strike, inline code, link, and wikilink.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:16:126-16-126\" data-block-id=\"paragraph:16:126\" data-src-from=\"16\" data-src-to=\"126\" contenteditable=\"false\"><p data-src-from=\"16\" data-src-to=\"126\">Paragraph with <strong>bold</strong>, <em>emphasis</em>, <s>strike</s>, <code>inline code</code>, <a href=\"https://example.com\">link</a>, and <a href=\"#wikilink\">wikilink</a>.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 431.52,
+                "right": 164.91,
+                "bottom": 453.52,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 431.52,
+                "right": 87.09,
+                "bottom": 454.7,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 372.89,
+                "bottom": 476.7,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 477.89,
+                "right": 193.77,
+                "bottom": 499.89,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 90.95,
+                "bottom": 501.08,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:16:126-16-126",
+              "blockId": "paragraph:16:126",
+              "sourceFrom": 16,
+              "sourceTo": 126,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        },
+        "fixtureName": "mixed-inline"
+      },
+      "screenshot": "00-load-fixture-mixed-inline.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 14,
+            "lineLength": 14
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:14",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 14,
+            "activeBlockType": "heading",
+            "activeBlockLength": 14,
+            "blockCount": 5,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Mixed Inline",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 194.14,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with bold, emphasis, strike, inline code, link, and wikilink.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:16:126-16-126\" data-block-id=\"paragraph:16:126\" data-src-from=\"16\" data-src-to=\"126\" contenteditable=\"false\"><p data-src-from=\"16\" data-src-to=\"126\">Paragraph with <strong>bold</strong>, <em>emphasis</em>, <s>strike</s>, <code>inline code</code>, <a href=\"https://example.com\">link</a>, and <a href=\"#wikilink\">wikilink</a>.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 431.52,
+                "right": 164.91,
+                "bottom": 453.52,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 431.52,
+                "right": 87.09,
+                "bottom": 454.7,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 372.89,
+                "bottom": 476.7,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 477.89,
+                "right": 193.77,
+                "bottom": 499.89,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 90.95,
+                "bottom": 501.08,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:16:126-16-126",
+              "blockId": "paragraph:16:126",
+              "sourceFrom": 16,
+              "sourceTo": 126,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "baseline",
+      "action": "snapshot",
+      "actionResult": null,
+      "screenshot": "01-baseline.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 14,
+            "lineLength": 14
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:14",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 14,
+            "activeBlockType": "heading",
+            "activeBlockLength": 14,
+            "blockCount": 5,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Mixed Inline",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 194.14,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with bold, emphasis, strike, inline code, link, and wikilink.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:16:126-16-126\" data-block-id=\"paragraph:16:126\" data-src-from=\"16\" data-src-to=\"126\" contenteditable=\"false\"><p data-src-from=\"16\" data-src-to=\"126\">Paragraph with <strong>bold</strong>, <em>emphasis</em>, <s>strike</s>, <code>inline code</code>, <a href=\"https://example.com\">link</a>, and <a href=\"#wikilink\">wikilink</a>.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 431.52,
+                "right": 164.91,
+                "bottom": 453.52,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 431.52,
+                "right": 87.09,
+                "bottom": 454.7,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 372.89,
+                "bottom": 476.7,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 477.89,
+                "right": 193.77,
+                "bottom": 499.89,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 90.95,
+                "bottom": 501.08,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:16:126-16-126",
+              "blockId": "paragraph:16:126",
+              "sourceFrom": 16,
+              "sourceTo": 126,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-3-col-14",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 30,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 30,
+            "lineNumber": 3,
+            "lineFrom": 16,
+            "lineTo": 126,
+            "lineLength": 110
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:16:126",
+            "activeBlockFrom": 16,
+            "activeBlockTo": 126,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 110,
+            "blockCount": 5,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Mixed Inline",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 181.23,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]].",
+              "className": "cm-line",
+              "html": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]].",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 46.38
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 164.91,
+                "bottom": 476.7,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 477.89,
+                "right": 372.89,
+                "bottom": 499.89,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 87.09,
+                "bottom": 501.08,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 501.08,
+                "right": 193.77,
+                "bottom": 523.08,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 501.08,
+                "right": 90.95,
+                "bottom": 524.27,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 524.27,
+                "right": 730,
+                "bottom": 547.45,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      },
+      "screenshot": "02-cursor-line-3-col-14.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 30,
+            "lineNumber": 3,
+            "lineFrom": 16,
+            "lineTo": 126,
+            "lineLength": 110
+          },
+          "liveState": {
+            "activeBlockId": "paragraph:16:126",
+            "activeBlockFrom": 16,
+            "activeBlockTo": 126,
+            "activeBlockType": "paragraph",
+            "activeBlockLength": 110,
+            "blockCount": 5,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Mixed Inline",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 181.23,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]].",
+              "className": "cm-line",
+              "html": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]].",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 46.38
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 164.91,
+                "bottom": 476.7,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 477.89,
+                "right": 372.89,
+                "bottom": 499.89,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 87.09,
+                "bottom": 501.08,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 501.08,
+                "right": 193.77,
+                "bottom": 523.08,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 501.08,
+                "right": 90.95,
+                "bottom": 524.27,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 524.27,
+                "right": 730,
+                "bottom": 547.45,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 46.38
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 524.27,
+                "right": 46,
+                "bottom": 547.45,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 186.81,
+            "top": 385.14,
+            "right": 188.81,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-6-col-8",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 149,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 149,
+            "lineNumber": 6,
+            "lineFrom": 141,
+            "lineTo": 184,
+            "lineLength": 43
+          },
+          "liveState": {
+            "activeBlockId": "list:141:184",
+            "activeBlockFrom": 141,
+            "activeBlockTo": 184,
+            "activeBlockType": "list",
+            "activeBlockLength": 43,
+            "blockCount": 5,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Mixed Inline",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 181.23,
+                "bottom": 360.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with bold, emphasis, strike, inline code, link, and wikilink.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:16:126-16-126\" data-block-id=\"paragraph:16:126\" data-src-from=\"16\" data-src-to=\"126\" contenteditable=\"false\"><p data-src-from=\"16\" data-src-to=\"126\">Paragraph with <strong>bold</strong>, <em>emphasis</em>, <s>strike</s>, <code>inline code</code>, <a href=\"https://example.com\">link</a>, and <a href=\"#wikilink\">wikilink</a>.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 431.52,
+                "right": 164.91,
+                "bottom": 453.52,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 431.52,
+                "right": 87.09,
+                "bottom": 454.7,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 431.52,
+                "right": 730,
+                "bottom": 454.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 454.7,
+                "right": 372.89,
+                "bottom": 476.7,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 454.7,
+                "right": 87.09,
+                "bottom": 477.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 454.7,
+                "right": 730,
+                "bottom": 477.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 477.89,
+                "right": 193.77,
+                "bottom": 499.89,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 477.89,
+                "right": 90.95,
+                "bottom": 501.08,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 477.89,
+                "right": 730,
+                "bottom": 501.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 501.08,
+                "right": 730,
+                "bottom": 524.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 46.38
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 431.52,
+                "right": 46,
+                "bottom": 454.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 454.7,
+                "right": 46,
+                "bottom": 477.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 477.89,
+                "right": 46,
+                "bottom": 501.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 501.08,
+                "right": 46,
+                "bottom": 524.27,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 524.27,
+                "right": 46,
+                "bottom": 547.45,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:16:126-16-126",
+              "blockId": "paragraph:16:126",
+              "sourceFrom": 16,
+              "sourceTo": 126,
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 186.81,
+            "top": 385.14,
+            "right": 188.81,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 385.14,
+                "right": 728,
+                "bottom": 408.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      },
+      "screenshot": "03-cursor-line-6-col-8.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 149,
+            "lineNumber": 6,
+            "lineFrom": 141,
+            "lineTo": 184,
+            "lineLength": 43
+          },
+          "liveState": {
+            "activeBlockId": "list:141:184",
+            "activeBlockFrom": 141,
+            "activeBlockTo": 184,
+            "activeBlockType": "list",
+            "activeBlockLength": 43,
+            "blockCount": 5,
+            "renderedBlockCount": 1,
+            "virtualizedBlockCount": 5,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 14,
+              "text": "# Mixed Inline"
+            },
+            {
+              "number": 2,
+              "from": 15,
+              "to": 15,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 16,
+              "to": 126,
+              "text": "Paragraph with **bold**, *emphasis*, ~~strike~~, `inline code`, [link](https://example.com), and [[wikilink]]."
+            },
+            {
+              "number": 4,
+              "from": 127,
+              "to": 127,
+              "text": ""
+            },
+            {
+              "number": 5,
+              "from": 128,
+              "to": 140,
+              "text": "- Bullet one"
+            },
+            {
+              "number": 6,
+              "from": 141,
+              "to": 184,
+              "text": "- Bullet two with [ ] text and a task below"
+            },
+            {
+              "number": 7,
+              "from": 185,
+              "to": 205,
+              "text": "- [ ] Real task item"
+            },
+            {
+              "number": 8,
+              "from": 206,
+              "to": 206,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Mixed Inline",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Mixed Inline</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 324.77,
+                "right": 181.23,
+                "bottom": 347.77,
+                "width": 102.84,
+                "height": 23
+              },
+              "sourceContentText": "Mixed Inline",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 325.77,
+                "right": 730,
+                "bottom": 348.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 348.95,
+                "right": 730,
+                "bottom": 372.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "Paragraph with bold, emphasis, strike, inline code, link, and wikilink.",
+              "className": "cm-line",
+              "html": "<img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><section class=\"mm-live-v4-block-widget\" data-fragment-id=\"block-paragraph:16:126-16-126\" data-block-id=\"paragraph:16:126\" data-src-from=\"16\" data-src-to=\"126\" contenteditable=\"false\"><p data-src-from=\"16\" data-src-to=\"126\">Paragraph with <strong>bold</strong>, <em>emphasis</em>, <s>strike</s>, <code>inline code</code>, <a href=\"https://example.com\">link</a>, and <a href=\"#wikilink\">wikilink</a>.</p></section><img class=\"cm-widgetBuffer\" aria-hidden=\"true\">",
+              "hasWidget": true,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 372.14,
+                "right": 730,
+                "bottom": 395.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 395.33,
+                "right": 730,
+                "bottom": 418.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "•\nBullet one",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet one</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 418.52,
+                "right": 164.91,
+                "bottom": 440.52,
+                "width": 77.81,
+                "height": 22
+              },
+              "sourceContentText": "Bullet one",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 418.52,
+                "right": 87.09,
+                "bottom": 441.7,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 418.52,
+                "right": 730,
+                "bottom": 441.7,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "•\nBullet two with [ ] text and a task below",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">•</span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Bullet two with [ ] text and a task below</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 441.7,
+                "right": 372.89,
+                "bottom": 463.7,
+                "width": 285.8,
+                "height": 22
+              },
+              "sourceContentText": "Bullet two with [ ] text and a task below",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 441.7,
+                "right": 87.09,
+                "bottom": 464.89,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 441.7,
+                "right": 730,
+                "bottom": 464.89,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "Real task item",
+              "className": "cm-line mm-live-v4-source-task-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">- </span><span class=\"mm-live-v4-syntax-hidden\">[ ]</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-task-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">[]</span><span class=\"mm-live-v4-inline-task-display\"><input type=\"checkbox\" data-task-source-from=\"185\"></span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-task\" data-list-depth=\"0\">Real task item</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "3",
+              "sourceContentRect": {
+                "left": 90.95,
+                "top": 464.89,
+                "right": 193.77,
+                "bottom": 486.89,
+                "width": 102.81,
+                "height": 22
+              },
+              "sourceContentText": "Real task item",
+              "inlinePrefixClass": "mm-live-v4-inline-task-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 464.89,
+                "right": 90.95,
+                "bottom": 488.08,
+                "width": 9.61,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 464.89,
+                "right": 730,
+                "bottom": 488.08,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 488.08,
+                "right": 730,
+                "bottom": 511.27,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 321.77,
+                "right": 46,
+                "bottom": 321.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 325.77,
+                "right": 46,
+                "bottom": 348.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 348.95,
+                "right": 46,
+                "bottom": 372.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 372.14,
+                "right": 46,
+                "bottom": 395.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 395.33,
+                "right": 46,
+                "bottom": 418.52,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 5,
+              "text": "5",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 418.52,
+                "right": 46,
+                "bottom": 441.7,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 6,
+              "text": "6",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 441.7,
+                "right": 46,
+                "bottom": 464.89,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 7,
+              "text": "7",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 464.89,
+                "right": 46,
+                "bottom": 488.08,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 8,
+              "text": "8",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 488.08,
+                "right": 46,
+                "bottom": 511.27,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [
+            {
+              "index": 0,
+              "fragmentId": "block-paragraph:16:126-16-126",
+              "blockId": "paragraph:16:126",
+              "sourceFrom": 16,
+              "sourceTo": 126,
+              "rect": {
+                "left": 78.39,
+                "top": 372.14,
+                "right": 728,
+                "bottom": 395.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "cursorRect": {
+            "left": 132.08,
+            "top": 441.7,
+            "right": 134.08,
+            "bottom": 463.7,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 325.77,
+                "right": 730,
+                "bottom": 348.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 78.39,
+                "top": 372.14,
+                "right": 728,
+                "bottom": 395.33,
+                "width": 649.61,
+                "height": 23.19
+              }
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 9
+            }
+          }
+        }
+      }
+    }
+  ],
+  "eventSummary": {
+    "pointer": {
+      "fragment": 0,
+      "fragmentMiss": 0,
+      "native": 0,
+      "activate": 0,
+      "activateMiss": 0
+    },
+    "cursor": {
+      "vertical": 0,
+      "verticalSkipped": 0,
+      "verticalBoundary": 0
+    },
+    "rendering": {
+      "projectionBuilt": 8,
+      "activeBlockLarge": 0
+    }
+  },
+  "assertions": {
+    "pointerActivationObserved": false,
+    "noPointerActivateMiss": true,
+    "fragmentMappingObserved": false
+  }
+}

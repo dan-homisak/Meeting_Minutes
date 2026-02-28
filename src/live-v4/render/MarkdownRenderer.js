@@ -130,7 +130,7 @@ function renderListLikeBlock(markdownText, options = null, markdownEngine = null
       : 0;
   const depthAttr = ` data-list-depth="${baseDepth}"`;
 
-  const taskMatch = source.match(/^(\s*)([-+*]|\d+\.)\s+\[( |x|X)\]\s+(.*)$/);
+  const taskMatch = source.match(/^(\s*)([-+*]|\d+\.)\s+\[( |x|X)\](?:\s+(.*))?$/);
   if (taskMatch) {
     const checked = String(taskMatch[3] ?? '').toLowerCase() === 'x';
     const contentHtml = renderInlineMarkdown(markdownEngine, taskMatch[4] ?? '');
@@ -141,7 +141,7 @@ function renderListLikeBlock(markdownText, options = null, markdownEngine = null
     return `<div class="mm-live-list-row task-list-item"${depthAttr}${sourceAttrs}><label class="task-list-control"><input type="checkbox"${taskSourceAttr}${checkedAttr}><span class="task-list-content">${contentHtml}</span></label></div>`;
   }
 
-  const listMatch = source.match(/^(\s*)([-+*]|\d+\.)\s+(.*)$/);
+  const listMatch = source.match(/^(\s*)([-+*]|\d+\.)(?:\s+(.*))?$/);
   if (!listMatch) {
     return null;
   }

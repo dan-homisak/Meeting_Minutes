@@ -5,6 +5,42 @@ function clampToLine(line, column) {
   return Math.min(line.to, line.from + normalizedColumn);
 }
 
+function readMarkerGapRange(lineText, lineFrom) {
+  if (typeof lineText !== 'string' || !Number.isFinite(lineFrom)) {
+    return null;
+  }
+
+  const taskMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\])(\s+)/);
+  if (taskMatch && typeof taskMatch[1] === 'string' && typeof taskMatch[2] === 'string') {
+    const markerCoreFrom = Math.trunc(lineFrom);
+    const markerCoreTo = markerCoreFrom + taskMatch[1].length;
+    const contentFrom = markerCoreTo + taskMatch[2].length;
+    if (contentFrom > markerCoreTo) {
+      return {
+        markerCoreFrom,
+        markerCoreTo,
+        contentFrom
+      };
+    }
+  }
+
+  const listMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.))(\s+)/);
+  if (listMatch && typeof listMatch[1] === 'string' && typeof listMatch[2] === 'string') {
+    const markerCoreFrom = Math.trunc(lineFrom);
+    const markerCoreTo = markerCoreFrom + listMatch[1].length;
+    const contentFrom = markerCoreTo + listMatch[2].length;
+    if (contentFrom > markerCoreTo) {
+      return {
+        markerCoreFrom,
+        markerCoreTo,
+        contentFrom
+      };
+    }
+  }
+
+  return null;
+}
+
 export function createCursorController({
   liveDebug,
   createCursorSelection = (position, assoc) => EditorSelection.cursor(position, assoc)
@@ -80,7 +116,58 @@ export function createCursorController({
     return true;
   }
 
+  function moveCursorHorizontally(view, direction, trigger = 'arrow') {
+    if (!Number.isInteger(direction) || (direction !== -1 && direction !== 1)) {
+      return false;
+    }
+
+    const selection = view.state.selection.main;
+    if (!selection.empty) {
+      return false;
+    }
+
+    const head = selection.head;
+    const line = view.state.doc.lineAt(head);
+    const lineText = view.state.doc.sliceString(line.from, line.to);
+    const markerGapRange = readMarkerGapRange(lineText, line.from);
+    if (!markerGapRange) {
+      return false;
+    }
+
+    let target = null;
+    if (direction > 0) {
+      if (head >= markerGapRange.markerCoreTo && head < markerGapRange.contentFrom) {
+        target = markerGapRange.contentFrom;
+      }
+    } else if (head <= markerGapRange.contentFrom && head > markerGapRange.markerCoreTo) {
+      target = markerGapRange.markerCoreTo;
+    }
+
+    if (!Number.isFinite(target) || target === head) {
+      return false;
+    }
+
+    view.dispatch({
+      selection: createCursorSelection(target, direction > 0 ? -1 : 1),
+      scrollIntoView: true
+    });
+    view.focus();
+
+    liveDebug?.trace?.('cursor.move.horizontal.marker-gap', {
+      trigger,
+      direction,
+      from: head,
+      to: target,
+      markerCoreFrom: markerGapRange.markerCoreFrom,
+      markerCoreTo: markerGapRange.markerCoreTo,
+      contentFrom: markerGapRange.contentFrom
+    });
+
+    return true;
+  }
+
   return {
-    moveCursorVertically
+    moveCursorVertically,
+    moveCursorHorizontally
   };
 }

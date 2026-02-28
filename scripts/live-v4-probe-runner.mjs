@@ -447,6 +447,16 @@ function buildLoadFixtureExpression(fixtureName) {
   })()`;
 }
 
+function buildMoveCursorHorizontalExpression(direction, repeat = 1) {
+  return `(() => {
+    const api = window['${PROBE_API_KEY}'];
+    if (!api || typeof api.moveCursorHorizontal !== 'function') {
+      return { ok: false, reason: 'missing-probe-api' };
+    }
+    return api.moveCursorHorizontal(${Math.trunc(direction)}, ${Math.max(1, Math.trunc(repeat))});
+  })()`;
+}
+
 function buildWidgetCoordinatesExpression(widgetIndex, xRatio, yRatio) {
   return `(() => {
     const widgets = [...document.querySelectorAll('.mm-live-v4-block-widget')];
@@ -693,6 +703,22 @@ function buildListFixtureSteps() {
       column: 1
     },
     {
+      id: 'cursor-line-3-col-5-gap-right',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 5
+    },
+    {
+      id: 'arrow-right-line-3-gap',
+      action: 'move-cursor-horizontal',
+      direction: 1
+    },
+    {
+      id: 'arrow-left-line-3-gap',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
       id: 'cursor-line-3-col-8-restore',
       action: 'set-cursor',
       lineNumber: 3,
@@ -711,6 +737,22 @@ function buildListFixtureSteps() {
       column: 1
     },
     {
+      id: 'cursor-line-5-col-7-gap-right',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 7
+    },
+    {
+      id: 'arrow-right-line-5-gap',
+      action: 'move-cursor-horizontal',
+      direction: 1
+    },
+    {
+      id: 'arrow-left-line-5-gap',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
       id: 'cursor-line-5-col-12-restore',
       action: 'set-cursor',
       lineNumber: 5,
@@ -727,6 +769,22 @@ function buildListFixtureSteps() {
       action: 'set-cursor',
       lineNumber: 8,
       column: 1
+    },
+    {
+      id: 'cursor-line-8-col-2-gap-right',
+      action: 'set-cursor',
+      lineNumber: 8,
+      column: 2
+    },
+    {
+      id: 'arrow-right-line-8-gap',
+      action: 'move-cursor-horizontal',
+      direction: 1
+    },
+    {
+      id: 'arrow-left-line-8-gap',
+      action: 'move-cursor-horizontal',
+      direction: -1
     },
     {
       id: 'cursor-line-8-col-12-restore',
@@ -785,12 +843,65 @@ function buildMixedInlineFixtureSteps() {
   ];
 }
 
+function buildEmptyMarkersFixtureSteps() {
+  return [
+    {
+      id: 'load-fixture-empty-markers',
+      action: 'load-fixture',
+      fixtureName: 'empty-markers'
+    },
+    {
+      id: 'baseline',
+      action: 'snapshot'
+    },
+    {
+      id: 'cursor-line-3-col-1',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 1
+    },
+    {
+      id: 'cursor-line-4-col-3',
+      action: 'set-cursor',
+      lineNumber: 4,
+      column: 3
+    },
+    {
+      id: 'cursor-line-5-col-1',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 1
+    },
+    {
+      id: 'cursor-line-6-col-3',
+      action: 'set-cursor',
+      lineNumber: 6,
+      column: 3
+    },
+    {
+      id: 'cursor-line-7-col-1',
+      action: 'set-cursor',
+      lineNumber: 7,
+      column: 1
+    },
+    {
+      id: 'cursor-line-8-col-3',
+      action: 'set-cursor',
+      lineNumber: 8,
+      column: 3
+    }
+  ];
+}
+
 function buildStepDefinitions(fixtureName) {
   if (fixtureName === 'lists-and-tasks') {
     return buildListFixtureSteps();
   }
   if (fixtureName === 'mixed-inline') {
     return buildMixedInlineFixtureSteps();
+  }
+  if (fixtureName === 'empty-markers') {
+    return buildEmptyMarkersFixtureSteps();
   }
   return buildDefaultFixtureSteps();
 }
@@ -863,6 +974,12 @@ async function runProbe({
       if (coordinates?.ok) {
         await dispatchMouseClick(client, sessionId, coordinates.x, coordinates.y);
       }
+    } else if (step.action === 'move-cursor-horizontal') {
+      actionResult = await evaluate(
+        client,
+        sessionId,
+        buildMoveCursorHorizontalExpression(step.direction, step.repeat ?? 1)
+      );
     }
 
     await sleep(STEP_WAIT_MS);

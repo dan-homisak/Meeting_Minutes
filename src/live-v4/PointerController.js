@@ -101,7 +101,7 @@ function toggleTaskCheckboxAtSource(view, sourceFrom, nextChecked) {
   const position = clampPosition(sourceFrom, doc.length);
   const line = doc.lineAt(position);
   const lineText = doc.sliceString(line.from, line.to);
-  const taskMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.)\s+\[)( |x|X)(\]\s+.*)$/);
+  const taskMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.)\s+\[)( |x|X)(\](?:\s+.*)?$)/);
   if (!taskMatch) {
     return false;
   }
