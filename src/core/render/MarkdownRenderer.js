@@ -1,11 +1,10 @@
 import DOMPurify from 'dompurify';
-import { createPreviewRenderer } from './PreviewRenderer.js';
+import { extractLeadingFrontmatter } from '../model/BlockSemantics.js';
 
 export function createMarkdownRenderer({
   markdownEngine,
   previewElement,
-  annotateMarkdownTokensWithSourceRanges,
-  previewFragmentCacheMax = 1200
+  annotateMarkdownTokensWithSourceRanges
 } = {}) {
   function escapeHtml(value) {
     const text = typeof value === 'string' ? value : '';
@@ -15,29 +14,6 @@ export function createMarkdownRenderer({
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
-  }
-
-  function extractLeadingFrontmatter(markdownText) {
-    const source = typeof markdownText === 'string' ? markdownText : '';
-    if (!source.startsWith('---\n')) {
-      return null;
-    }
-    const closingFenceMatch = source.match(/\n---(?:\n|$)/);
-    if (!closingFenceMatch || !Number.isFinite(closingFenceMatch.index)) {
-      return null;
-    }
-    const closingStart = closingFenceMatch.index;
-    const totalLength = closingStart + closingFenceMatch[0].length;
-    const raw = source.slice(0, totalLength);
-    const body = raw
-      .replace(/^---\n/, '')
-      .replace(/\n---(?:\n|$)$/, '')
-      .replace(/\n$/, '');
-    return {
-      raw,
-      body,
-      totalLength
-    };
   }
 
   function renderFrontmatterHtml(frontmatter, options = null) {
@@ -284,13 +260,8 @@ export function createMarkdownRenderer({
     return sanitizeHtml(frontmatterHtml + taskAugmented);
   }
 
-  const previewRenderer = createPreviewRenderer({
-    renderMarkdownHtml,
-    previewFragmentCacheMax
-  });
-
   function renderPreview(markdownText, options = null) {
-    const rendered = previewRenderer.renderPreview(markdownText, options);
+    const rendered = renderMarkdownHtml(markdownText, options);
 
     if (previewElement) {
       previewElement.innerHTML = rendered;

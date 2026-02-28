@@ -11,23 +11,8 @@ export function createWorkspaceController({
   renderFileList,
   getEditorText,
   setEditorText,
-  readDocumentModel,
-  renderPreview,
   liveDebug
 } = {}) {
-  function readPreviewDocumentModel(markdownText) {
-    if (typeof readDocumentModel !== 'function') {
-      return null;
-    }
-
-    const documentModel = readDocumentModel();
-    if (!documentModel || typeof documentModel.text !== 'string') {
-      return null;
-    }
-
-    return documentModel.text === markdownText ? documentModel : null;
-  }
-
   async function persistWorkspaceState() {
     if (!app.folderHandle) {
       return;
@@ -102,11 +87,6 @@ export function createWorkspaceController({
     app.hasUnsavedChanges = false;
 
     setEditorText(markdownText);
-    if (app.viewMode === 'preview') {
-      renderPreview(markdownText, {
-        documentModel: readPreviewDocumentModel(markdownText)
-      });
-    }
     renderFileList();
     updateActionButtons();
 

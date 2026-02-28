@@ -1,165 +1,64 @@
-# Meeting Minutes MVP
+# Meeting Minutes Live (Obsidian-Style Live Preview)
 
-A local-first markdown note editor built for the browser.
+A local-first markdown editor focused on a single live preview workflow.
 
-## MVP features
+## What Changed
 
-- Single-pane markdown workflow with `Raw`, `Live`, and `Preview` modes.
-- CodeMirror editor with markdown list continuation and snippet autocomplete (`/` commands).
-- File and folder access through the browser File System Access API.
-- Autosave (debounced) plus manual Save button.
-- Persisted workspace restore via IndexedDB.
-- Sanitized preview rendering to reduce XSS risk from raw HTML in notes.
+This rewrite is a big-bang cut to a live-only runtime:
 
-## Stack
+- Single mode: live preview editing only.
+- New runtime pipeline in `src/live-v3/`.
+- Full-block inactive rendering with one active editable block.
+- Deterministic source mapping via `data-src-*` and interaction map entries.
+- Legacy source/preview mode wiring removed from the runtime entry path.
 
-- HTML, CSS, JavaScript
-- [Vite](https://vitejs.dev/) for local dev/build
-- [CodeMirror 6](https://codemirror.net/)
-- [markdown-it](https://github.com/markdown-it/markdown-it)
-- [DOMPurify](https://github.com/cure53/DOMPurify)
+## Core Runtime Pipeline
 
-## Launch (double-click)
+`source text -> parser/model -> block projection -> CodeMirror decorations -> interaction map`
 
-1. In Finder, double-click:
+Key modules:
 
-`/Users/danhomisak/Code/Meeting_Minutes/Launch Meeting Minutes.command`
+- `src/live-v3/createLiveApp.js`: live-only app composition root.
+- `src/live-v3/LiveRuntime.js`: runtime assembly (parser, renderer, state, pointer/cursor).
+- `src/live-v3/parser/ObsidianCoreParser.js`: core parser/session adapter.
+- `src/live-v3/model/LiveDocModel.js`: canonical live document model.
+- `src/live-v3/LiveStateField.js`: CodeMirror state field for live projection updates.
+- `src/live-v3/LiveRenderer.js`: projection + decorations renderer.
+- `src/live-v3/LiveProjection.js`: active block selection, virtualization, render budgeting.
+- `src/live-v3/InteractionMap.js`: deterministic source interaction mapping.
+- `src/live-v3/PointerController.js`: pointer activation, task toggle, modifier-link open.
+- `src/live-v3/CursorController.js`: vertical cursor movement.
 
-2. The launcher will:
-- install dependencies if needed
-- start the Vite app
-- open your browser automatically
-- shut down the server automatically after the browser/tab is closed
-- stay running when you refresh the page (refresh sends a new heartbeat)
-
-## Run manually (Terminal)
-
-1. Install dependencies:
+## Run
 
 ```bash
 npm install
-```
-
-2. Start with auto-open and auto-shutdown:
-
-```bash
 npm run launch
 ```
 
-3. Click **Open Folder** and choose a local folder containing markdown files.
+Then click **Open Vault** and choose a local folder with markdown files.
 
-## Testing and live debug
+## Test
 
-- Run regression tests:
+Parity-first suite:
 
 ```bash
 npm test
 ```
 
-- Continuous test loop while iterating:
+Watch mode:
 
 ```bash
 npm run test:watch
 ```
 
-- Live debug is auto-enabled to `TRACE` in local dev (`npm run dev`) unless you already set a level.
-
-- Use the in-app **Live Debug** panel (under the status bar) to:
-- change level (`OFF/ERROR/WARN/INFO/TRACE`)
-- clear timeline entries
-- copy JSON logs for bug reports
-
-- To persist logs to disk for after-the-fact debugging, run with launcher:
+## Build
 
 ```bash
-npm run launch
+npm run build
 ```
 
-- Terminal-only launcher (no browser auto-open):
-
-```bash
-LAUNCHER_NO_OPEN=1 npm run launch
-```
-
-- Launcher sessions write JSONL logs to `logs/live-debug-*.jsonl` and print the exact file path at startup.
-
-- Quick report for latest session:
-
-```bash
-npm run logs:latest -- --last 120
-```
-
-- Enable live-view debug logs with URL query:
-
-`http://localhost:5173/?debugLive=trace`
-
-- Or toggle from devtools:
-
-```js
-window.__meetingMinutesLiveDebug.setLevel('trace');
-window.__meetingMinutesLiveDebug.entries();
-```
-
-- Full troubleshooting workflow:
-
-`docs/live-view-troubleshooting.md`
-
-- Repro fixture for cursor mapping:
-
-`Markdown_Test_Files/live_view_cursor_fixture.md`
-
-## Browser compatibility
+## Browser Support
 
 - Best support: Chromium desktop browsers (Chrome, Edge, Brave).
-- Requirement: secure context (`https://` or `http://localhost`).
-- Safari and Firefox currently have limited support for folder-based read/write workflows.
-
-## Project structure
-
-- `index.html`: shell layout
-- `src/main.js`: thin app entrypoint (CSS import + `createApp` call)
-- `src/bootstrap/createApp.js`: top-level app composition root and bootstrap wiring
-- `src/bootstrap/createLiveControllers.js`: composition root for live interaction/diagnostic controllers
-- `src/bootstrap/createEditor.js`: editor state/view assembly and extension wiring
-- `src/bootstrap/startAppLifecycle.js`: startup sequence and UI event binding orchestration
-- `src/bootstrap/createLiveRuntimeHelpers.js`: shared live-runtime adapter helpers around bridge/probe/snapshot/controller getters
-- `src/bootstrap/createAppControllers.js`: workspace+mode controller composition and app action delegates
-- `src/bootstrap/createTelemetryBootstrap.js`: launcher bridge + snapshot + debug panel telemetry wiring
-- `src/bootstrap/createEditorDocumentAdapter.js`: editor text read/write adapter with programmatic-selection diagnostics
-- `src/bootstrap/createAppShellContext.js`: app shell DOM bindings and initial app state construction
-- `src/bootstrap/createLiveDebugBootstrap.js`: live-debug logger initialization, persisted level handling, and startup metadata logs
-- `src/bootstrap/createLiveEditorExtensions.js`: live pointer/key/focus/blur editor extensions and atomic range wiring
-- `src/bootstrap/createExtensions.js`: live preview + editor extension composition (state field, pointer handlers, atomic ranges)
-- `src/bootstrap/createLiveControllerOptions.js`: helper/runtime option composition for live controller factory wiring
-- `src/bootstrap/liveConstants.js`: shared live-mode timing/threshold constants and keylog key sets
-- `src/liveDebugLogger.js`: structured live-view logger with persistent levels
-- `src/live/logString.js`: shared log-safe string normalization helper
-- `src/live/livePreviewController.js`: live-preview state field and decoration orchestration
-- `src/live/livePreviewBridge.js`: live-preview controller/view adapter for refresh/state/block access
-- `src/live/editorUpdateController.js`: editor update-listener doc/selection handling and autosave flow
-- `src/core/render/MarkdownRenderer.js`: markdown-to-HTML render + sanitized preview output
-- `src/core/render/LiveHybridRenderer.js`: fragment-based live renderer and decoration orchestration
-- `src/core/render/LiveFragmentGraph.js`: line/inline/marker fragment graph builder for live preview
-- `src/core/selection/ActivationController.js`: live pointer activation context resolution and block selection
-- `src/core/selection/CursorNavigator.js`: live vertical cursor navigation and assoc-correction policy
-- `src/core/selection/SelectionPolicy.js`: shared source-map lookup/clamping policy for activation and cursor movement
-- `src/live/liveDiagnosticsController.js`: runtime/editor input diagnostics hooks and instrumentation
-- `src/live/liveDiagnosticsLogHelpers.js`: shared DOM/selection log serialization helpers for diagnostics
-- `src/live/liveLineMappingHelpers.js`: shared numeric clamp and source line/bounds diagnostics readers
-- `src/live/pointerInputHelpers.js`: pointer target normalization and coordinate extraction helpers
-- `src/live/liveSnapshotController.js`: input signal tracking and editor snapshot telemetry payloads
-- `src/live/selectionDiagnosticsController.js`: selection-change/jump diagnostics and transaction summary logging
-- `src/live/cursorVisibilityController.js`: cursor visibility probing, recovery, and gutter/cursor anomaly signals
-- `src/live/liveViewportProbe.js`: cursor/gutter viewport geometry readers for live diagnostics
-- `src/editor/slashCommands.js`: slash command catalog + completion provider
-- `src/ui/modeController.js`: raw/live/preview mode transitions and UI state
-- `src/ui/themeController.js`: theme state and browser preference syncing
-- `src/ui/workspaceView.js`: status/action/file-list UI rendering helpers
-- `src/workspace/fileSystem.js`: markdown file discovery + permission helpers
-- `src/workspace/workspaceController.js`: workspace save/open/load/restore workflows
-- `src/workspace/workspaceDb.js`: IndexedDB workspace persistence
-- `src/telemetry/launcherBridge.js`: launcher heartbeat and live-debug upload transport
-- `src/telemetry/liveDebugPanelController.js`: live-debug panel UI mounting, rendering, and control handlers
-- `src/style.css`: UI styling and responsive behavior
-- `tests/*.test.js`: node-based regression suite
-- `docs/architecture-plan.md`: phased Obsidian-style architecture roadmap
+- Requires secure context (`https://` or `http://localhost`).

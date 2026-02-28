@@ -1,3 +1,5 @@
+import { extractFrontmatterRange } from '../model/BlockSemantics.js';
+
 function buildLineStartOffsets(source) {
   const text = typeof source === 'string' ? source : '';
   if (text.length === 0) {
@@ -117,34 +119,6 @@ function buildFallbackBlockRanges(source, offset = 0) {
   }
 
   return normalizeBlockRanges(ranges, offset + text.length);
-}
-
-function extractFrontmatterRange(source, offset = 0) {
-  const text = typeof source === 'string' ? source : '';
-  const absoluteOffset = Math.max(0, Math.trunc(offset));
-  if (!text.startsWith('---\n')) {
-    return null;
-  }
-
-  const closingFencePattern = /\n---(?:\n|$)/g;
-  closingFencePattern.lastIndex = 4;
-  const closingMatch = closingFencePattern.exec(text);
-  if (!closingMatch || !Number.isFinite(closingMatch.index)) {
-    return null;
-  }
-
-  const from = absoluteOffset;
-  const to = absoluteOffset + closingMatch.index + closingMatch[0].length;
-  if (to <= from) {
-    return null;
-  }
-
-  return {
-    from,
-    to,
-    sourceFrom: 0,
-    sourceTo: closingMatch.index + closingMatch[0].length
-  };
 }
 
 function collectTokenBlockRanges(tokens, source, offset = 0) {

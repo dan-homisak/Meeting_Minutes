@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meeting Minutes</title>
+    <title>Meeting Minutes Live</title>
   </head>
   <body>
     <div class="app-shell">
       <aside class="vault-sidebar" aria-label="Vault navigation">
         <div class="vault-header">
-          <p class="vault-eyebrow">Local Vault</p>
+          <p class="vault-eyebrow">Vault</p>
           <h1>Meeting Minutes</h1>
         </div>
 
@@ -29,23 +29,14 @@
 
       <main class="workspace-main">
         <header class="note-toolbar">
-          <div class="mode-toggle" role="group" aria-label="View mode">
-            <button id="mode-raw" class="mode-button" type="button" aria-pressed="false">Source</button>
-            <button id="mode-live" class="mode-button active" type="button" aria-pressed="true">Live Preview</button>
-            <button id="mode-preview" class="mode-button" type="button" aria-pressed="false">Reading</button>
-          </div>
-
-          <div class="note-toolbar-actions">
-            <button id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
-            <button id="save-now" type="button" disabled>Save</button>
-          </div>
+          <p class="mode-indicator">Live Preview</p>
+          <button id="save-now" type="button" disabled>Save</button>
         </header>
 
-        <p id="status" aria-live="polite">Choose a folder with markdown files to start editing.</p>
+        <p id="status" aria-live="polite">Choose a vault folder with markdown files to start editing.</p>
 
         <section class="note-pane" aria-label="Note content">
           <div id="editor"></div>
-          <article id="preview" hidden></article>
         </section>
       </main>
     </div>

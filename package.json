@@ -8,8 +8,9 @@
     "launch": "node scripts/launcher.mjs",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test",
-    "test:watch": "node --test --watch",
+    "check:legacy-contracts": "node scripts/check-legacy-contracts.mjs",
+    "test": "npm run check:legacy-contracts && node --test \"tests/v3/**/*.test.js\"",
+    "test:watch": "node --test --watch \"tests/v3/**/*.test.js\"",
     "logs:latest": "node scripts/live-debug-report.mjs",
     "logs:verify": "node scripts/live-debug-verify.mjs"
   },

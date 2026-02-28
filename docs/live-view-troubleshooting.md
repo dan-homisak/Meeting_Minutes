@@ -1,59 +1,14 @@
-# Live View Development and Troubleshooting Strategy
+# Live-V3 Troubleshooting
 
-This document defines how to iterate on live mode without cursor drift, gutter collapse, or click mapping jumps.
+## Runtime Expectations
 
-## Shipped Architecture
-
-1. Live mode now runs a hybrid renderer architecture.
-2. Active line stays source-editable while surrounding inactive lines render as fragment widgets.
-3. Fragment-map entries now include `line-fragment`, `inline-fragment`, `marker`, and `block` kinds mapped to source ranges.
-4. Pointer clicks map to source activation and are logged (`pointer.map.native`, `block.activate.request`, `block.activated`).
-5. A block index is rebuilt on document changes for deterministic diagnostics (`block.index.rebuilt`, `block.index.delta`).
-6. Fence marker state is logged on selection changes (`fence.visibility.state`).
-7. Hybrid decoration rebuilds emit render telemetry (`decorations.hybrid-built`) with viewport-centered metrics.
-
-## Behavioral Targets
-
-1. Cursor remains on expected row/column after clicks and key navigation.
-2. Gutter line numbers remain visible and stable in live mode.
-3. Editing inside fenced code keeps opening and closing fence markers visible.
-4. Selection jumps are treated as regressions unless explicitly suppressed by programmatic transitions.
-
-## Instrumentation Taxonomy
-
-Primary events:
-
-- `live.mode.architecture`
-- `mode.changed`
-- `plugin.update`
-- `plugin.update.selection-skipped`
-- `selection.changed`
-- `selection.jump.detected`
-- `cursor.visibility.probe`
-- `cursor.visibility.suspect`
-- `gutter.visibility.probe`
-- `gutter.visibility.hidden`
-- `pointer.map.native`
-- `pointer.map.fragment`
-- `pointer.map.fragment-miss`
-- `pointer.map.clamped`
-- `block.activate.request`
-- `block.activated`
-- `block.index.rebuilt`
-- `block.index.delta`
-- `fence.visibility.state`
-- `document.changed`
-
-Hybrid compatibility event:
-
-- `decorations.hybrid-built`
-- includes hybrid counters (`renderedFragmentCount`, `lineFragmentCount`, `inlineFragmentCount`, `markerFragmentCount`, `virtualizedBlockCount`, `renderBudgetTruncated`)
+1. Live mode is always active.
+2. One block is source-editable (active block).
+3. Other blocks are rendered widgets with `data-src-from` and `data-src-to`.
 
 ## Debug Controls
 
-1. In-app **Live Debug** panel: choose level, clear entries, copy JSON.
-2. URL query level override: `?debugLive=trace` (`off|error|warn|info|trace`).
-3. Browser API:
+Use browser devtools:
 
 ```js
 window.__meetingMinutesLiveDebug.setLevel('trace');
@@ -61,60 +16,28 @@ window.__meetingMinutesLiveDebug.entries();
 window.__meetingMinutesLiveDebug.clear();
 ```
 
-4. Persisted debug level key: `meetingMinutes.liveDebugLevel`.
+## Common Checks
 
-## Log Workflow
+1. Pointer mapping
+- Confirm clicked widget DOM has `data-src-from` / `data-src-to`.
+- Confirm log event `live-v3.pointer.activate` appears with expected source position.
 
-1. Capture session logs: `npm run launch`.
-2. Read latest log report: `npm run logs:latest -- --last 160`.
-3. Run automatic verification gates:
+2. Task toggles
+- Confirm checkbox carries `data-task-source-from`.
+- Confirm source line toggles `[ ]` <-> `[x]`.
+
+3. Cursor movement
+- Confirm `ArrowUp`/`ArrowDown` move line-by-line without jumps.
+
+4. Render budget
+- Confirm `live-v3.projection.built` logs `renderedBlockCount` within budget.
+
+## Regression Suite
+
+Run:
 
 ```bash
-npm run logs:verify
+npm test
 ```
 
-`logs:verify` ignores the initial pointer-driven selection jump from `head=0` (document start) to the first clicked location.
-
-Useful overrides:
-
-```bash
-npm run logs:verify -- --max-selection-jumps 0 --max-selection-skip-line-mismatches 0 --max-cursor-suspects 0 --max-gutter-hidden 0 --min-pointer-native 1
-```
-
-## Repeatable Iteration Loop
-
-1. Run tests: `npm test`.
-2. Reproduce with fixture markdown.
-3. Ensure `debugLive=trace`.
-4. Perform exact pointer/key actions.
-5. Inspect logs for:
-   - `pointer.map.fragment` / `pointer.map.fragment-miss` hit-rate around rendered widget clicks
-   - `pointer.map.native` and `block.activated` records around each click
-   - target mapping attributes use `data-src-from` / `data-src-to` (no legacy `data-source-from`)
-   - `fence.visibility.state` while moving in/out of fenced code
-   - no unexpected `selection.jump.detected`
-   - no `gutter.visibility.hidden`
-   - `currentPath` in the session matches the file you are testing
-6. Add/adjust regression tests before changing behavior.
-
-## Regression Coverage
-
-Core live-preview helper regressions are covered by:
-
-- `tests/blockRangeCollector.test.js` (block collection and overlap handling)
-- `tests/sourceRangeMapper.test.js` (source range annotation)
-- `tests/liveBlockHelpers.test.js` (line-overlap and fenced-block detection helpers)
-- `tests/liveActivationHelpers.test.js` (block lookup and activation-bound resolution helpers)
-- `tests/liveBlockIndex.test.js` (block type classification and index lookup)
-- `tests/e2e/live-highlighting-selection.test.js` (same-line selection skip vs cross-line decoration rebuild behavior)
-
-`tests/liveDebugLogger.test.js` covers:
-
-- debug-level resolution and aliases
-- level filtering behavior
-- timeline bounding and subscriptions
-
-`tests/liveDebugScripts.test.js` covers:
-
-- verify/report handling of the initial pointer-driven jump from document start
-- verify guard for `plugin.update.selection-skipped` line mismatch anomalies
+The parity-first suite is under `tests/v3/` and covers parser/model/projection/interaction/pointer/cursor/performance and legacy purge contracts.

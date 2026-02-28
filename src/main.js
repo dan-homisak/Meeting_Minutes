@@ -1,10 +1,8 @@
 import './style.css';
-import { createApp } from './bootstrap/createApp.js';
+import { createLiveApp } from './live-v3/createLiveApp.js';
 
-createApp({
+createLiveApp({
   windowObject: window,
   documentObject: document,
-  navigatorObject: navigator,
-  fetchImpl: fetch,
   isDevBuild: Boolean(import.meta.env?.DEV)
 });

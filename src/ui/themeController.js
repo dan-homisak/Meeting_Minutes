@@ -1,6 +1,6 @@
-export const THEME_STORAGE_KEY = 'meeting-minutes-theme';
-export const THEME_LIGHT = 'light';
-export const THEME_DARK = 'dark';
+const THEME_STORAGE_KEY = 'meeting-minutes-theme';
+const THEME_LIGHT = 'light';
+const THEME_DARK = 'dark';
 
 export function readStoredTheme(storage) {
   if (!storage) {
