@@ -138,7 +138,8 @@ window.__meetingMinutesLiveDebug.entries();
 - `src/live/livePreviewBridge.js`: live-preview controller/view adapter for refresh/state/block access
 - `src/live/editorUpdateController.js`: editor update-listener doc/selection handling and autosave flow
 - `src/core/render/MarkdownRenderer.js`: markdown-to-HTML render + sanitized preview output
-- `src/core/render/LiveSourceRenderer.js`: source-first line/token classification and decoration plan builders
+- `src/core/render/LiveHybridRenderer.js`: fragment-based live renderer and decoration orchestration
+- `src/core/render/LiveFragmentGraph.js`: line/inline/marker fragment graph builder for live preview
 - `src/core/selection/ActivationController.js`: live pointer activation context resolution and block selection
 - `src/core/selection/CursorNavigator.js`: live vertical cursor navigation and assoc-correction policy
 - `src/core/selection/SelectionPolicy.js`: shared source-map lookup/clamping policy for activation and cursor movement

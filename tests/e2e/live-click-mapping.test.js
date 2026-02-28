@@ -192,7 +192,7 @@ function createTestPointerController({
         return null;
       }
       const sourceFromRaw = typeof target.getAttribute === 'function'
-        ? target.getAttribute('data-source-from')
+        ? target.getAttribute('data-src-from')
         : null;
       const sourceFrom = Number(sourceFromRaw);
       return {

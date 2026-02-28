@@ -1,5 +1,6 @@
 import { Decoration, WidgetType } from '@codemirror/view';
 import { buildSourceMapIndex } from '../mapping/SourceMapIndex.js';
+import { buildLiveFragmentGraph } from './LiveFragmentGraph.js';
 import { virtualizeBlocksAroundActive } from '../viewport/BlockVirtualizer.js';
 import { applyRenderBudget } from '../viewport/RenderBudget.js';
 
@@ -11,6 +12,31 @@ function escapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function normalizeViewportWindow(viewportWindow, docLength, selectionHead, windowRadiusChars = 3200) {
+  const max = Math.max(0, Math.trunc(docLength));
+  if (
+    viewportWindow &&
+    Number.isFinite(viewportWindow.from) &&
+    Number.isFinite(viewportWindow.to) &&
+    viewportWindow.to > viewportWindow.from
+  ) {
+    const from = Math.max(0, Math.min(max, Math.trunc(viewportWindow.from)));
+    const to = Math.max(from, Math.min(max, Math.trunc(viewportWindow.to)));
+    return {
+      from,
+      to
+    };
+  }
+
+  const center = Number.isFinite(selectionHead) ? Math.max(0, Math.min(max, Math.trunc(selectionHead))) : 0;
+  const from = Math.max(0, center - Math.max(400, Math.trunc(windowRadiusChars)));
+  const to = Math.min(max, center + Math.max(400, Math.trunc(windowRadiusChars)));
+  return {
+    from,
+    to
+  };
 }
 
 function readBlockSource(doc, block) {
@@ -58,40 +84,56 @@ function findActiveBlock(blocks, position) {
   return nearest;
 }
 
-class RenderedBlockWidget extends WidgetType {
-  constructor({ html, fragmentId, blockId, sourceFrom, sourceTo }) {
+class RenderedFragmentWidget extends WidgetType {
+  constructor({
+    html,
+    fragmentId,
+    blockId,
+    sourceFrom,
+    sourceTo,
+    lineNumber = null,
+    fragmentKind = 'line-fragment'
+  }) {
     super();
     this.html = typeof html === 'string' ? html : '';
     this.fragmentId = fragmentId;
     this.blockId = blockId;
     this.sourceFrom = sourceFrom;
     this.sourceTo = sourceTo;
+    this.lineNumber = Number.isFinite(lineNumber) ? Math.trunc(lineNumber) : null;
+    this.fragmentKind = fragmentKind;
   }
 
   eq(other) {
     return (
-      other instanceof RenderedBlockWidget &&
+      other instanceof RenderedFragmentWidget &&
       this.html === other.html &&
       this.fragmentId === other.fragmentId &&
       this.blockId === other.blockId &&
       this.sourceFrom === other.sourceFrom &&
-      this.sourceTo === other.sourceTo
+      this.sourceTo === other.sourceTo &&
+      this.lineNumber === other.lineNumber &&
+      this.fragmentKind === other.fragmentKind
     );
   }
 
   toDOM() {
     const wrapper = document.createElement('section');
-    wrapper.className = 'cm-rendered-block-widget cm-rendered-block';
+    wrapper.className = `cm-rendered-fragment-widget cm-rendered-fragment cm-rendered-fragment-${this.fragmentKind}`;
     wrapper.setAttribute('data-fragment-id', this.fragmentId);
-    wrapper.setAttribute('data-block-id', this.blockId);
-    wrapper.setAttribute('data-source-from', String(this.sourceFrom));
-    wrapper.setAttribute('data-source-to', String(this.sourceTo));
+    if (typeof this.blockId === 'string' && this.blockId.length > 0) {
+      wrapper.setAttribute('data-block-id', this.blockId);
+    }
+    wrapper.setAttribute('data-src-from', String(this.sourceFrom));
+    wrapper.setAttribute('data-src-to', String(this.sourceTo));
+    if (Number.isFinite(this.lineNumber)) {
+      wrapper.setAttribute('data-line-number', String(this.lineNumber));
+    }
     wrapper.innerHTML = this.html;
     return wrapper;
   }
 
   ignoreEvent() {
-    // Let pointer events reach editor handlers so we can map rendered clicks.
     return false;
   }
 }
@@ -100,16 +142,13 @@ export function createLiveHybridRenderer({
   app,
   liveDebug,
   renderMarkdownHtml = null,
-  renderBudgetMaxBlocks = 120,
-  virtualizationBufferBefore = 40,
-  virtualizationBufferAfter = 40
+  renderBudgetMaxBlocks = 220,
+  virtualizationBufferBefore = 24,
+  virtualizationBufferAfter = 24
 } = {}) {
-  function renderBlockHtml(source, block) {
+  function renderFragmentHtml(source, options = null) {
     if (typeof renderMarkdownHtml === 'function') {
-      return renderMarkdownHtml(source, {
-        sourceFrom: block.from,
-        sourceTo: block.to
-      });
+      return renderMarkdownHtml(source, options);
     }
 
     if (!source.trim()) {
@@ -119,101 +158,125 @@ export function createLiveHybridRenderer({
     return `<p>${escapeHtml(source)}</p>`;
   }
 
-  function buildDecorations(state, blocks) {
+  function buildDecorations(state, blocks, viewportWindow = null, options = {}) {
     if (app.viewMode !== 'live') {
       return {
         activeBlockId: null,
+        activeLineRange: null,
         decorations: Decoration.none,
         fragmentMap: [],
-        sourceMapIndex: buildSourceMapIndex({
-          blocks: [],
-          renderedFragments: []
-        })
+        sourceMapIndex: [],
+        renderMetrics: {
+          viewportFrom: null,
+          viewportTo: null,
+          virtualizedBlockCount: 0,
+          renderedFragmentCount: 0,
+          lineFragmentCount: 0,
+          blockFragmentCount: 0,
+          inlineFragmentCount: 0,
+          markerFragmentCount: 0,
+          renderBudgetMaxBlocks,
+          renderBudgetTruncated: false
+        }
       };
     }
 
     const doc = state.doc;
     const selectionHead = state.selection.main.head;
+    const activeLine = doc.lineAt(selectionHead);
+    const activeLineRange = {
+      from: activeLine.from,
+      to: activeLine.to
+    };
     const activeBlock = findActiveBlock(blocks, selectionHead);
     const activeBlockId = activeBlock?.id ?? null;
+    const normalizedViewportWindow = normalizeViewportWindow(
+      viewportWindow,
+      doc.length,
+      selectionHead
+    );
 
     const virtualized = virtualizeBlocksAroundActive({
       blocks,
       activeBlockId,
+      viewportWindow: normalizedViewportWindow,
       bufferBefore: virtualizationBufferBefore,
       bufferAfter: virtualizationBufferAfter
     });
     const budgeted = applyRenderBudget(virtualized.blocks, renderBudgetMaxBlocks);
     const candidateBlocks = budgeted.blocks;
 
+    const fragmentGraph = buildLiveFragmentGraph({
+      doc,
+      blocks: candidateBlocks,
+      activeLineRange,
+      renderMarkdownHtml: renderFragmentHtml,
+      inlineSpans: Array.isArray(options.inlineSpans) ? options.inlineSpans : []
+    });
+
     const ranges = [];
-    const renderedFragments = [];
-
-    for (let index = 0; index < candidateBlocks.length; index += 1) {
-      const block = candidateBlocks[index];
-      if (!block || !Number.isFinite(block.from) || !Number.isFinite(block.to)) {
+    for (const fragment of fragmentGraph.renderedFragments) {
+      if (!Number.isFinite(fragment.sourceFrom) || !Number.isFinite(fragment.sourceTo)) {
         continue;
       }
-
-      if (activeBlock && block.id === activeBlock.id) {
+      if (fragment.sourceTo <= fragment.sourceFrom) {
         continue;
       }
-
-      const source = readBlockSource(doc, block);
-      const html = renderBlockHtml(source, block);
-      const blockId = typeof block.id === 'string' && block.id.length > 0
-        ? block.id
-        : `block-${virtualized.fromIndex + index}-${block.from}-${block.to}`;
-      const fragmentId = `fragment-${virtualized.fromIndex + index}-${block.from}-${block.to}`;
-
       ranges.push(
         Decoration.replace({
-          widget: new RenderedBlockWidget({
-            html,
-            fragmentId,
-            blockId,
-            sourceFrom: block.from,
-            sourceTo: block.to
+          widget: new RenderedFragmentWidget({
+            html: fragment.html,
+            fragmentId: fragment.fragmentId,
+            blockId: fragment.blockId,
+            sourceFrom: fragment.sourceFrom,
+            sourceTo: fragment.sourceTo,
+            lineNumber: fragment.lineNumber,
+            fragmentKind: fragment.kind
           }),
           block: true,
           inclusive: false
-        }).range(block.from, block.to)
+        }).range(fragment.sourceFrom, fragment.sourceTo)
       );
-
-      renderedFragments.push({
-        fragmentId,
-        blockId,
-        from: block.from,
-        to: block.to,
-        blockFrom: block.from,
-        blockTo: block.to,
-        domPathHint: `[data-fragment-id="${fragmentId}"]`,
-        priority: 100
-      });
     }
 
     const sourceMapIndex = buildSourceMapIndex({
       blocks,
-      renderedFragments,
-      activeLine: doc.lineAt(selectionHead)
+      renderedFragments: fragmentGraph.renderedFragments,
+      inlineFragments: fragmentGraph.inlineFragments,
+      markerFragments: fragmentGraph.markerFragments,
+      activeLine: activeLineRange
     });
+
+    const renderMetrics = {
+      viewportFrom: normalizedViewportWindow.from,
+      viewportTo: normalizedViewportWindow.to,
+      virtualizedBlockCount: virtualized.blocks.length,
+      renderedFragmentCount: fragmentGraph.metrics.renderedFragmentCount,
+      lineFragmentCount: fragmentGraph.metrics.lineFragmentCount,
+      blockFragmentCount: fragmentGraph.metrics.blockFragmentCount,
+      inlineFragmentCount: fragmentGraph.metrics.inlineFragmentCount,
+      markerFragmentCount: fragmentGraph.metrics.markerFragmentCount,
+      renderBudgetMaxBlocks,
+      renderBudgetTruncated: budgeted.truncated
+    };
 
     liveDebug.trace('decorations.hybrid-built', {
       blockCount: Array.isArray(blocks) ? blocks.length : 0,
       activeBlockId,
-      renderedFragmentCount: renderedFragments.length,
+      activeLineFrom: activeLineRange.from,
+      activeLineTo: activeLineRange.to,
       virtualizedFromIndex: virtualized.fromIndex,
       virtualizedToIndexExclusive: virtualized.toIndexExclusive,
-      virtualizedBlockCount: virtualized.blocks.length,
-      renderBudgetMaxBlocks,
-      renderBudgetTruncated: budgeted.truncated
+      ...renderMetrics
     });
 
     return {
       activeBlockId,
+      activeLineRange,
       decorations: ranges.length > 0 ? Decoration.set(ranges, true) : Decoration.none,
-      fragmentMap: renderedFragments,
-      sourceMapIndex
+      fragmentMap: fragmentGraph.renderedFragments,
+      sourceMapIndex,
+      renderMetrics
     };
   }
 

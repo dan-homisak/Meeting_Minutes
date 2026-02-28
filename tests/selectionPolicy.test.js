@@ -307,7 +307,7 @@ test('resolvePointerActivationIntent prefers fragment-map source lookup over coo
     liveBlocksForView: () => [{ from: 30, to: 40 }],
     liveSourceMapIndexForView: () => [
       {
-        kind: 'rendered-fragment',
+        kind: 'line-fragment',
         fragmentId: 'fragment-1',
         blockId: 'block-1',
         sourceFrom: 33,

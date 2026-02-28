@@ -39,7 +39,7 @@ test('describeElementForLog returns normalized element summary', () => {
     className: '  alpha beta  ',
     textContent: '  hello world  ',
     attrs: {
-      'data-source-from': '11',
+      'data-src-from': '11',
       'data-fragment-from': '7'
     }
   });

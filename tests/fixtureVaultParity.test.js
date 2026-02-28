@@ -26,7 +26,9 @@ test('fixture vault preview snapshots stay stable for core parity fixtures', asy
 
   const fixtures = [
     ['core_live_preview_fixture.md', 'snapshots/core_live_preview_fixture.preview.html'],
-    ['cursor_mapping_fixture.md', 'snapshots/cursor_mapping_fixture.preview.html']
+    ['cursor_mapping_fixture.md', 'snapshots/cursor_mapping_fixture.preview.html'],
+    ['frontmatter_live_parity_fixture.md', 'snapshots/frontmatter_live_parity_fixture.preview.html'],
+    ['inline_click_precision_fixture.md', 'snapshots/inline_click_precision_fixture.preview.html']
   ];
 
   for (const [fixtureFile, snapshotFile] of fixtures) {

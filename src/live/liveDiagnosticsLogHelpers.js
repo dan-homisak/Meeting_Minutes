@@ -31,7 +31,7 @@ export function createLiveDiagnosticsLogHelpers({
       id: element.id || '',
       className:
         typeof element.className === 'string' ? normalizeText(element.className, 140) : '',
-      sourceFrom: element.getAttribute('data-source-from') ?? null,
+      sourceFrom: element.getAttribute('data-src-from') ?? null,
       fragmentFrom: element.getAttribute('data-fragment-from') ?? null,
       textPreview: normalizeText(element.textContent ?? '', 90)
     };

@@ -3,6 +3,7 @@ export function createEditorUpdateController({
   liveDebug,
   handleSelectionUpdate,
   renderPreview,
+  requestLivePreviewRefresh,
   updateActionButtons,
   setStatus,
   scheduleAutosave,
@@ -11,6 +12,8 @@ export function createEditorUpdateController({
   const runSelectionUpdate =
     typeof handleSelectionUpdate === 'function' ? handleSelectionUpdate : () => {};
   const runRenderPreview = typeof renderPreview === 'function' ? renderPreview : () => {};
+  const runRequestLivePreviewRefresh =
+    typeof requestLivePreviewRefresh === 'function' ? requestLivePreviewRefresh : () => {};
   const runUpdateActionButtons =
     typeof updateActionButtons === 'function' ? updateActionButtons : () => {};
   const runSetStatus = typeof setStatus === 'function' ? setStatus : () => {};
@@ -48,6 +51,22 @@ export function createEditorUpdateController({
   }
 
   function handleEditorUpdate(update) {
+    if (app.viewMode === 'live' && update.viewportChanged) {
+      const viewportWindow = (
+        Number.isFinite(update?.view?.viewport?.from) &&
+        Number.isFinite(update?.view?.viewport?.to)
+      )
+        ? {
+          from: Math.trunc(update.view.viewport.from),
+          to: Math.trunc(update.view.viewport.to)
+        }
+        : null;
+      runRequestLivePreviewRefresh({
+        reason: 'viewport-change',
+        viewportWindow
+      });
+    }
+
     if (app.viewMode === 'live' && update.selectionSet) {
       runSelectionUpdate(update);
     }

@@ -1,100 +1,83 @@
-function normalizeRange(range, keyFrom = 'from', keyTo = 'to') {
-  if (!range || !Number.isFinite(range[keyFrom]) || !Number.isFinite(range[keyTo])) {
+function clampRange(from, to) {
+  if (!Number.isFinite(from) || !Number.isFinite(to)) {
     return null;
   }
-
-  const from = Math.max(0, Math.trunc(range[keyFrom]));
-  const to = Math.max(from, Math.trunc(range[keyTo]));
-  if (to <= from) {
+  const normalizedFrom = Math.max(0, Math.trunc(from));
+  const normalizedTo = Math.max(normalizedFrom, Math.trunc(to));
+  if (normalizedTo <= normalizedFrom) {
     return null;
   }
-
   return {
-    from,
-    to
+    from: normalizedFrom,
+    to: normalizedTo
   };
 }
 
-function buildEntryId(entry) {
-  return [
-    entry.kind,
-    `${entry.sourceFrom}:${entry.sourceTo}`,
-    `${entry.blockFrom}:${entry.blockTo}`,
-    `${entry.fragmentFrom}:${entry.fragmentTo}`,
-    `${entry.priority}`
-  ].join('|');
-}
-
-function normalizeBlockEntry(block, activeLine, index) {
-  const blockRange = normalizeRange(block, 'from', 'to');
-  if (!blockRange) {
+function readLineNumber(entry, fallbackRange) {
+  if (Number.isFinite(entry?.lineNumber)) {
+    return Math.max(1, Math.trunc(entry.lineNumber));
+  }
+  if (Number.isFinite(entry?.lineFrom)) {
+    return Math.max(1, Math.trunc(entry.lineFrom));
+  }
+  if (fallbackRange) {
     return null;
   }
+  return null;
+}
 
-  const activeRange = normalizeRange(activeLine, 'from', 'to');
-  const activeIntersectsBlock =
-    !!activeRange &&
-    activeRange.from < blockRange.to &&
-    activeRange.to > blockRange.from;
-
+function normalizeBlockEntry(block, index, activeLineRange = null) {
+  const range = clampRange(block?.from, block?.to);
+  if (!range) {
+    return null;
+  }
+  const active = Boolean(
+    activeLineRange &&
+      Number.isFinite(activeLineRange.from) &&
+      Number.isFinite(activeLineRange.to) &&
+      activeLineRange.from < range.to &&
+      activeLineRange.to > range.from
+  );
+  const blockId =
+    typeof block?.id === 'string' && block.id.length > 0
+      ? block.id
+      : `block-${index}-${range.from}-${range.to}`;
   return {
     kind: 'block',
-    blockId:
-      typeof block?.id === 'string' && block.id.length > 0
-        ? block.id
-        : `block-${index}-${blockRange.from}-${blockRange.to}`,
+    blockId,
     fragmentId: null,
-    sourceFrom: blockRange.from,
-    sourceTo: blockRange.to,
-    blockFrom: blockRange.from,
-    blockTo: blockRange.to,
-    fragmentFrom: blockRange.from,
-    fragmentTo: blockRange.to,
-    domPathHint: null,
+    sourceFrom: range.from,
+    sourceTo: range.to,
+    lineNumber: readLineNumber(block, range),
     priority: 0,
-    active: activeIntersectsBlock
+    active
   };
 }
 
 function normalizeFragmentEntry(fragment, index) {
-  if (!fragment) {
+  const range = clampRange(fragment?.sourceFrom ?? fragment?.from, fragment?.sourceTo ?? fragment?.to);
+  if (!range) {
     return null;
   }
-
-  const fragmentRange = normalizeRange(fragment, 'from', 'to');
-  const blockRange = normalizeRange(
-    {
-      from: fragment.blockFrom,
-      to: fragment.blockTo
-    },
-    'from',
-    'to'
-  );
-  if (!fragmentRange || !blockRange) {
-    return null;
-  }
-
+  const kind = fragment?.kind === 'inline-fragment' || fragment?.kind === 'line-fragment' || fragment?.kind === 'marker'
+    ? fragment.kind
+    : 'line-fragment';
   return {
-    kind: 'rendered-fragment',
+    kind,
     blockId:
       typeof fragment?.blockId === 'string' && fragment.blockId.length > 0
         ? fragment.blockId
-        : `fragment-block-${index}-${blockRange.from}-${blockRange.to}`,
+        : null,
     fragmentId:
       typeof fragment?.fragmentId === 'string' && fragment.fragmentId.length > 0
         ? fragment.fragmentId
-        : `fragment-${index}-${fragmentRange.from}-${fragmentRange.to}`,
-    sourceFrom: fragmentRange.from,
-    sourceTo: fragmentRange.to,
-    blockFrom: blockRange.from,
-    blockTo: blockRange.to,
-    fragmentFrom: fragmentRange.from,
-    fragmentTo: fragmentRange.to,
-    domPathHint:
-      typeof fragment?.domPathHint === 'string' && fragment.domPathHint.length > 0
-        ? fragment.domPathHint
-        : null,
-    priority: Number.isFinite(fragment?.priority) ? Math.trunc(fragment.priority) : 100,
+        : `${kind}-${index}-${range.from}-${range.to}`,
+    sourceFrom: range.from,
+    sourceTo: range.to,
+    lineNumber: readLineNumber(fragment, range),
+    priority: Number.isFinite(fragment?.priority) ? Math.trunc(fragment.priority) : (
+      kind === 'inline-fragment' ? 220 : kind === 'marker' ? 260 : 120
+    ),
     active: false
   };
 }
@@ -103,53 +86,67 @@ function sortSourceMapEntries(left, right) {
   return (
     left.sourceFrom - right.sourceFrom ||
     left.sourceTo - right.sourceTo ||
-    left.priority - right.priority ||
-    left.blockFrom - right.blockFrom ||
-    left.blockTo - right.blockTo ||
-    left.fragmentFrom - right.fragmentFrom ||
-    left.fragmentTo - right.fragmentTo ||
-    left.kind.localeCompare(right.kind)
+    right.priority - left.priority ||
+    (left.kind ?? '').localeCompare(right.kind ?? '') ||
+    (left.fragmentId ?? '').localeCompare(right.fragmentId ?? '') ||
+    (left.blockId ?? '').localeCompare(right.blockId ?? '')
   );
+}
+
+function buildEntryIdentity(entry) {
+  return [
+    entry.kind,
+    entry.blockId ?? '',
+    entry.fragmentId ?? '',
+    `${entry.sourceFrom}:${entry.sourceTo}`,
+    `${entry.priority}`,
+    `${entry.lineNumber ?? ''}`
+  ].join('|');
 }
 
 export function buildSourceMapIndex({
   blocks = [],
   renderedFragments = [],
+  inlineFragments = [],
+  markerFragments = [],
   activeLine = null
 } = {}) {
+  const activeLineRange = clampRange(activeLine?.from, activeLine?.to);
   const entries = [];
 
   if (Array.isArray(blocks)) {
     for (let index = 0; index < blocks.length; index += 1) {
-      const blockEntry = normalizeBlockEntry(blocks[index], activeLine, index);
-      if (blockEntry) {
-        entries.push(blockEntry);
+      const normalized = normalizeBlockEntry(blocks[index], index, activeLineRange);
+      if (normalized) {
+        entries.push(normalized);
       }
     }
   }
 
-  if (Array.isArray(renderedFragments)) {
-    for (let index = 0; index < renderedFragments.length; index += 1) {
-      const fragmentEntry = normalizeFragmentEntry(renderedFragments[index], index);
-      if (fragmentEntry) {
-        entries.push(fragmentEntry);
+  const fragmentGroups = [renderedFragments, inlineFragments, markerFragments];
+  for (const group of fragmentGroups) {
+    if (!Array.isArray(group)) {
+      continue;
+    }
+    for (let index = 0; index < group.length; index += 1) {
+      const normalized = normalizeFragmentEntry(group[index], index);
+      if (normalized) {
+        entries.push(normalized);
       }
     }
   }
 
   entries.sort(sortSourceMapEntries);
-
-  const deduped = [];
   const seen = new Set();
+  const deduped = [];
   for (const entry of entries) {
-    const id = buildEntryId(entry);
-    if (seen.has(id)) {
+    const identity = buildEntryIdentity(entry);
+    if (seen.has(identity)) {
       continue;
     }
-
-    seen.add(id);
+    seen.add(identity);
     deduped.push({
-      id,
+      id: identity,
       ...entry
     });
   }
@@ -161,14 +158,17 @@ export function findSourceMapEntriesAtPosition(sourceMapIndex, position) {
   if (!Array.isArray(sourceMapIndex) || !Number.isFinite(position)) {
     return [];
   }
-
   const pos = Math.trunc(position);
-  return sourceMapIndex.filter(
-    (entry) =>
+  return sourceMapIndex
+    .filter((entry) => (
       entry &&
       Number.isFinite(entry.sourceFrom) &&
       Number.isFinite(entry.sourceTo) &&
       pos >= entry.sourceFrom &&
       pos < entry.sourceTo
-  );
+    ))
+    .sort((left, right) => (
+      right.priority - left.priority ||
+      (left.sourceTo - left.sourceFrom) - (right.sourceTo - right.sourceFrom)
+    ));
 }

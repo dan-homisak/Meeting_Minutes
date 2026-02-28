@@ -7,6 +7,64 @@ export function createMarkdownRenderer({
   annotateMarkdownTokensWithSourceRanges,
   previewFragmentCacheMax = 1200
 } = {}) {
+  function escapeHtml(value) {
+    const text = typeof value === 'string' ? value : '';
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function extractLeadingFrontmatter(markdownText) {
+    const source = typeof markdownText === 'string' ? markdownText : '';
+    if (!source.startsWith('---\n')) {
+      return null;
+    }
+    const closingFenceMatch = source.match(/\n---(?:\n|$)/);
+    if (!closingFenceMatch || !Number.isFinite(closingFenceMatch.index)) {
+      return null;
+    }
+    const closingStart = closingFenceMatch.index;
+    const totalLength = closingStart + closingFenceMatch[0].length;
+    const raw = source.slice(0, totalLength);
+    const body = raw
+      .replace(/^---\n/, '')
+      .replace(/\n---(?:\n|$)$/, '')
+      .replace(/\n$/, '');
+    return {
+      raw,
+      body,
+      totalLength
+    };
+  }
+
+  function renderFrontmatterHtml(frontmatter, options = null) {
+    if (!frontmatter || typeof frontmatter.body !== 'string') {
+      return '';
+    }
+    const lines = frontmatter.body.split('\n');
+    const sourceFrom = Number(options?.sourceFrom);
+    const sourceTo = Number(options?.sourceTo);
+    const hasSourceBounds = Number.isFinite(sourceFrom) && Number.isFinite(sourceTo) && sourceTo > sourceFrom;
+    const sourceAttrs = hasSourceBounds
+      ? ` data-src-from="${Math.trunc(sourceFrom)}" data-src-to="${Math.trunc(sourceTo)}"`
+      : '';
+    const entries = lines
+      .map((line, index) => {
+        const keyValueMatch = line.match(/^([^:]+):(.*)$/);
+        if (!keyValueMatch) {
+          return `<div class="frontmatter-entry frontmatter-entry-raw"><span class="frontmatter-value">${escapeHtml(line)}</span></div>`;
+        }
+        const key = keyValueMatch[1].trim();
+        const value = keyValueMatch[2].trim();
+        return `<div class="frontmatter-entry" data-frontmatter-line="${index + 1}"><span class="frontmatter-key">${escapeHtml(key)}</span><span class="frontmatter-separator">:</span><span class="frontmatter-value">${escapeHtml(value)}</span></div>`;
+      })
+      .join('');
+    return `<section class="frontmatter-block"${sourceAttrs}><div class="frontmatter-label">Frontmatter</div>${entries}</section>`;
+  }
+
   function transformObsidianSyntax(markdownText) {
     const source = typeof markdownText === 'string' ? markdownText : '';
     if (!source) {
@@ -195,20 +253,35 @@ export function createMarkdownRenderer({
     const sourceFrom = Number(options?.sourceFrom);
     const sourceTo = Number(options?.sourceTo);
     const shouldAnnotateSourceRanges = Number.isFinite(sourceFrom) && Number.isFinite(sourceTo);
+    const frontmatter = extractLeadingFrontmatter(transformedText);
+    const contentWithoutFrontmatter = frontmatter
+      ? transformedText.slice(frontmatter.totalLength)
+      : transformedText;
+    const frontmatterHtml = frontmatter
+      ? renderFrontmatterHtml(frontmatter, {
+        sourceFrom,
+        sourceTo: shouldAnnotateSourceRanges
+          ? Math.min(sourceTo, sourceFrom + frontmatter.totalLength)
+          : sourceFrom + frontmatter.totalLength
+      })
+      : '';
+    const markdownSourceFrom = shouldAnnotateSourceRanges && frontmatter
+      ? Math.min(sourceTo, sourceFrom + frontmatter.totalLength)
+      : sourceFrom;
 
     let rendered = '';
     if (shouldAnnotateSourceRanges) {
-      const tokens = markdownEngine.parse(transformedText, {});
+      const tokens = markdownEngine.parse(contentWithoutFrontmatter, {});
       if (typeof annotateMarkdownTokensWithSourceRanges === 'function') {
-        annotateMarkdownTokensWithSourceRanges(tokens, transformedText, sourceFrom, sourceTo);
+        annotateMarkdownTokensWithSourceRanges(tokens, contentWithoutFrontmatter, markdownSourceFrom, sourceTo);
       }
       rendered = markdownEngine.renderer.render(tokens, markdownEngine.options, {});
     } else {
-      rendered = markdownEngine.render(transformedText);
+      rendered = markdownEngine.render(contentWithoutFrontmatter);
     }
 
     const taskAugmented = augmentTaskListHtml(rendered, options);
-    return sanitizeHtml(taskAugmented);
+    return sanitizeHtml(frontmatterHtml + taskAugmented);
   }
 
   const previewRenderer = createPreviewRenderer({

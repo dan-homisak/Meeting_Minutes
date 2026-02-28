@@ -23,3 +23,28 @@ test('virtualizeBlocksAroundActive returns active-window slice', () => {
   assert.equal(result.blocks[0].id, 'b19');
   assert.equal(result.blocks[result.blocks.length - 1].id, 'b24');
 });
+
+test('virtualizeBlocksAroundActive prefers viewport-centered slice when viewport window is provided', () => {
+  const blocks = Array.from({ length: 40 }, (_, index) => ({
+    id: `b${index + 1}`,
+    from: index * 10,
+    to: index * 10 + 9
+  }));
+
+  const result = virtualizeBlocksAroundActive({
+    blocks,
+    activeBlockId: 'b2',
+    viewportWindow: {
+      from: 205,
+      to: 245
+    },
+    bufferBefore: 1,
+    bufferAfter: 2
+  });
+
+  assert.equal(result.fromIndex, 19);
+  assert.equal(result.toIndexExclusive, 27);
+  assert.equal(result.blocks[0].id, 'b20');
+  assert.equal(result.blocks.at(-1).id, 'b27');
+  assert.equal(result.activeIndex, 1);
+});

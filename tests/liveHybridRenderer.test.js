@@ -69,7 +69,7 @@ test('buildDecorations emits rendered fragment entries for inactive blocks', () 
   assert.equal(result.activeBlockId, 'b1');
   assert.equal(result.fragmentMap.length, 1);
   assert.equal(result.sourceMapIndex.some((entry) => entry.kind === 'block'), true);
-  assert.equal(result.sourceMapIndex.some((entry) => entry.kind === 'rendered-fragment'), true);
+  assert.equal(result.sourceMapIndex.some((entry) => entry.kind === 'line-fragment'), true);
 });
 
 test('buildDecorations logs hybrid telemetry and renders only inactive blocks', () => {

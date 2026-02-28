@@ -339,31 +339,39 @@ button:disabled {
   background: transparent !important;
 }
 
-.cm-rendered-block-widget {
+.cm-rendered-block-widget,
+.cm-rendered-fragment-widget {
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 0.2rem 0.15rem;
   margin: 0.05rem 0;
 }
 
-.cm-rendered-block {
+.cm-rendered-block,
+.cm-rendered-fragment {
   font-family: 'Iowan Old Style', 'Palatino Linotype', serif;
   line-height: 1.72;
   color: var(--ink);
 }
 
-.cm-rendered-block > :first-child {
+.cm-rendered-block > :first-child,
+.cm-rendered-fragment > :first-child {
   margin-top: 0;
 }
 
-.cm-rendered-block > :last-child {
+.cm-rendered-block > :last-child,
+.cm-rendered-fragment > :last-child {
   margin-bottom: 0;
 }
 
 .cm-rendered-block p,
+.cm-rendered-fragment p,
 .cm-rendered-block ul,
+.cm-rendered-fragment ul,
 .cm-rendered-block ol,
+.cm-rendered-fragment ol,
 .cm-rendered-block blockquote,
+.cm-rendered-fragment blockquote,
 #preview p,
 #preview ul,
 #preview ol,
@@ -373,8 +381,11 @@ button:disabled {
 }
 
 .cm-rendered-block h1,
+.cm-rendered-fragment h1,
 .cm-rendered-block h2,
+.cm-rendered-fragment h2,
 .cm-rendered-block h3,
+.cm-rendered-fragment h3,
 #preview h1,
 #preview h2,
 #preview h3 {
@@ -384,6 +395,7 @@ button:disabled {
 }
 
 .cm-rendered-block pre,
+.cm-rendered-fragment pre,
 #preview pre {
   border: 1px solid var(--code-border);
   border-radius: 8px;
@@ -393,12 +405,14 @@ button:disabled {
 }
 
 .cm-rendered-block code,
+.cm-rendered-fragment code,
 #preview code {
   font-family: 'Menlo', 'Consolas', monospace;
   font-size: 0.86em;
 }
 
 .cm-rendered-block blockquote,
+.cm-rendered-fragment blockquote,
 #preview blockquote {
   border-left: 3px solid var(--blockquote-line);
   padding-left: 0.62rem;
@@ -406,6 +420,8 @@ button:disabled {
 
 .cm-rendered-block a,
 .cm-rendered-block a:visited,
+.cm-rendered-fragment a,
+.cm-rendered-fragment a:visited,
 #preview a,
 #preview a:visited {
   color: var(--ink);
@@ -413,6 +429,7 @@ button:disabled {
 }
 
 .cm-rendered-block .task-list-control,
+.cm-rendered-fragment .task-list-control,
 #preview .task-list-control {
   display: inline-flex;
   align-items: flex-start;
@@ -420,14 +437,56 @@ button:disabled {
 }
 
 .cm-rendered-block input[type='checkbox'][data-task-source-from],
+.cm-rendered-fragment input[type='checkbox'][data-task-source-from],
 #preview input[type='checkbox'][data-task-source-from] {
   margin-top: 0.18rem;
   accent-color: var(--accent-strong);
 }
 
 .cm-rendered-block .task-list-content,
+.cm-rendered-fragment .task-list-content,
 #preview .task-list-content {
   display: inline-block;
+}
+
+.frontmatter-block {
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-muted) 84%, transparent);
+  padding: 0.45rem 0.6rem;
+}
+
+.frontmatter-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.35rem;
+}
+
+.frontmatter-entry {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  column-gap: 0.25rem;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.frontmatter-entry-raw {
+  display: block;
+}
+
+.frontmatter-key {
+  color: var(--accent-strong);
+}
+
+.frontmatter-separator {
+  color: var(--ink-muted);
+}
+
+.frontmatter-value {
+  color: var(--ink);
 }
 
 #preview {

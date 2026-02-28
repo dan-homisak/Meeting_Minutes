@@ -5,12 +5,12 @@ This document defines how to iterate on live mode without cursor drift, gutter c
 ## Shipped Architecture
 
 1. Live mode now runs a hybrid renderer architecture.
-2. Active block stays source-editable while inactive blocks render as widget fragments.
-3. Fragment-map entries are emitted for rendered widgets and mapped back to source ranges.
+2. Active line stays source-editable while surrounding inactive lines render as fragment widgets.
+3. Fragment-map entries now include `line-fragment`, `inline-fragment`, `marker`, and `block` kinds mapped to source ranges.
 4. Pointer clicks map to source activation and are logged (`pointer.map.native`, `block.activate.request`, `block.activated`).
 5. A block index is rebuilt on document changes for deterministic diagnostics (`block.index.rebuilt`, `block.index.delta`).
 6. Fence marker state is logged on selection changes (`fence.visibility.state`).
-7. Hybrid decoration rebuilds emit render telemetry (`decorations.hybrid-built`).
+7. Hybrid decoration rebuilds emit render telemetry (`decorations.hybrid-built`) with viewport-centered metrics.
 
 ## Behavioral Targets
 
@@ -47,7 +47,7 @@ Primary events:
 Hybrid compatibility event:
 
 - `decorations.hybrid-built`
-- includes hybrid counters (`renderedFragmentCount`, `virtualizedBlockCount`, `renderBudgetTruncated`)
+- includes hybrid counters (`renderedFragmentCount`, `lineFragmentCount`, `inlineFragmentCount`, `markerFragmentCount`, `virtualizedBlockCount`, `renderBudgetTruncated`)
 
 ## Debug Controls
 
@@ -90,6 +90,7 @@ npm run logs:verify -- --max-selection-jumps 0 --max-selection-skip-line-mismatc
 5. Inspect logs for:
    - `pointer.map.fragment` / `pointer.map.fragment-miss` hit-rate around rendered widget clicks
    - `pointer.map.native` and `block.activated` records around each click
+   - target mapping attributes use `data-src-from` / `data-src-to` (no legacy `data-source-from`)
    - `fence.visibility.state` while moving in/out of fenced code
    - no unexpected `selection.jump.detected`
    - no `gutter.visibility.hidden`

@@ -138,6 +138,7 @@ export function createLiveControllers({
     liveDebug,
     handleSelectionUpdate: (update) => selectionDiagnosticsController?.handleSelectionUpdate(update),
     renderPreview: helpers.renderPreview,
+    requestLivePreviewRefresh: helpers.requestLivePreviewRefresh,
     updateActionButtons: helpers.updateActionButtons,
     setStatus: helpers.setStatus,
     scheduleAutosave: helpers.scheduleAutosave,

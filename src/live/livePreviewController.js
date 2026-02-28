@@ -17,19 +17,47 @@ export function createLivePreviewController({
   refreshLivePreviewEffect,
   renderMarkdownHtml = null
 } = {}) {
-  function normalizeRefreshReason(value) {
+  function normalizeViewportWindow(viewportWindow, docLength) {
+    if (
+      !viewportWindow ||
+      !Number.isFinite(viewportWindow.from) ||
+      !Number.isFinite(viewportWindow.to) ||
+      viewportWindow.to <= viewportWindow.from
+    ) {
+      return null;
+    }
+
+    const max = Math.max(0, Math.trunc(docLength));
+    const from = Math.max(0, Math.min(max, Math.trunc(viewportWindow.from)));
+    const to = Math.max(from, Math.min(max, Math.trunc(viewportWindow.to)));
+    return {
+      from,
+      to
+    };
+  }
+
+  function normalizeRefreshPayload(value, docLength = 0) {
     if (typeof value === 'string' && value.trim().length > 0) {
-      return value;
+      return {
+        reason: value,
+        viewportWindow: null
+      };
     }
 
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      return normalizeRefreshReason(value.reason);
+      return {
+        reason: normalizeRefreshPayload(value.reason, docLength).reason,
+        viewportWindow: normalizeViewportWindow(value.viewportWindow, docLength)
+      };
     }
 
-    return 'manual';
+    return {
+      reason: 'manual',
+      viewportWindow: null
+    };
   }
 
-  function collectTopLevelBlocksSafe(doc, transaction = null, reason = 'state-read') {
+  function collectLiveModelSafe(doc, transaction = null, reason = 'state-read') {
     const startedAt = performance.now();
     if (documentSession) {
       try {
@@ -41,10 +69,16 @@ export function createLivePreviewController({
         }
 
         const blocks = Array.isArray(sessionResult?.model?.blocks) ? sessionResult.model.blocks : [];
+        const inlineSpans = Array.isArray(sessionResult?.model?.inlineSpans)
+          ? sessionResult.model.inlineSpans
+          : Array.isArray(sessionResult?.model?.inline)
+            ? sessionResult.model.inline
+            : [];
         const elapsedMs = Number((performance.now() - startedAt).toFixed(2));
         const parserMeta = sessionResult?.model?.meta ?? {};
         liveDebug.trace('blocks.collected', {
           blockCount: blocks.length,
+          inlineSpanCount: inlineSpans.length,
           docLength: doc.length,
           elapsedMs,
           strategy: parserMeta.parser ?? 'session',
@@ -53,7 +87,10 @@ export function createLivePreviewController({
             ? parserMeta.reparsedCharLength
             : null
         });
-        return blocks;
+        return {
+          blocks,
+          inlineSpans
+        };
       } catch (error) {
         liveDebug.error('blocks.collect.session-failed', {
           message: error instanceof Error ? error.message : String(error)
@@ -68,13 +105,19 @@ export function createLivePreviewController({
         docLength: doc.length,
         elapsedMs: Number((performance.now() - startedAt).toFixed(2))
       });
-      return blocks;
+      return {
+        blocks,
+        inlineSpans: []
+      };
     } catch (error) {
       liveDebug.error('blocks.collect.failed', {
         message: error instanceof Error ? error.message : String(error)
       });
       console.warn('Live preview block parser failed. Falling back to raw lines.', error);
-      return [];
+      return {
+        blocks: [],
+        inlineSpans: []
+      };
     }
   }
 
@@ -86,9 +129,13 @@ export function createLivePreviewController({
 
   const livePreviewStateField = StateField.define({
     create(state) {
-      const blocks = collectTopLevelBlocksSafe(state.doc, null, 'state-create');
+      const liveModel = collectLiveModelSafe(state.doc, null, 'state-create');
+      const blocks = liveModel.blocks;
+      const inlineSpans = liveModel.inlineSpans;
       const blockIndex = buildLiveBlockIndex(state.doc, blocks);
-      const initialRender = liveHybridRenderer.buildDecorations(state, blocks);
+      const initialRender = liveHybridRenderer.buildDecorations(state, blocks, null, {
+        inlineSpans
+      });
       const lastSelectionLineFrom = state.doc.lineAt(state.selection.main.head).from;
       liveDebug.trace('block.index.rebuilt', {
         reason: 'create',
@@ -97,28 +144,53 @@ export function createLivePreviewController({
       });
       return {
         blocks,
+        inlineSpans,
         blockIndex,
         decorations: initialRender.decorations,
         sourceMapIndex: initialRender.sourceMapIndex,
         fragmentMap: initialRender.fragmentMap,
         activeBlockId: initialRender.activeBlockId,
+        activeLineFrom: initialRender.activeLineRange?.from ?? null,
+        activeLineTo: initialRender.activeLineRange?.to ?? null,
+        viewportWindow: initialRender.renderMetrics?.viewportFrom != null &&
+          initialRender.renderMetrics?.viewportTo != null
+          ? {
+            from: initialRender.renderMetrics.viewportFrom,
+            to: initialRender.renderMetrics.viewportTo
+          }
+          : null,
+        renderMetrics: initialRender.renderMetrics,
+        renderVersion: 1,
         lastSelectionLineFrom
       };
     },
     update(value, transaction) {
       let blocks = value.blocks;
+      let inlineSpans = Array.isArray(value.inlineSpans) ? value.inlineSpans : [];
       let blockIndex = Array.isArray(value.blockIndex) ? value.blockIndex : [];
+      let viewportWindow = value.viewportWindow ?? null;
+      let renderVersion = Number.isFinite(value.renderVersion) ? Math.trunc(value.renderVersion) : 1;
 
       if (transaction.docChanged) {
-        blocks = collectTopLevelBlocksSafe(transaction.state.doc, transaction, 'transaction-doc-changed');
+        const liveModel = collectLiveModelSafe(transaction.state.doc, transaction, 'transaction-doc-changed');
+        blocks = liveModel.blocks;
+        inlineSpans = liveModel.inlineSpans;
         const nextBlockIndex = buildLiveBlockIndex(transaction.state.doc, blocks);
         blockIndex = nextBlockIndex;
       }
 
-      const refreshReasons = transaction.effects
+      const refreshPayloads = transaction.effects
         .filter((effect) => effect.is(refreshLivePreviewEffect))
-        .map((effect) => normalizeRefreshReason(effect.value));
-      const refreshRequested = refreshReasons.length > 0;
+        .map((effect) => normalizeRefreshPayload(effect.value, transaction.state.doc.length));
+      const refreshReasons = refreshPayloads.map((payload) => payload.reason);
+      const refreshRequested = refreshPayloads.length > 0;
+      const latestViewportWindow = refreshPayloads
+        .map((payload) => payload.viewportWindow)
+        .filter(Boolean)
+        .at(-1) ?? null;
+      if (latestViewportWindow) {
+        viewportWindow = latestViewportWindow;
+      }
 
       const previousSelection = transaction.startState.selection.main;
       const currentSelection = transaction.state.selection.main;
@@ -133,7 +205,22 @@ export function createLivePreviewController({
         transaction.docChanged || refreshRequested || selectionLineChanged;
 
       if (shouldRebuildDecorations) {
-        const renderResult = liveHybridRenderer.buildDecorations(transaction.state, blocks);
+        const renderResult = liveHybridRenderer.buildDecorations(
+          transaction.state,
+          blocks,
+          viewportWindow,
+          {
+            inlineSpans
+          }
+        );
+        renderVersion += 1;
+        viewportWindow = renderResult.renderMetrics?.viewportFrom != null &&
+          renderResult.renderMetrics?.viewportTo != null
+          ? {
+            from: renderResult.renderMetrics.viewportFrom,
+            to: renderResult.renderMetrics.viewportTo
+          }
+          : viewportWindow;
         liveDebug.trace('plugin.update', {
           docChanged: transaction.docChanged,
           selectionSet,
@@ -143,16 +230,27 @@ export function createLivePreviewController({
           refreshRequested,
           refreshReasons,
           activeBlockId: renderResult.activeBlockId,
-          renderedFragmentCount: renderResult.fragmentMap.length
+          activeLineFrom: renderResult.activeLineRange?.from ?? null,
+          activeLineTo: renderResult.activeLineRange?.to ?? null,
+          renderedFragmentCount: renderResult.fragmentMap.length,
+          viewportFrom: renderResult.renderMetrics?.viewportFrom ?? null,
+          viewportTo: renderResult.renderMetrics?.viewportTo ?? null,
+          renderVersion
         });
 
         return {
           blocks,
+          inlineSpans,
           blockIndex,
           decorations: renderResult.decorations,
           sourceMapIndex: renderResult.sourceMapIndex,
           fragmentMap: renderResult.fragmentMap,
           activeBlockId: renderResult.activeBlockId,
+          activeLineFrom: renderResult.activeLineRange?.from ?? null,
+          activeLineTo: renderResult.activeLineRange?.to ?? null,
+          viewportWindow,
+          renderMetrics: renderResult.renderMetrics,
+          renderVersion,
           lastSelectionLineFrom: currentSelectionLineFrom
         };
       }
@@ -168,7 +266,10 @@ export function createLivePreviewController({
         return {
           ...value,
           blocks,
+          inlineSpans,
           blockIndex,
+          viewportWindow,
+          renderVersion,
           lastSelectionLineFrom: currentSelectionLineFrom
         };
       }
@@ -219,13 +320,15 @@ export function createLivePreviewController({
   }
 
   function requestLivePreviewRefresh(view, reason = 'manual') {
-    const refreshReason = normalizeRefreshReason(reason);
+    const refreshPayload = normalizeRefreshPayload(reason, view?.state?.doc?.length ?? 0);
     liveDebug.trace('refresh.requested', {
       mode: app.viewMode,
-      reason: refreshReason
+      reason: refreshPayload.reason,
+      viewportFrom: refreshPayload.viewportWindow?.from ?? null,
+      viewportTo: refreshPayload.viewportWindow?.to ?? null
     });
     view.dispatch({
-      effects: refreshLivePreviewEffect.of(refreshReason)
+      effects: refreshLivePreviewEffect.of(refreshPayload)
     });
   }
 

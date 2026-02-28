@@ -23,9 +23,13 @@ function findSourceMapBlockAtPosition(sourceMapIndex, position, nearestTolerance
 
   for (const lookupPosition of lookupPositions) {
     const entries = findSourceMapEntriesAtPosition(sourceMapIndex, lookupPosition);
-    const fragmentEntry = entries.find((entry) => entry?.kind === 'rendered-fragment');
-    if (fragmentEntry) {
-      return fragmentEntry;
+    const inlineEntry = entries.find((entry) => entry?.kind === 'inline-fragment');
+    if (inlineEntry) {
+      return inlineEntry;
+    }
+    const lineFragmentEntry = entries.find((entry) => entry?.kind === 'line-fragment');
+    if (lineFragmentEntry) {
+      return lineFragmentEntry;
     }
     const blockEntry = entries.find((entry) => entry?.kind === 'block');
     if (blockEntry) {
@@ -38,7 +42,11 @@ function findSourceMapBlockAtPosition(sourceMapIndex, position, nearestTolerance
   for (const entry of sourceMapIndex) {
     if (
       !entry ||
-      (entry.kind !== 'block' && entry.kind !== 'rendered-fragment') ||
+      (
+        entry.kind !== 'block' &&
+        entry.kind !== 'line-fragment' &&
+        entry.kind !== 'inline-fragment'
+      ) ||
       !Number.isFinite(entry.sourceFrom) ||
       !Number.isFinite(entry.sourceTo)
     ) {
@@ -682,6 +690,32 @@ function readFiniteAttributeValue(element, attributeName) {
   return Number.isFinite(value) ? Math.trunc(value) : null;
 }
 
+function readSourceRangeFromTarget(targetElement) {
+  if (!targetElement) {
+    return {
+      sourceFrom: null,
+      sourceTo: null
+    };
+  }
+  const directFrom = readFiniteAttributeValue(targetElement, 'data-src-from');
+  const directTo = readFiniteAttributeValue(targetElement, 'data-src-to');
+  if (Number.isFinite(directFrom) && Number.isFinite(directTo) && directTo > directFrom) {
+    return {
+      sourceFrom: directFrom,
+      sourceTo: directTo
+    };
+  }
+  const closestWithSource = typeof targetElement?.closest === 'function'
+    ? targetElement.closest('[data-src-from][data-src-to]')
+    : null;
+  const closestFrom = readFiniteAttributeValue(closestWithSource, 'data-src-from');
+  const closestTo = readFiniteAttributeValue(closestWithSource, 'data-src-to');
+  return {
+    sourceFrom: Number.isFinite(closestFrom) ? closestFrom : null,
+    sourceTo: Number.isFinite(closestTo) ? closestTo : null
+  };
+}
+
 function readAttributeString(element, attributeName) {
   if (!element || typeof attributeName !== 'string' || attributeName.length === 0) {
     return null;
@@ -703,12 +737,42 @@ function readClosestAttributeString(targetElement, selector, attributeName) {
   return readAttributeString(closest, attributeName);
 }
 
+function sourceMapKindRank(kind) {
+  if (kind === 'inline-fragment') {
+    return 0;
+  }
+  if (kind === 'line-fragment') {
+    return 1;
+  }
+  if (kind === 'block') {
+    return 2;
+  }
+  if (kind === 'marker') {
+    return 3;
+  }
+  return 9;
+}
+
+function chooseBestSourceMapEntry(entries = []) {
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return null;
+  }
+  const sorted = [...entries].sort((left, right) => (
+    sourceMapKindRank(left?.kind) - sourceMapKindRank(right?.kind) ||
+    (left?.sourceTo - left?.sourceFrom) - (right?.sourceTo - right?.sourceFrom) ||
+    (right?.priority ?? 0) - (left?.priority ?? 0)
+  ));
+  return sorted[0] ?? null;
+}
+
 function resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex) {
   if (!targetElement || !Array.isArray(sourceMapIndex) || sourceMapIndex.length === 0) {
     return {
       sourceFrom: null,
+      sourceTo: null,
       fragmentId: null,
-      blockId: null
+      blockId: null,
+      kind: null
     };
   }
 
@@ -719,13 +783,15 @@ function resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex) {
 
   if (fragmentId) {
     const fragmentEntry = sourceMapIndex.find(
-      (entry) => entry?.kind === 'rendered-fragment' && entry.fragmentId === fragmentId
+      (entry) => entry?.fragmentId === fragmentId
     );
     if (fragmentEntry && Number.isFinite(fragmentEntry.sourceFrom)) {
       return {
         sourceFrom: Math.trunc(fragmentEntry.sourceFrom),
+        sourceTo: Number.isFinite(fragmentEntry.sourceTo) ? Math.trunc(fragmentEntry.sourceTo) : null,
         fragmentId,
-        blockId: fragmentEntry.blockId ?? blockId
+        blockId: fragmentEntry.blockId ?? blockId,
+        kind: fragmentEntry.kind ?? null
       };
     }
   }
@@ -737,16 +803,20 @@ function resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex) {
     if (blockEntry && Number.isFinite(blockEntry.sourceFrom)) {
       return {
         sourceFrom: Math.trunc(blockEntry.sourceFrom),
+        sourceTo: Number.isFinite(blockEntry.sourceTo) ? Math.trunc(blockEntry.sourceTo) : null,
         fragmentId,
-        blockId
+        blockId,
+        kind: blockEntry.kind ?? null
       };
     }
   }
 
   return {
     sourceFrom: null,
+    sourceTo: null,
     fragmentId,
-    blockId
+    blockId,
+    kind: null
   };
 }
 
@@ -771,20 +841,19 @@ export function resolvePointerActivationIntent({
     ? liveSourceMapIndexForView(view)
     : [];
   const fragmentMapping = resolveFragmentMappedSourceFromTarget(targetElement, sourceMapIndex);
-  const sourceFromFromTarget = (() => {
-    if (!targetElement) {
+  const targetSourceRange = readSourceRangeFromTarget(targetElement);
+  const sourceEntryFromTargetRange = (() => {
+    if (!Number.isFinite(targetSourceRange.sourceFrom)) {
       return null;
     }
-    const direct = readFiniteAttributeValue(targetElement, 'data-source-from');
-    if (Number.isFinite(direct)) {
-      return direct;
-    }
-    const closestWithSource = typeof targetElement?.closest === 'function'
-      ? targetElement.closest('[data-source-from]')
-      : null;
-    const closestValue = readFiniteAttributeValue(closestWithSource, 'data-source-from');
-    return Number.isFinite(closestValue) ? closestValue : null;
+    const entries = findSourceMapEntriesAtPosition(sourceMapIndex, targetSourceRange.sourceFrom);
+    return chooseBestSourceMapEntry(entries);
   })();
+  const sourceFromFromTarget = Number.isFinite(sourceEntryFromTargetRange?.sourceFrom)
+    ? Math.trunc(sourceEntryFromTargetRange.sourceFrom)
+    : Number.isFinite(targetSourceRange.sourceFrom)
+      ? targetSourceRange.sourceFrom
+      : null;
 
   if (viewMode === 'live') {
     const pointerModifiers = {
@@ -824,12 +893,12 @@ export function resolvePointerActivationIntent({
   const rawMappedPositionResolved = typeof resolvePointerPosition === 'function'
     ? resolvePointerPosition(view, targetElement, coordinates)
     : null;
-  const rawMappedPosition = Number.isFinite(rawMappedPositionResolved)
-    ? rawMappedPositionResolved
+  const rawMappedPosition = Number.isFinite(sourceFromFromTarget)
+    ? sourceFromFromTarget
     : Number.isFinite(fragmentMapping.sourceFrom)
       ? fragmentMapping.sourceFrom
-    : Number.isFinite(sourceFromFromTarget)
-      ? sourceFromFromTarget
+    : Number.isFinite(rawMappedPositionResolved)
+      ? rawMappedPositionResolved
       : Number.isFinite(targetSummary?.sourceFrom)
         ? Math.trunc(targetSummary.sourceFrom)
         : null;
@@ -843,6 +912,7 @@ export function resolvePointerActivationIntent({
         trigger,
         fragmentId: fragmentMapping.fragmentId,
         blockId: fragmentMapping.blockId,
+        kind: fragmentMapping.kind ?? null,
         mappedSourceFrom: Number.isFinite(fragmentMapping.sourceFrom)
           ? fragmentMapping.sourceFrom
           : null
@@ -872,6 +942,7 @@ export function resolvePointerActivationIntent({
       payload: {
         trigger,
         mappedPosition: hybridActivation.mappedPosition,
+        sourceMapTargetKind: sourceEntryFromTargetRange?.kind ?? null,
         sourceFromFromFragmentMap: Number.isFinite(fragmentMapping.sourceFrom)
           ? fragmentMapping.sourceFrom
           : null,

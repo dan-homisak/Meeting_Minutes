@@ -49,7 +49,55 @@ test('requestLivePreviewRefresh emits trace and dispatches refresh effect', () =
   assert.equal(traceCalls[0].data.reason, 'manual');
   assert.equal(dispatched.length, 1);
   assert.equal(dispatched[0].effects.is(refreshLivePreviewEffect), true);
-  assert.equal(dispatched[0].effects.value, 'manual');
+  assert.deepEqual(dispatched[0].effects.value, {
+    reason: 'manual',
+    viewportWindow: null
+  });
+});
+
+test('requestLivePreviewRefresh includes normalized viewport window payload', () => {
+  const refreshLivePreviewEffect = StateEffect.define();
+  const controller = createLivePreviewController({
+    app: { viewMode: 'live' },
+    liveDebug: createLiveDebugStub(),
+    markdownEngine: {
+      parse() {
+        return [];
+      }
+    },
+    refreshLivePreviewEffect
+  });
+
+  const dispatched = [];
+  controller.requestLivePreviewRefresh(
+    {
+      state: {
+        doc: {
+          length: 500
+        }
+      },
+      dispatch(transaction) {
+        dispatched.push(transaction);
+      }
+    },
+    {
+      reason: 'viewport-change',
+      viewportWindow: {
+        from: -10,
+        to: 900
+      }
+    }
+  );
+
+  assert.equal(dispatched.length, 1);
+  assert.equal(dispatched[0].effects.is(refreshLivePreviewEffect), true);
+  assert.deepEqual(dispatched[0].effects.value, {
+    reason: 'viewport-change',
+    viewportWindow: {
+      from: 0,
+      to: 500
+    }
+  });
 });
 
 test('emitFenceVisibilityState is a no-op when not in live mode', () => {
