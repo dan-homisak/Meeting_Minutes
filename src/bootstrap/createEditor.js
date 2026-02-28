@@ -21,6 +21,7 @@ export function createEditor({
   slashCommandCompletion,
   moveLiveCursorVertically,
   moveLiveCursorHorizontally,
+  adjustLiveListIndent,
   handleEditorUpdate,
   initialDoc = DEFAULT_EDITOR_DOC,
   factories = {}
@@ -54,6 +55,21 @@ export function createEditor({
     {
       key: 'ArrowLeft',
       run: (view) => moveLiveCursorHorizontally?.(view, -1, 'ArrowLeft') ?? false
+    },
+    {
+      key: 'Tab',
+      run: (view) => (
+        adjustLiveListIndent?.(view, 1, 'Tab') ??
+        false
+      ) || indentWithTab(view)
+    },
+    {
+      key: 'Shift-Tab',
+      run: (view) => adjustLiveListIndent?.(view, -1, 'Shift-Tab') ?? false
+    },
+    {
+      key: 'Backspace',
+      run: (view) => adjustLiveListIndent?.(view, -1, 'Backspace') ?? false
     },
     {
       key: 'Enter',

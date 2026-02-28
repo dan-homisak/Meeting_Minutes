@@ -160,6 +160,30 @@ async function stopProcessGracefully(child, timeoutMs, name) {
   }
 }
 
+async function removeDirectoryBestEffort(directoryPath, {
+  attempts = 5,
+  waitMs = 150
+} = {}) {
+  if (typeof directoryPath !== 'string' || directoryPath.length === 0) {
+    return;
+  }
+
+  let lastError = null;
+  for (let index = 0; index < attempts; index += 1) {
+    try {
+      await rm(directoryPath, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (index < attempts - 1) {
+        await sleep(waitMs);
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 async function startLauncher(projectRoot) {
   const child = spawn(
     process.execPath,
@@ -377,7 +401,7 @@ async function startHeadlessChrome(chromePath) {
     };
   } catch (error) {
     await stopProcessGracefully(child, CHROME_SHUTDOWN_TIMEOUT_MS, 'chrome');
-    await rm(profileDir, { recursive: true, force: true });
+    await removeDirectoryBestEffort(profileDir);
     throw error;
   }
 }
@@ -905,16 +929,104 @@ function buildNestedGuidesFixtureSteps() {
       action: 'snapshot'
     },
     {
-      id: 'cursor-line-4-col-8',
+      id: 'cursor-line-4-col-1-indent',
       action: 'set-cursor',
       lineNumber: 4,
-      column: 8
+      column: 1
+    },
+    {
+      id: 'cursor-line-4-col-2-indent',
+      action: 'set-cursor',
+      lineNumber: 4,
+      column: 2
+    },
+    {
+      id: 'cursor-line-4-col-4-pretext',
+      action: 'set-cursor',
+      lineNumber: 4,
+      column: 4
+    },
+    {
+      id: 'arrow-left-line-4-pretext',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
+      id: 'arrow-left-line-4-pretext-second',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
+      id: 'cursor-line-5-col-3-indent',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 3
     },
     {
       id: 'cursor-line-5-col-10',
       action: 'set-cursor',
       lineNumber: 5,
       column: 10
+    }
+  ];
+}
+
+function buildSingleBulletFixtureSteps() {
+  return [
+    {
+      id: 'load-fixture-single-bullet',
+      action: 'load-fixture',
+      fixtureName: 'single-bullet'
+    },
+    {
+      id: 'baseline',
+      action: 'snapshot'
+    },
+    {
+      id: 'cursor-line-3-col-2-pretext',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 2
+    },
+    {
+      id: 'arrow-left-line-3-pretext',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
+      id: 'arrow-left-line-3-pretext-second',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    }
+  ];
+}
+
+function buildSingleNestedBulletFixtureSteps() {
+  return [
+    {
+      id: 'load-fixture-single-nested-bullet',
+      action: 'load-fixture',
+      fixtureName: 'single-nested-bullet'
+    },
+    {
+      id: 'baseline',
+      action: 'snapshot'
+    },
+    {
+      id: 'cursor-line-3-col-4-pretext',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 4
+    },
+    {
+      id: 'arrow-left-line-3-pretext',
+      action: 'move-cursor-horizontal',
+      direction: -1
+    },
+    {
+      id: 'arrow-left-line-3-pretext-second',
+      action: 'move-cursor-horizontal',
+      direction: -1
     }
   ];
 }
@@ -931,6 +1043,12 @@ function buildStepDefinitions(fixtureName) {
   }
   if (fixtureName === 'nested-guides') {
     return buildNestedGuidesFixtureSteps();
+  }
+  if (fixtureName === 'single-bullet') {
+    return buildSingleBulletFixtureSteps();
+  }
+  if (fixtureName === 'single-nested-bullet') {
+    return buildSingleNestedBulletFixtureSteps();
   }
   return buildDefaultFixtureSteps();
 }
@@ -1149,7 +1267,7 @@ async function main() {
 
     if (chrome) {
       await stopProcessGracefully(chrome.child, CHROME_SHUTDOWN_TIMEOUT_MS, 'chrome');
-      await rm(chrome.profileDir, { recursive: true, force: true });
+      await removeDirectoryBestEffort(chrome.profileDir);
     }
 
     if (launcher && !options.keepLauncherAlive) {

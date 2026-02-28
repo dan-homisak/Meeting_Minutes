@@ -13,6 +13,8 @@ test('createLiveRuntime returns live-v4 state/pointer/cursor contracts', () => {
   assert.equal(typeof runtime.requestRefresh, 'function');
   assert.equal(typeof runtime.readLiveState, 'function');
   assert.equal(typeof runtime.moveCursorVertically, 'function');
+  assert.equal(typeof runtime.moveCursorHorizontally, 'function');
+  assert.equal(typeof runtime.adjustListIndent, 'function');
   assert.ok(runtime.liveStateField);
   assert.ok(runtime.livePointerHandlers);
   assert.ok(runtime.liveAtomicRanges);

@@ -10,30 +10,47 @@ function readMarkerGapRange(lineText, lineFrom) {
     return null;
   }
 
-  const taskMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.)\s+\[(?: |x|X)\])(\s+)/);
-  if (taskMatch && typeof taskMatch[1] === 'string' && typeof taskMatch[2] === 'string') {
-    const markerCoreFrom = Math.trunc(lineFrom);
-    const markerCoreTo = markerCoreFrom + taskMatch[1].length;
-    const contentFrom = markerCoreTo + taskMatch[2].length;
+  const taskMatch = lineText.match(/^(\s*)([-+*]|\d+\.)(\s+)(\[(?: |x|X)\])(\s+)/);
+  if (taskMatch) {
+    const indentationText = taskMatch[1] ?? '';
+    const listToken = taskMatch[2] ?? '-';
+    const listKind = /^\d+\.$/.test(listToken) ? 'ordered' : 'bullet';
+    const markerPrefixSpacing = taskMatch[3] ?? ' ';
+    const markerCoreText = taskMatch[4] ?? '[ ]';
+    const trailingSpacing = taskMatch[5] ?? ' ';
+    const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
+    const markerCoreTo = markerCoreFrom + listToken.length + markerPrefixSpacing.length + markerCoreText.length;
+    const contentFrom = markerCoreTo + trailingSpacing.length;
     if (contentFrom > markerCoreTo) {
       return {
+        markerKind: 'task',
+        listKind,
+        lineFrom: Math.trunc(lineFrom),
         markerCoreFrom,
         markerCoreTo,
-        contentFrom
+        contentFrom,
+        indentationChars: indentationText.length
       };
     }
   }
 
-  const listMatch = lineText.match(/^(\s*(?:[-+*]|\d+\.))(\s+)/);
-  if (listMatch && typeof listMatch[1] === 'string' && typeof listMatch[2] === 'string') {
-    const markerCoreFrom = Math.trunc(lineFrom);
-    const markerCoreTo = markerCoreFrom + listMatch[1].length;
-    const contentFrom = markerCoreTo + listMatch[2].length;
+  const listMatch = lineText.match(/^(\s*)([-+*]|\d+\.)(\s+)/);
+  if (listMatch) {
+    const indentationText = listMatch[1] ?? '';
+    const markerCoreText = listMatch[2] ?? '-';
+    const markerKind = /^\d+\.$/.test(markerCoreText) ? 'ordered' : 'bullet';
+    const trailingSpacing = listMatch[3] ?? ' ';
+    const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
+    const markerCoreTo = markerCoreFrom + markerCoreText.length;
+    const contentFrom = markerCoreTo + trailingSpacing.length;
     if (contentFrom > markerCoreTo) {
       return {
+        markerKind,
+        lineFrom: Math.trunc(lineFrom),
         markerCoreFrom,
         markerCoreTo,
-        contentFrom
+        contentFrom,
+        indentationChars: indentationText.length
       };
     }
   }
@@ -136,19 +153,29 @@ export function createCursorController({
 
     let target = null;
     if (direction > 0) {
-      if (head >= markerGapRange.markerCoreTo && head < markerGapRange.contentFrom) {
+      if (head < markerGapRange.markerCoreFrom) {
+        target = markerGapRange.markerCoreFrom;
+      } else if (head >= markerGapRange.markerCoreTo && head < markerGapRange.contentFrom) {
         target = markerGapRange.contentFrom;
       }
-    } else if (head <= markerGapRange.contentFrom && head > markerGapRange.markerCoreTo) {
+    } else if (head > markerGapRange.markerCoreTo && head <= markerGapRange.contentFrom) {
       target = markerGapRange.markerCoreTo;
+    } else if (head <= markerGapRange.markerCoreFrom && markerGapRange.markerCoreFrom > markerGapRange.lineFrom) {
+      // Keep the caret out of hidden indentation guide ranges.
+      target = markerGapRange.markerCoreFrom;
     }
 
-    if (!Number.isFinite(target) || target === head) {
+    if (!Number.isFinite(target)) {
       return false;
     }
 
+    if (target === head) {
+      return true;
+    }
+
     view.dispatch({
-      selection: createCursorSelection(target, direction > 0 ? -1 : 1),
+      // Keep caret on visible boundaries when marker/indent syntax is hidden.
+      selection: createCursorSelection(target, 1),
       scrollIntoView: true
     });
     view.focus();
@@ -166,8 +193,79 @@ export function createCursorController({
     return true;
   }
 
+  function adjustListIndent(view, direction, trigger = 'list-indent') {
+    if (!Number.isInteger(direction) || direction === 0) {
+      return false;
+    }
+
+    const selection = view.state.selection.main;
+    if (!selection.empty) {
+      return false;
+    }
+
+    const line = view.state.doc.lineAt(selection.head);
+    const lineText = view.state.doc.sliceString(line.from, line.to);
+    const markerGapRange = readMarkerGapRange(lineText, line.from);
+    if (!markerGapRange) {
+      return false;
+    }
+
+    // Treat Tab/Backspace as indent controls while caret is in guide/marker zone.
+    if (selection.head > markerGapRange.contentFrom) {
+      return false;
+    }
+
+    const indentationChars = Math.max(0, Math.trunc(markerGapRange.indentationChars ?? 0));
+    if (direction > 0) {
+      const insertText = '  ';
+      view.dispatch({
+        changes: {
+          from: line.from,
+          to: line.from,
+          insert: insertText
+        },
+        selection: createCursorSelection(selection.head + insertText.length, -1),
+        scrollIntoView: true
+      });
+      view.focus();
+      liveDebug?.trace?.('cursor.list-indent', {
+        trigger,
+        direction,
+        from: selection.head,
+        to: selection.head + insertText.length,
+        lineNumber: line.number
+      });
+      return true;
+    }
+
+    if (indentationChars < 2) {
+      return true;
+    }
+
+    const removeChars = Math.min(2, indentationChars);
+    view.dispatch({
+      changes: {
+        from: line.from,
+        to: line.from + removeChars,
+        insert: ''
+      },
+      selection: createCursorSelection(Math.max(line.from, selection.head - removeChars), -1),
+      scrollIntoView: true
+    });
+    view.focus();
+    liveDebug?.trace?.('cursor.list-indent', {
+      trigger,
+      direction,
+      from: selection.head,
+      to: Math.max(line.from, selection.head - removeChars),
+      lineNumber: line.number
+    });
+    return true;
+  }
+
   return {
     moveCursorVertically,
-    moveCursorHorizontally
+    moveCursorHorizontally,
+    adjustListIndent
   };
 }

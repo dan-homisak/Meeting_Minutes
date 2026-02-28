@@ -609,6 +609,7 @@ export function createLiveApp({
     slashCommandCompletion,
     moveLiveCursorVertically: runtime.moveCursorVertically,
     moveLiveCursorHorizontally: runtime.moveCursorHorizontally,
+    adjustLiveListIndent: runtime.adjustListIndent,
     handleEditorUpdate(update) {
       liveDebug.trace('plugin.update', {
         docChanged: Boolean(update.docChanged),

@@ -259,21 +259,22 @@ function resolveLineTransformMeta(state, transform) {
   }
 
   if (transform.type === 'task') {
-    const match = lineText.match(/^(\s*(?:[-+*]|\d+\.)\s+)(\[)( |x|X)(\])(\s*)/);
+    const match = lineText.match(/^(\s*)([-+*]|\d+\.)(\s+)(\[)( |x|X)(\])(\s*)/);
     if (!match || typeof match[0] !== 'string') {
       return null;
     }
-    const prefixText = match[1] ?? '';
-    const markerText = `${match[2] ?? '['}${match[3] ?? ' '}${match[4] ?? ']'}`;
-    const trailingSpaceText = match[5] ?? '';
-    const prefixTo = range.from + prefixText.length;
-    const markerCoreFrom = prefixTo;
-    const markerCoreTo = markerCoreFrom + markerText.length;
+    const indentationText = match[1] ?? '';
+    const listMarkerToken = match[2] ?? '-';
+    const markerPrefixSpacing = match[3] ?? ' ';
+    const markerText = `${match[4] ?? '['}${match[5] ?? ' '}${match[6] ?? ']'}`;
+    const trailingSpaceText = match[7] ?? '';
+    const markerCoreFrom = range.from + indentationText.length;
+    const markerCoreTo = markerCoreFrom + listMarkerToken.length + markerPrefixSpacing.length + markerText.length;
     const markerTo = markerCoreTo + trailingSpaceText.length;
     if (markerCoreTo <= markerCoreFrom || markerTo <= range.from) {
       return null;
     }
-    const listMarker = /^\s*(\d+\.|[-+*])/.exec(lineText)?.[1] ?? '-';
+    const listMarker = listMarkerToken;
     const normalizedDepth = Number.isFinite(depth) ? depth : Math.max(0, Math.floor(indentation / 2));
     return {
       ...base,
@@ -282,7 +283,7 @@ function resolveLineTransformMeta(state, transform) {
       markerCoreFrom,
       markerCoreTo,
       contentFrom: markerTo,
-      checked: String(match[3] ?? '').toLowerCase() === 'x',
+      checked: String(match[5] ?? '').toLowerCase() === 'x',
       markerText,
       markerChars: markerText.length,
       listMarker,
@@ -363,8 +364,9 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       selectionHead >= markerCoreFrom &&
       selectionHead <= markerCoreTo
     );
-    const hideSyntaxMarker = !markerIncludesSelection;
+    const hideCoreMarker = !markerIncludesSelection;
 
+    // Keep indentation and trailing marker spacing hidden even when marker core syntax is shown.
     if (markerCoreFrom > meta.markerFrom) {
       decorations.push(
         Decoration.mark({
@@ -373,7 +375,7 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       );
     }
 
-    if (hideSyntaxMarker && meta.markerTo > markerCoreTo) {
+    if (hideCoreMarker && meta.markerTo > markerCoreTo) {
       decorations.push(
         Decoration.mark({
           class: 'mm-live-v4-syntax-hidden'
@@ -381,7 +383,7 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       );
     }
 
-    if (hideSyntaxMarker && markerCoreTo > markerCoreFrom) {
+    if (hideCoreMarker && markerCoreTo > markerCoreFrom) {
       decorations.push(
         Decoration.mark({
           class: 'mm-live-v4-syntax-hidden'
@@ -403,7 +405,7 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       );
     }
 
-    if (!hideSyntaxMarker) {
+    if (!hideCoreMarker) {
       continue;
     }
 

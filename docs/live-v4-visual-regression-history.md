@@ -32,7 +32,7 @@ Every visual/runtime change must run these fixtures:
 
 5. `nested-guides`
 - Deep nested list indentation/connector-line continuity.
-- Required screenshot steps: `01-baseline`, cursor depth steps.
+- Required screenshot steps: `01-baseline`, indentation cursor steps (`cursor-line-4-col-1-indent`, `cursor-line-4-col-2-indent`, `cursor-line-5-col-3-indent`), and left-arrow regression steps (`arrow-left-line-4-pretext`, `arrow-left-line-4-pretext-second`).
 
 ## Required Gates
 
@@ -53,6 +53,12 @@ Every visual/runtime change must run these fixtures:
 | 2026-02-28 | Final list parity tuning: task/ordered spacing rebalance + marker trailing-space visibility while syntax is active | lists-and-tasks, mixed-inline, empty-markers | `logs/probes/lists-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-44-53-276Z`, `logs/probes/mixed-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-998Z`, `logs/probes/empty-gap-pass-2026-02-28T22-45/live-v4-probe-2026-02-28T21-45-58-999Z` |
 | 2026-02-28 | User-reported list spacing cleanup from screenshot (bullet/task marker-text separation retune) | lists-and-tasks, mixed-inline | `logs/probes/lists-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z`, `logs/probes/mixed-spacing-pass-2026-02-28T23-23/live-v4-probe-2026-02-28T21-54-15-802Z` |
 | 2026-02-28 | Spacing bump + checkbox checkmark centering + vertical nested connector lines | lists-and-tasks, mixed-inline, nested-guides | `logs/probes/lists-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z`, `logs/probes/mixed-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z`, `logs/probes/nested-guides-pass-2026-02-28T23-35/live-v4-probe-2026-02-28T22-05-16-464Z` |
+| 2026-02-28 | Follow-up polish: slight extra marker-to-text spacing, cursor visibility fix near guides, connected vertical guides across lines | lists-and-tasks, mixed-inline, nested-guides | `logs/probes/lists-guides-pass-2026-02-28T23-50-rerun/live-v4-probe-2026-02-28T22-12-45-458Z`, `logs/probes/mixed-guides-pass-2026-02-28T23-50/live-v4-probe-2026-02-28T22-12-24-886Z`, `logs/probes/nested-guides-pass-2026-02-28T23-50/live-v4-probe-2026-02-28T22-12-24-886Z` |
+| 2026-02-28 | Deep cursor investigation around guide columns: moved guides to background layer + marker-range reveal to prevent caret loss in hidden indent syntax | lists-and-tasks, nested-guides | `logs/probes/lists-guides-cursor-pass-2026-03-01T00-10/live-v4-probe-2026-02-28T22-20-10-395Z`, `logs/probes/nested-guides-cursor-pass-2026-03-01T00-06/live-v4-probe-2026-02-28T22-19-38-441Z` |
+| 2026-02-28 | Follow-up fix for left-arrow caret loss across `- ` marker into indent guide area: stop unconditional prefix hiding while marker is active | lists-and-tasks, nested-guides | `logs/probes/lists-guides-cursor-pass-2026-03-01T00-20/live-v4-probe-2026-02-28T22-30-53-682Z`, `logs/probes/nested-guides-cursor-pass-2026-03-01T00-18/live-v4-probe-2026-02-28T22-30-27-152Z` |
+| 2026-02-28 | Reverted full-marker reveal regression (no extra left padding spaces), kept only marker-core reveal, added guide-zone Tab/Shift-Tab/Backspace indent controls, and stabilized probe cleanup retries | lists-and-tasks, nested-guides | `logs/probes/live-v4-probe-2026-02-28T22-45-35-630Z`, `logs/probes/live-v4-probe-2026-02-28T22-43-42-093Z` |
+| 2026-02-28 | Verification rerun after renderer/cursor revert: nested-guides + lists-and-tasks probes regenerated with same fixture matrix | lists-and-tasks, nested-guides | `logs/probes/live-v4-probe-2026-02-28T22-49-31-382Z`, `logs/probes/live-v4-probe-2026-02-28T22-49-23-189Z` |
+| 2026-02-28 | Cursor-boundary simplification for nested lists: use visible marker anchor on indented lines and add left-arrow regression probe steps | nested-guides | `logs/probes/live-v4-probe-2026-02-28T23-06-02-516Z`, `logs/probes/live-v4-probe-2026-02-28T23-04-19-891Z` |
 
 ## How To Extend History
 

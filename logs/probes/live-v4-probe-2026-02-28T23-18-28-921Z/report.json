@@ -1,0 +1,2510 @@
+{
+  "generatedAt": "2026-02-28T23:18:32.937Z",
+  "artifactDir": "/Users/danhomisak/Code/Meeting_Minutes/logs/probes/live-v4-probe-2026-02-28T23-18-28-921Z",
+  "launch": {
+    "url": "http://127.0.0.1:5173/?launcherToken=864dab6a-5dc0-4f5e-9572-e423276f68de",
+    "launcherLogFilePath": "/Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T23-18-29-003Z-864dab6a.jsonl",
+    "launcherOutput": [
+      "Starting Meeting Minutes at http://127.0.0.1:5173/?launcherToken=864dab6a-5dc0-4f5e-9572-e423276f68de",
+      "Heartbeat interval: 4000ms",
+      "Auto-shutdown disabled (LAUNCHER_NO_TIMEOUT=1).",
+      "Live debug log file: /Users/danhomisak/Code/Meeting_Minutes/logs/live-debug-2026-02-28T23-18-29-003Z-864dab6a.jsonl",
+      "Browser auto-open disabled (LAUNCHER_NO_OPEN=1)."
+    ]
+  },
+  "fixture": "single-bullet",
+  "steps": [
+    {
+      "id": "load-fixture-single-bullet",
+      "action": "load-fixture",
+      "actionResult": {
+        "ok": true,
+        "length": 24,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 15,
+            "lineLength": 15
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:15",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 15,
+            "activeBlockType": "heading",
+            "activeBlockLength": 15,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Single Bullet",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 195.52,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "• \nText",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">• </span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 385.14,
+                "right": 122.64,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 385.14,
+                "right": 87.09,
+                "bottom": 408.33,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 0,
+            "top": 0,
+            "right": 0,
+            "bottom": 0,
+            "width": 0,
+            "height": 0
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        },
+        "fixtureName": "single-bullet"
+      },
+      "screenshot": "00-load-fixture-single-bullet.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 15,
+            "lineLength": 15
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:15",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 15,
+            "activeBlockType": "heading",
+            "activeBlockLength": 15,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Single Bullet",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 195.52,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "• \nText",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">• </span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 385.14,
+                "right": 122.64,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 385.14,
+                "right": 87.09,
+                "bottom": 408.33,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "baseline",
+      "action": "snapshot",
+      "actionResult": null,
+      "screenshot": "01-baseline.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 0,
+            "lineNumber": 1,
+            "lineFrom": 0,
+            "lineTo": 15,
+            "lineLength": 15
+          },
+          "liveState": {
+            "activeBlockId": "heading:0:15",
+            "activeBlockFrom": 0,
+            "activeBlockTo": 15,
+            "activeBlockType": "heading",
+            "activeBlockLength": 15,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "# Single Bullet",
+              "className": "cm-line",
+              "html": "# <span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 91.3,
+                "top": 337.77,
+                "right": 195.52,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "• \nText",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">• </span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 385.14,
+                "right": 122.64,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 385.14,
+                "right": 87.09,
+                "bottom": 408.33,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "cursor-line-3-col-2-pretext",
+      "action": "set-cursor",
+      "actionResult": {
+        "ok": true,
+        "position": 19,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 19,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "• \nText",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">• </span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 385.14,
+                "right": 122.64,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 385.14,
+                "right": 87.09,
+                "bottom": 408.33,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 77.8,
+            "top": 338.77,
+            "right": 79.8,
+            "bottom": 360.77,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      },
+      "screenshot": "02-cursor-line-3-col-2-pretext.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 19,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "• \nText",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\">-</span><span class=\"mm-live-v4-syntax-hidden\"> </span><span class=\"mm-live-v4-inline-list-prefix\" data-mm-list-kind=\"bullet\" contenteditable=\"false\"><span class=\"mm-live-v4-inline-prefix-sizer\">-</span><span class=\"mm-live-v4-inline-prefix-display\">• </span></span><img class=\"cm-widgetBuffer\" aria-hidden=\"true\"><span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 87.09,
+                "top": 385.14,
+                "right": 122.64,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": "mm-live-v4-inline-list-prefix",
+              "inlinePrefixRect": {
+                "left": 81.34,
+                "top": 385.14,
+                "right": 87.09,
+                "bottom": 408.33,
+                "width": 5.75,
+                "height": 23.19
+              },
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 92.58,
+            "top": 385.14,
+            "right": 94.58,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "arrow-left-line-3-pretext",
+      "action": "move-cursor-horizontal",
+      "actionResult": {
+        "ok": true,
+        "movedCount": 1,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 18,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "- Text",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "- <span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 90.47,
+                "top": 385.14,
+                "right": 126.02,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 92.58,
+            "top": 385.14,
+            "right": 94.58,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      },
+      "screenshot": "03-arrow-left-line-3-pretext.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 18,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "- Text",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "- <span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 90.47,
+                "top": 385.14,
+                "right": 126.02,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 85.86,
+            "top": 385.14,
+            "right": 87.86,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "arrow-left-line-3-pretext-second",
+      "action": "move-cursor-horizontal",
+      "actionResult": {
+        "ok": true,
+        "movedCount": 1,
+        "snapshot": {
+          "ready": true,
+          "selection": {
+            "head": 18,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "- Text",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "- <span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 90.47,
+                "top": 385.14,
+                "right": 126.02,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 85.86,
+            "top": 385.14,
+            "right": 87.86,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      },
+      "screenshot": "04-arrow-left-line-3-pretext-second.png",
+      "snapshot": {
+        "source": "probe-api",
+        "payload": {
+          "ready": true,
+          "selection": {
+            "head": 18,
+            "lineNumber": 3,
+            "lineFrom": 17,
+            "lineTo": 23,
+            "lineLength": 6
+          },
+          "liveState": {
+            "activeBlockId": "list:17:23",
+            "activeBlockFrom": 17,
+            "activeBlockTo": 23,
+            "activeBlockType": "list",
+            "activeBlockLength": 6,
+            "blockCount": 2,
+            "renderedBlockCount": 0,
+            "virtualizedBlockCount": 2,
+            "budgetTruncated": false
+          },
+          "hasFocus": true,
+          "lines": [
+            {
+              "number": 1,
+              "from": 0,
+              "to": 15,
+              "text": "# Single Bullet"
+            },
+            {
+              "number": 2,
+              "from": 16,
+              "to": 16,
+              "text": ""
+            },
+            {
+              "number": 3,
+              "from": 17,
+              "to": 23,
+              "text": "- Text"
+            },
+            {
+              "number": 4,
+              "from": 24,
+              "to": 24,
+              "text": ""
+            }
+          ],
+          "domLines": [
+            {
+              "index": 0,
+              "text": "Single Bullet",
+              "className": "cm-line",
+              "html": "<span class=\"mm-live-v4-syntax-hidden\"># </span><span class=\"mm-live-v4-source-content mm-live-v4-source-heading\">Single Bullet</span>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": {
+                "left": 78.39,
+                "top": 337.77,
+                "right": 182.61,
+                "bottom": 360.77,
+                "width": 104.22,
+                "height": 23
+              },
+              "sourceContentText": "Single Bullet",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 1,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 361.95,
+                "right": 730,
+                "bottom": 385.14,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "- Text",
+              "className": "cm-line mm-live-v4-source-list-line",
+              "html": "- <span class=\"mm-live-v4-source-content mm-live-v4-source-list\" data-list-depth=\"0\">Text</span>",
+              "hasWidget": false,
+              "lineListDepth": "0",
+              "lineMarkerChars": "1",
+              "sourceContentRect": {
+                "left": 90.47,
+                "top": 385.14,
+                "right": 126.02,
+                "bottom": 407.14,
+                "width": 35.55,
+                "height": 22
+              },
+              "sourceContentText": "Text",
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 385.14,
+                "right": 730,
+                "bottom": 408.33,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "\n",
+              "className": "cm-line",
+              "html": "<br>",
+              "hasWidget": false,
+              "lineListDepth": null,
+              "lineMarkerChars": null,
+              "sourceContentRect": null,
+              "sourceContentText": null,
+              "inlinePrefixClass": null,
+              "inlinePrefixRect": null,
+              "rect": {
+                "left": 72.39,
+                "top": 408.33,
+                "right": 730,
+                "bottom": 431.52,
+                "width": 657.61,
+                "height": 23.19
+              }
+            }
+          ],
+          "gutterLines": [
+            {
+              "index": 0,
+              "text": "",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 334.77,
+                "right": 46,
+                "bottom": 334.77,
+                "width": 20,
+                "height": 0
+              }
+            },
+            {
+              "index": 1,
+              "text": "1",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 338.77,
+                "right": 46,
+                "bottom": 361.95,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 2,
+              "text": "2",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 361.95,
+                "right": 46,
+                "bottom": 385.14,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 3,
+              "text": "3",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 385.14,
+                "right": 46,
+                "bottom": 408.33,
+                "width": 20,
+                "height": 23.19
+              }
+            },
+            {
+              "index": 4,
+              "text": "4",
+              "className": "cm-gutterElement",
+              "rect": {
+                "left": 26,
+                "top": 408.33,
+                "right": 46,
+                "bottom": 431.52,
+                "width": 20,
+                "height": 23.19
+              }
+            }
+          ],
+          "widgets": [],
+          "cursorRect": {
+            "left": 85.86,
+            "top": 385.14,
+            "right": 87.86,
+            "bottom": 407.14,
+            "width": 2,
+            "height": 22
+          },
+          "typography": {
+            "ready": true,
+            "scroller": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "content": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px"
+            },
+            "firstLine": {
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "16px",
+              "lineHeight": "23.2px",
+              "rect": {
+                "left": 72.39,
+                "top": 338.77,
+                "right": 730,
+                "bottom": 361.95,
+                "width": 657.61,
+                "height": 23.19
+              }
+            },
+            "firstWidget": {
+              "fontFamily": null,
+              "fontSize": null,
+              "lineHeight": null,
+              "rect": null
+            },
+            "gutters": {
+              "display": "flex",
+              "width": "46.3906px",
+              "lineHeight": "18.096px",
+              "fontFamily": "Inter, \"Avenir Next\", \"SF Pro Text\", -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+              "fontSize": "12.48px",
+              "visibleLineNumberCount": 5
+            }
+          }
+        }
+      }
+    }
+  ],
+  "eventSummary": {
+    "pointer": {
+      "fragment": 0,
+      "fragmentMiss": 0,
+      "native": 0,
+      "activate": 0,
+      "activateMiss": 0
+    },
+    "cursor": {
+      "vertical": 0,
+      "verticalSkipped": 0,
+      "verticalBoundary": 0
+    },
+    "rendering": {
+      "projectionBuilt": 6,
+      "activeBlockLarge": 0
+    }
+  },
+  "assertions": {
+    "pointerActivationObserved": false,
+    "noPointerActivateMiss": true,
+    "fragmentMappingObserved": false
+  }
+}

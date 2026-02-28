@@ -239,7 +239,7 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
   assert.equal(activeState.selection.main.head > 0, true);
 });
 
-test('cursor controller skips list/task marker gap positions horizontally', () => {
+test('cursor controller skips hidden marker gaps for task, ordered, and bullet lines', () => {
   let activeState = EditorState.create({
     doc: '- [ ] Task item\n1. Numbered item\n- Bullet item',
     selection: { anchor: 0 }
@@ -270,23 +270,111 @@ test('cursor controller skips list/task marker gap positions horizontally', () =
     return position;
   }
 
-  setCursorByLineColumn(1, 5);
-  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
-  assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 6);
+  // Task list: jump from content start across hidden trailing marker gap.
+  setCursorByLineColumn(1, 6);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 5);
+  // Inside visible syntax we defer to native per-character movement.
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
 
-  setCursorByLineColumn(2, 2);
-  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
-  assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 3);
+  // Ordered list: same behavior as bullets/tasks for hidden-gap transitions.
+  setCursorByLineColumn(2, 3);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 2);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
 
-  setCursorByLineColumn(3, 1);
-  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
-  assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 2);
+  setCursorByLineColumn(3, 2);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
+});
+
+test('cursor controller keeps caret out of guide columns and supports list indent controls', () => {
+  let activeState = EditorState.create({
+    doc: '  - Child\n  - [ ] Task\nPlain text',
+    selection: { anchor: 0 }
+  });
+
+  const cursor = createCursorController({
+    liveDebug: { trace() {} }
+  });
+  const cursorView = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {}
+  };
+
+  function setCursorByLineColumn(lineNumber, column) {
+    const line = activeState.doc.line(lineNumber);
+    const position = Math.min(line.to, line.from + Math.max(0, Math.trunc(column)));
+    activeState = activeState.update({
+      selection: {
+        anchor: position,
+        head: position
+      }
+    }).state;
+    return position;
+  }
+
+  setCursorByLineColumn(1, 1);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 2);
+
+  setCursorByLineColumn(1, 2);
+  assert.equal(cursor.adjustListIndent(cursorView, 1, 'Tab'), true);
+  assert.equal(activeState.doc.line(1).text.startsWith('    - Child'), true);
+
+  setCursorByLineColumn(1, 4);
+  assert.equal(cursor.adjustListIndent(cursorView, -1, 'Backspace'), true);
+  assert.equal(activeState.doc.line(1).text.startsWith('  - Child'), true);
+
+  setCursorByLineColumn(1, 6);
+  assert.equal(cursor.adjustListIndent(cursorView, 1, 'Tab'), false);
+});
+
+test('cursor controller does not enter hidden list guide columns near marker edge', () => {
+  let activeState = EditorState.create({
+    doc: '    - Grandchild',
+    selection: { anchor: 0 }
+  });
+
+  const cursor = createCursorController({
+    liveDebug: { trace() {} }
+  });
+  const cursorView = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {}
+  };
+
+  const line = activeState.doc.line(1);
+  const startPosition = line.from + 6;
+  activeState = activeState.update({
+    selection: {
+      anchor: startPosition,
+      head: startPosition
+    }
+  }).state;
+
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
+  activeState = activeState.update({
+    selection: {
+      anchor: line.from + 4,
+      head: line.from + 4
+    }
+  }).state;
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, line.from + 4);
 });
 
 test('pointer controller passes through non-rendered targets to native editor behavior', () => {

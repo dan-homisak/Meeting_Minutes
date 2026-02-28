@@ -45,6 +45,14 @@ Paragraph with **bold**, *emphasis*, ~~strike~~, \`inline code\`, [link](https:/
     - Grandchild sibling
   - Child two
 - Sibling top
+`,
+  'single-bullet': `# Single Bullet
+
+- Text
+`,
+  'single-nested-bullet': `# Single Nested Bullet
+
+  - Text
 `
 });
 
