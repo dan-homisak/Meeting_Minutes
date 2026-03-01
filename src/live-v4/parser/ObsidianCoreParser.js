@@ -421,6 +421,7 @@ const INLINE_PATTERNS = [
   { type: 'strong', regex: /\*\*[^*\n]+\*\*|__[^_\n]+__/g },
   { type: 'emphasis', regex: /(?<!\*)\*[^*\n]+\*(?!\*)|(?<!_)_[^_\n]+_(?!_)/g },
   { type: 'strike', regex: /~~[^~\n]+~~/g },
+  { type: 'highlight', regex: /==[^=\n]+==/g },
   { type: 'code', regex: /`[^`\n]+`/g }
 ];
 
@@ -430,6 +431,7 @@ const INLINE_TYPE_PRIORITY = Object.freeze({
   wikilink: 320,
   strong: 240,
   strike: 220,
+  highlight: 210,
   emphasis: 180
 });
 

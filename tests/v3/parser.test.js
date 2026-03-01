@@ -66,3 +66,16 @@ test('parser recognizes empty list/task marker lines with stable depth metadata'
     { type: 'list', depth: 1, text: '  1.' }
   ]);
 });
+
+test('parser captures highlight inline spans for ==mark== syntax', () => {
+  const parser = createObsidianCoreParser({
+    markdownEngine: createMarkdownEngine()
+  });
+
+  const source = 'Paragraph with ==mark== text\n';
+  const result = parser.setText(source, 'highlight-inline');
+  const highlight = result.model.inlines.find((inline) => inline.type === 'highlight');
+
+  assert.ok(highlight);
+  assert.equal(source.slice(highlight.from, highlight.to), '==mark==');
+});

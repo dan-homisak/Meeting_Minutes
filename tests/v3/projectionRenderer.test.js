@@ -225,3 +225,42 @@ test('inline syntax hides in content mode and reveals when cursor is inside synt
   assert.equal(syntaxHidden.some(([from, to]) => from === 15 && to === 17), false);
   assert.equal(syntaxHidden.some(([from, to]) => from === 21 && to === 23), false);
 });
+
+test('highlight inline renders style and hides == markers outside syntax focus', () => {
+  const text = 'Paragraph ==mark== text\n';
+  const line = text.trimEnd();
+  const model = createModel(
+    text,
+    [
+      { id: 'p1', type: 'paragraph', from: 0, to: line.length, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+    ],
+    [
+      { from: 10, to: 18, type: 'highlight' }
+    ]
+  );
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const contentState = EditorState.create({
+    doc: text,
+    selection: { anchor: 14 }
+  });
+  const contentProjection = renderer.buildRenderProjection(contentState, model);
+  const contentHidden = collectSyntaxHiddenRanges(contentProjection, 0, line.length);
+  assert.equal(contentHidden.some(([from, to]) => from === 10 && to === 12), true);
+  assert.equal(contentHidden.some(([from, to]) => from === 16 && to === 18), true);
+
+  const syntaxState = EditorState.create({
+    doc: text,
+    selection: { anchor: 11 }
+  });
+  const syntaxProjection = renderer.buildRenderProjection(syntaxState, model);
+  const syntaxHidden = collectSyntaxHiddenRanges(syntaxProjection, 0, line.length);
+  assert.equal(syntaxHidden.some(([from, to]) => from === 10 && to === 12), false);
+  assert.equal(syntaxHidden.some(([from, to]) => from === 16 && to === 18), false);
+});

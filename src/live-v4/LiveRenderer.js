@@ -430,6 +430,21 @@ function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
     };
   }
 
+  if (span.type === 'highlight') {
+    if (!(text.startsWith('==') && text.endsWith('==') && text.length > 4)) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-highlight',
+      contentFrom: spanFrom + 2,
+      contentTo: spanTo - 2,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 2 },
+        { from: spanTo - 2, to: spanTo }
+      ]
+    };
+  }
+
   if (span.type === 'code') {
     if (!(text.startsWith('`') && text.endsWith('`') && text.length > 2)) {
       return null;

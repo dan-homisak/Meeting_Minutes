@@ -10,7 +10,7 @@ owner: team-notes
 
 ## Heading Two
 
-Paragraph with a [standard link](https://example.com), a [[Wiki Target]], and an embed ![[diagram.png]].
+==Paragraph== with a [standard link](https://example.com), a [[Wiki Target]], and an embed ![[diagram.png]].
 
 > Blockquote line
 > continues on second line.

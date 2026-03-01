@@ -363,6 +363,13 @@ button:disabled {
   text-decoration-thickness: 1.5px;
 }
 
+.mm-live-v4-inline-highlight {
+  background: color-mix(in srgb, #facc15 42%, transparent);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  padding: 0 0.08em;
+}
+
 .mm-live-v4-inline-code {
   background: var(--background-primary-alt);
   border: 1px solid var(--background-modifier-border);
