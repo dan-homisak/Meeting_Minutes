@@ -161,7 +161,7 @@ function resolveInlineBlockId(blocks, inlineFrom) {
 }
 
 const ACTIVE_SLICE_TYPES = new Set(['paragraph', 'blockquote', 'list']);
-const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'list', 'task', 'blockquote']);
+const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'paragraph', 'list', 'task', 'blockquote']);
 
 function canSliceActiveBlock(block) {
   if (!block || typeof block.type !== 'string') {
@@ -178,6 +178,33 @@ function shouldUseSourceTransform(block) {
     return false;
   }
   return Number.isFinite(block.lineFrom) && Number.isFinite(block.lineTo) && block.lineFrom === block.lineTo;
+}
+
+function collectInlineSpansForRange(inlines, rangeFrom, rangeTo) {
+  if (!Array.isArray(inlines) || !Number.isFinite(rangeFrom) || !Number.isFinite(rangeTo)) {
+    return [];
+  }
+
+  const from = Math.trunc(rangeFrom);
+  const to = Math.trunc(rangeTo);
+  if (to <= from) {
+    return [];
+  }
+
+  return inlines
+    .filter((inline) => (
+      inline &&
+      Number.isFinite(inline.from) &&
+      Number.isFinite(inline.to) &&
+      inline.to > inline.from &&
+      inline.from >= from &&
+      inline.to <= to
+    ))
+    .map((inline) => ({
+      from: Math.trunc(inline.from),
+      to: Math.trunc(inline.to),
+      type: typeof inline.type === 'string' ? inline.type : 'inline'
+    }));
 }
 
 function sliceActiveBlockIntoInactiveRanges(state, block, selectionHead) {
@@ -315,7 +342,8 @@ export function buildLiveProjection({
         sourceFrom: block.from,
         sourceTo: block.to,
         attrs: block.attrs ?? {},
-        depth: block.depth
+        depth: block.depth,
+        inlineSpans: collectInlineSpansForRange(inlines, block.from, block.to)
       });
 
       interactionEntries.push(...collectMarkerEntriesForBlock(state.doc, block));
