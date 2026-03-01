@@ -8,7 +8,7 @@ This rewrite is a big-bang cut to a live-only runtime:
 
 - Single mode: live preview editing only.
 - New runtime pipeline in `src/live-v4/`.
-- Full-block inactive rendering with one active editable block.
+- Full-block inactive rendering with one active editable block for block-backed lines (`activeBlockId` is `null` on inter-block blank lines).
 - Syntax-level source transforms for single-line heading/list/task/blockquote markers.
 - Deterministic source mapping via `data-src-*` and interaction map entries.
 - Legacy source/preview mode wiring removed from the runtime entry path.
@@ -67,6 +67,7 @@ The project includes an automated troubleshooting runner that places cursors at 
 
 ```bash
 npm run probe:live-v4
+npm run probe:live-v4 -- --fixture code-blocks
 ```
 
 See `docs/live-v4-probe.md` for flags and artifact details.
@@ -79,6 +80,16 @@ This repository currently uses a "visible-syntax first" cursor policy for list l
 2. Custom horizontal handling only skips hidden ranges (hidden indentation guides and hidden marker trailing gaps).
 3. Cursor never intentionally lands inside hidden syntax ranges.
 4. `Tab` / `Shift-Tab` / `Backspace` in guide/marker zone adjust list nesting (indent/outdent).
+
+## Current Code Block Strategy
+
+1. Fenced code blocks use source-transform lines in live preview (no multiline range replacement).
+2. Source code lines use explicit code-line styling (`mm-live-v4-source-code-line`) for stable monospace typography/chrome.
+3. This keeps gutter line numbers continuous through code blocks while preserving native cursor traversal.
+4. Native arrow traversal across fence syntax is validated by probe steps.
+5. The blank line after a closing fence is not treated as part of the code block active range.
+6. Typing the third backtick on an otherwise empty fence line auto-inserts a closing fence on the next line, shifting existing next-line content down.
+7. Code blocks include a right-aligned `Copy` button that copies only content between the opening and closing fences.
 
 ## Build
 

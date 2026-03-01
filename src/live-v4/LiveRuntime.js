@@ -41,11 +41,13 @@ export function createLiveRuntime({
 
   const pointerController = createPointerController({
     liveDebug,
-    readInteractionMapForView
+    readInteractionMapForView,
+    readLiveState
   });
 
   const cursorController = createCursorController({
-    liveDebug
+    liveDebug,
+    readLiveState
   });
 
   const livePointerHandlers = EditorView.domEventHandlers({

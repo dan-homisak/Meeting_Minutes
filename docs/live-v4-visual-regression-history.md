@@ -42,6 +42,19 @@ Every visual/runtime change must run these fixtures:
 - Minimal nested bullet marker traversal and hidden-indent boundary regression.
 - Required screenshot steps: `01-baseline`, `02-cursor-line-3-col-4-pretext`, `03-arrow-left-line-3-pretext`, `04-arrow-left-line-3-pretext-second`.
 
+8. `code-blocks`
+- Fenced code rendering parity, active-source code typography, fence traversal, and post-fence boundary behavior.
+- Required screenshot steps:
+  - `01-baseline`
+  - `03-cursor-line-5-col-1-fence-open`
+  - `05-arrow-left-line-5-fence-open`
+  - `07-cursor-line-6-col-3-code-content`
+  - `08-cursor-line-10-col-1-fence-close`
+  - `10-arrow-left-line-10-fence-close`
+  - `12-cursor-line-14-col-1-fence-open-plain`
+  - `15-cursor-line-15-col-5-code-plain-content`
+  - `16-cursor-line-18-col-6-outro`
+
 ## Required Gates
 
 1. `npm test -- --runInBand`
@@ -49,11 +62,22 @@ Every visual/runtime change must run these fixtures:
 3. Probe runs for `default-welcome`, `lists-and-tasks`, and `mixed-inline` with explicit output dirs.
 4. Probe runs for `empty-markers` and `nested-guides` with explicit output dirs when list behavior or spacing changes.
 5. Probe runs for `single-bullet` and `single-nested-bullet` when cursor/list marker behavior changes.
+6. Probe run for `code-blocks` when fenced code rendering, source scope, typography, or fence traversal changes.
 
 ## Run History
 
 | Date (UTC) | Purpose | Fixtures | Artifact Root |
 |---|---|---|---|
+| 2026-03-01 | Fence-click cursor placement refinement: pointer clicks on opening/closing fence lines now snap caret to fence-line end (language-aware on opening fence) and added probe coverage for visible closing-fence clicks | code-blocks | `logs/probes/live-v4-probe-2026-03-01T01-39-51-588Z` |
+| 2026-03-01 | Hidden-fence click mapping fix: clicks on inactive backtick fence lines now map into fence source range and activate code source editing | code-blocks | `logs/probes/live-v4-probe-2026-03-01T01-21-31-702Z` |
+| 2026-03-01 | Code-block keyboard parity follow-up: fixed `Tab` command path to always indent in-editor, hardened copy-button focus deflection, and added probe assertions for `Tab` indentation/focus retention | code-blocks | `logs/probes/live-v4-probe-2026-03-01T01-12-42-178Z` |
+| 2026-03-01 | Cursor/tab hardening for code blocks: ArrowDown snaps to opening fence end, copy button removed from tab order, and editor Tab fallback prevents UI/browser focus navigation | code-blocks | `logs/probes/live-v4-probe-2026-03-01T01-00-41-493Z` |
+| 2026-03-01 | Code-block UX additions: full fenced block chrome with inactive fence hiding, copy button control, and fence auto-close insertion guardrails | code-blocks | `logs/probes/live-v4-probe-2026-03-01T00-49-52-163Z`, `logs/probes/live-v4-probe-2026-03-01T00-40-18-944Z` |
+| 2026-03-01 | Gutter continuity fix for code blocks: switched code blocks to source-transform path so rendered code no longer drops line numbers | code-blocks, lists-and-tasks | `logs/probes/live-v4-probe-2026-03-01T00-23-12-571Z`, `logs/probes/live-v4-probe-2026-03-01T00-23-58-646Z` |
+| 2026-03-01 | Code-block follow-up: blank-line boundary now yields no active block, with assertions updated for `activeBlockType: null` | code-blocks | `logs/probes/live-v4-probe-2026-03-01T00-17-35-165Z` |
+| 2026-03-01 | Code-block parity pass: fenced range boundary fix, active source monospace/chrome, and native fence traversal probe coverage | code-blocks | `logs/probes/live-v4-probe-2026-03-01T00-11-55-874Z` |
+| 2026-03-01 | Initial code-block inspection baseline before fixes | code-blocks | `logs/probes/live-v4-probe-2026-03-01T00-05-35-487Z` |
+| 2026-03-01 | List regression sanity run after parser/style updates from code-block pass | lists-and-tasks | `logs/probes/live-v4-probe-2026-03-01T00-14-48-156Z` |
 | 2026-02-28 | Syntax-transform + gutter stabilization | default-welcome, lists-and-tasks, mixed-inline | `logs/probes/live-v4-probe-2026-02-28T20-35-34-600Z`, `logs/probes/live-v4-probe-2026-02-28T20-38-03-460Z`, `logs/probes/live-v4-probe-2026-02-28T20-36-22-871Z` |
 | 2026-02-28 | List/checkbox spacing refinement | lists-and-tasks, mixed-inline | `logs/probes/lists-refine-2026-02-28T20-58/live-v4-probe-2026-02-28T20-56-19-026Z`, `logs/probes/mixed-refine-2026-02-28T20-58/live-v4-probe-2026-02-28T20-56-19-026Z` |
 | 2026-02-28 | Empty-marker depth detection + checkbox vertical centering + numbered-list indent tune | default-welcome, lists-and-tasks, mixed-inline | `logs/probes/default-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z`, `logs/probes/lists-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z`, `logs/probes/mixed-refine-2026-02-28T21-06/live-v4-probe-2026-02-28T21-10-12-647Z` |

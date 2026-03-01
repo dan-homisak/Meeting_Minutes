@@ -19,6 +19,7 @@ npm run probe:live-v4 -- --fixture empty-markers --output-dir logs/probes/<run-l
 npm run probe:live-v4 -- --fixture nested-guides --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture single-bullet --output-dir logs/probes/<run-label>
 npm run probe:live-v4 -- --fixture single-nested-bullet --output-dir logs/probes/<run-label>
+npm run probe:live-v4 -- --fixture code-blocks --output-dir logs/probes/<run-label>
 ```
 
 3. Inspect `report.json` first:
@@ -54,6 +55,17 @@ Important:
 6. Horizontal marker-gap traversal:
 - `arrow-right-*` and `arrow-left-*` steps must skip hidden marker trailing space in one keypress.
 - inside visible marker syntax, movement should remain character-accessible (no forced skip over visible `-`, `1.`, or `[ ]` characters).
+7. Code block boundaries and typography:
+- `code-blocks` step `cursor-line-18-col-6-outro` must report `activeBlockType === null`.
+- code-content steps must include `.mm-live-v4-source-code-line` classes in `domLines`.
+- fence traversal (`press-key` ArrowLeft steps) must keep cursor visible and move head positions deterministically.
+- baseline/code steps should keep gutter numbers continuous (no jump from fence-open line to post-block line).
+- baseline should include `.mm-live-v4-code-copy-button` on each rendered code block.
+- inactive baseline should hide opening/closing fence text while preserving block chrome.
+- ArrowDown entry steps should land at the end of opening fence lines (`head === lineTo`) for both fenced blocks.
+- `tab-line-6-code-content-start` should keep `hasFocus === true` and mutate line 6 with leading indentation.
+- `click-hidden-fence-open` should land at line 5 end (`head === lineTo`).
+- `click-visible-fence-close-line-10` should land at line 10 end (`head === lineTo`).
 
 ## Acceptance Heuristics
 
@@ -62,6 +74,7 @@ Important:
 - Checkbox and text baseline should stay visually centered.
 - Top-level and nested list depth must remain deterministic from source indentation.
 - Task and ordered marker syntax must remain cursor-accessible and visible when selected.
+- Code blocks should keep stable monospace styling in active source mode and avoid activating on trailing blank lines after closing fences.
 
 ## Artifact Conventions
 

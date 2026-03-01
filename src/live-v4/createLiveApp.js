@@ -13,6 +13,7 @@ import {
 import { readWorkspaceFromDb, writeWorkspaceToDb } from '../workspace/workspaceDb.js';
 import { createLiveRuntime } from './LiveRuntime.js';
 import { LIVE_PROBE_FIXTURES, readProbeFixture } from './probeFixtures.js';
+import { isCodeFenceLineText, resolveCodeFenceCaretPosition } from './codeFenceCaret.js';
 
 export function createLiveApp({
   windowObject,
@@ -64,7 +65,8 @@ export function createLiveApp({
     lastProgrammaticSelectionAt: 0,
     previousSelectionHead: null,
     previousSelectionLine: null,
-    lastLayoutProbeAt: 0
+    lastLayoutProbeAt: 0,
+    lastPointerDownAt: 0
   };
 
   function setStatus(message, asError = false) {
@@ -88,6 +90,67 @@ export function createLiveApp({
       lineTo: line.to,
       lineLength: Math.max(0, line.to - line.from)
     };
+  }
+
+  function isPointerSelectionTransaction(transaction) {
+    if (!transaction || typeof transaction.isUserEvent !== 'function') {
+      return false;
+    }
+    return (
+      transaction.isUserEvent('select.pointer') ||
+      transaction.isUserEvent('input.pointer')
+    );
+  }
+
+  function maybeSnapPointerFenceSelectionToLineEnd(update) {
+    if (!update?.selectionSet || !update?.state?.doc || !Array.isArray(update.transactions)) {
+      return false;
+    }
+    const pointerTransaction = update.transactions.some(isPointerSelectionTransaction);
+    const pointerAgeMs = Date.now() - Number(liveDebugDiagnostics.lastPointerDownAt ?? 0);
+    const pointerRecently = Number.isFinite(pointerAgeMs) && pointerAgeMs >= 0 && pointerAgeMs <= 350;
+    if (!pointerTransaction && !pointerRecently) {
+      return false;
+    }
+
+    const selection = update.state.selection.main;
+    if (!selection?.empty) {
+      return false;
+    }
+
+    const line = update.state.doc.lineAt(selection.head);
+    const lineText = update.state.doc.sliceString(line.from, line.to);
+    if (!isCodeFenceLineText(lineText)) {
+      return false;
+    }
+
+    const liveState = runtime.readLiveState?.(update.state) ?? null;
+    const blocks = Array.isArray(liveState?.model?.blocks) ? liveState.model.blocks : [];
+    const isFenceBoundary = blocks.some((block) => (
+      block &&
+      block.type === 'code' &&
+      Number.isFinite(block.from) &&
+      Number.isFinite(block.to) &&
+      (Math.trunc(block.from) === Math.trunc(line.from) || Math.trunc(block.to) === Math.trunc(line.to))
+    ));
+    if (!isFenceBoundary) {
+      return false;
+    }
+
+    const fenceCaretTo = resolveCodeFenceCaretPosition(update.state.doc, line.from, line.to);
+    if (!Number.isFinite(fenceCaretTo) || selection.head === fenceCaretTo) {
+      return false;
+    }
+
+    update.view.dispatch({
+      selection: {
+        anchor: fenceCaretTo,
+        head: fenceCaretTo
+      },
+      scrollIntoView: true,
+      userEvent: 'select.pointer'
+    });
+    return true;
   }
 
   function readLiveStateSnapshot(view) {
@@ -611,6 +674,10 @@ export function createLiveApp({
     moveLiveCursorHorizontally: runtime.moveCursorHorizontally,
     adjustLiveListIndent: runtime.adjustListIndent,
     handleEditorUpdate(update) {
+      if (maybeSnapPointerFenceSelectionToLineEnd(update)) {
+        return;
+      }
+
       liveDebug.trace('plugin.update', {
         docChanged: Boolean(update.docChanged),
         selectionSet: Boolean(update.selectionSet),
@@ -663,6 +730,9 @@ export function createLiveApp({
   installProbeApi();
 
   const trackableKeys = LIVE_CONSTANTS.LIVE_DEBUG_KEYLOG_KEYS;
+  const onPointerDownCapture = () => {
+    liveDebugDiagnostics.lastPointerDownAt = Date.now();
+  };
   const onKeydownRoot = (event) => {
     if (!trackableKeys.has(event.key)) {
       return;
@@ -676,6 +746,8 @@ export function createLiveApp({
     });
   };
 
+  editorView.dom.addEventListener('mousedown', onPointerDownCapture, true);
+  editorView.dom.addEventListener('touchstart', onPointerDownCapture, true);
   editorView.dom.addEventListener('keydown', onKeydownRoot, true);
 
   runtime.requestRefresh(editorView, 'startup');
@@ -708,6 +780,8 @@ export function createLiveApp({
       return;
     }
     diagnosticsShutdown = true;
+    editorView?.dom?.removeEventListener?.('mousedown', onPointerDownCapture, true);
+    editorView?.dom?.removeEventListener?.('touchstart', onPointerDownCapture, true);
     editorView?.dom?.removeEventListener?.('keydown', onKeydownRoot, true);
     uninstallProbeApi();
     launcherDebugBridge?.shutdown?.();

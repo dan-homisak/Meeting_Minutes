@@ -2,6 +2,7 @@ import {
   resolveInteractionSourceFromTarget,
   findInteractionEntriesAtPosition
 } from './InteractionMap.js';
+import { isCodeFenceLineText, resolveCodeFenceCaretPosition } from './codeFenceCaret.js';
 
 function readPointerCoordinates(event) {
   if (Number.isFinite(event?.clientX) && Number.isFinite(event?.clientY)) {
@@ -92,6 +93,46 @@ function mapPointerByElementGeometry({
   return clampPosition(estimated, docLength);
 }
 
+function readFiniteAttributeValue(element, attributeName) {
+  if (!element || typeof element.getAttribute !== 'function') {
+    return null;
+  }
+  const raw = Number(element.getAttribute(attributeName));
+  return Number.isFinite(raw) ? Math.trunc(raw) : null;
+}
+
+function resolveCodeFenceLineTarget(targetElement) {
+  if (!targetElement || typeof targetElement.closest !== 'function') {
+    return null;
+  }
+  const host = targetElement.closest('.cm-line[data-src-from][data-src-to]');
+  if (!host) {
+    return null;
+  }
+
+  const hostClassName = String(host.className ?? '');
+  const isCodeFenceLine = (
+    hostClassName.includes('mm-live-v4-source-code-fence-hidden') ||
+    hostClassName.includes('mm-live-v4-source-code-line-start') ||
+    hostClassName.includes('mm-live-v4-source-code-line-end')
+  );
+  if (!isCodeFenceLine) {
+    return null;
+  }
+
+  const sourceFrom = readFiniteAttributeValue(host, 'data-src-from');
+  const sourceTo = readFiniteAttributeValue(host, 'data-src-to');
+  if (!Number.isFinite(sourceFrom) || !Number.isFinite(sourceTo) || sourceTo < sourceFrom) {
+    return null;
+  }
+  return {
+    host,
+    sourceFrom,
+    sourceTo,
+    hidden: hostClassName.includes('mm-live-v4-source-code-fence-hidden')
+  };
+}
+
 function toggleTaskCheckboxAtSource(view, sourceFrom, nextChecked) {
   if (!view?.state?.doc || !Number.isFinite(sourceFrom)) {
     return false;
@@ -123,8 +164,67 @@ function toggleTaskCheckboxAtSource(view, sourceFrom, nextChecked) {
 
 export function createPointerController({
   liveDebug,
-  readInteractionMapForView
+  readInteractionMapForView,
+  readLiveState = null
 } = {}) {
+  function resolveCodeFenceLineTargetFromCoords(view, event) {
+    if (!view?.state?.doc || typeof view.posAtCoords !== 'function') {
+      return null;
+    }
+
+    const coordinates = readPointerCoordinates(event);
+    if (!coordinates) {
+      return null;
+    }
+    const mapped = view.posAtCoords(coordinates);
+    if (!Number.isFinite(mapped)) {
+      return null;
+    }
+
+    const position = clampPosition(mapped, view.state.doc.length);
+    if (!Number.isFinite(position)) {
+      return null;
+    }
+
+    const line = view.state.doc.lineAt(position);
+    const lineText = view.state.doc.sliceString(line.from, line.to);
+    if (!isCodeFenceLineText(lineText)) {
+      return null;
+    }
+
+    const liveState = typeof readLiveState === 'function' ? readLiveState(view.state) : null;
+    const blocks = Array.isArray(liveState?.model?.blocks) ? liveState.model.blocks : [];
+    const isFenceBoundary = blocks.some((block) => (
+      block &&
+      block.type === 'code' &&
+      Number.isFinite(block.from) &&
+      Number.isFinite(block.to) &&
+      (Math.trunc(block.from) === Math.trunc(line.from) || Math.trunc(block.to) === Math.trunc(line.to))
+    ));
+    if (!isFenceBoundary) {
+      return null;
+    }
+
+    return {
+      host: null,
+      sourceFrom: Math.trunc(line.from),
+      sourceTo: Math.trunc(line.to),
+      hidden: false,
+      byCoords: true
+    };
+  }
+
+  function resolveCodeFenceLineTargetForEvent(view, event, targetElement) {
+    const targetResolved = resolveCodeFenceLineTarget(targetElement);
+    if (targetResolved) {
+      return {
+        ...targetResolved,
+        byCoords: false
+      };
+    }
+    return resolveCodeFenceLineTargetFromCoords(view, event);
+  }
+
   function schedulePostActivationRemap({
     view,
     pointerCoordinates,
@@ -424,6 +524,37 @@ export function createPointerController({
       event.preventDefault?.();
       liveDebug?.trace?.('live-v4.link.open.modifier', { trigger, href });
       return true;
+    }
+
+    const codeFenceLineTarget = resolveCodeFenceLineTargetForEvent(view, event, target);
+    if (codeFenceLineTarget && !target.closest?.('.mm-live-v4-code-copy-button')) {
+      // Obsidian-style behavior: entering a fence line via click places caret at
+      // the end of the visible fence text (` ``` ` or ` ```lang `).
+      const targetPosition = resolveCodeFenceCaretPosition(
+        view.state.doc,
+        codeFenceLineTarget.sourceFrom,
+        codeFenceLineTarget.sourceTo
+      );
+      if (Number.isFinite(targetPosition)) {
+        view.dispatch({
+          selection: {
+            anchor: targetPosition,
+            head: targetPosition
+          },
+          scrollIntoView: true
+        });
+        view.focus();
+        event.preventDefault?.();
+        liveDebug?.trace?.('pointer.activate.code-fence-line', {
+          trigger,
+          sourceFrom: codeFenceLineTarget.sourceFrom,
+          sourceTo: codeFenceLineTarget.sourceTo,
+          hidden: codeFenceLineTarget.hidden,
+          byCoords: codeFenceLineTarget.byCoords,
+          targetPosition
+        });
+        return true;
+      }
     }
 
     // Let CodeMirror own pointer behavior in editable/native source DOM.

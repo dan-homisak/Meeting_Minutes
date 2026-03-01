@@ -239,6 +239,195 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
   assert.equal(activeState.selection.main.head > 0, true);
 });
 
+test('pointer controller maps clicks inside hidden code-fence source lines', () => {
+  const text = '```js   \nconst value = 1;\n```   ';
+  const ctx = createPointerView(text);
+  const controller = createPointerController({
+    liveDebug: { trace() {}, warn() {} },
+    readInteractionMapForView: () => []
+  });
+
+  const hiddenFenceLineHost = {
+    className: 'cm-line mm-live-v4-source-code-line mm-live-v4-source-code-line-start mm-live-v4-source-code-fence-hidden',
+    getAttribute(name) {
+      if (name === 'data-src-from') {
+        return '0';
+      }
+      if (name === 'data-src-to') {
+        return '8';
+      }
+      return null;
+    },
+    getBoundingClientRect() {
+      return {
+        left: 100,
+        width: 100
+      };
+    },
+    closest(selector) {
+      if (selector === '.mm-live-v4-code-copy-button') {
+        return null;
+      }
+      if (selector === '.cm-line[data-src-from][data-src-to]') {
+        return this;
+      }
+      return null;
+    }
+  };
+
+  const target = {
+    closest(selector) {
+      if (selector === '[data-task-source-from]') {
+        return null;
+      }
+      if (selector === 'a[href]') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-code-copy-button') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-block-widget') {
+        return null;
+      }
+      if (selector === '.cm-line[data-src-from][data-src-to]') {
+        return hiddenFenceLineHost;
+      }
+      return null;
+    }
+  };
+
+  const handled = controller.handlePointer(ctx.view, {
+    target,
+    clientX: 145,
+    clientY: 220,
+    preventDefault() {}
+  }, 'mousedown');
+
+  assert.equal(handled, true);
+  assert.equal(ctx.readSelectionHead(), 5);
+});
+
+test('pointer controller resolves code-fence clicks from coordinates when target has no line host', () => {
+  const docText = '```js   \nconst value = 1;\n```   \n';
+  const state = EditorState.create({
+    doc: docText,
+    selection: { anchor: 0 }
+  });
+  let activeState = state;
+
+  const closeFenceLine = state.doc.line(3);
+  const view = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {},
+    posAtCoords() {
+      return closeFenceLine.from;
+    },
+    posAtDOM() {
+      return null;
+    }
+  };
+
+  const controller = createPointerController({
+    liveDebug: { trace() {}, warn() {} },
+    readInteractionMapForView: () => [],
+    readLiveState: () => ({
+      model: {
+        blocks: [
+          {
+            id: 'code:0',
+            type: 'code',
+            from: 0,
+            to: closeFenceLine.to
+          }
+        ]
+      }
+    })
+  });
+
+  const target = {
+    closest(selector) {
+      if (selector === '[data-task-source-from]') {
+        return null;
+      }
+      if (selector === 'a[href]') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-code-copy-button') {
+        return null;
+      }
+      if (selector === '.cm-line[data-src-from][data-src-to]') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-block-widget') {
+        return null;
+      }
+      return null;
+    }
+  };
+
+  const handled = controller.handlePointer(view, {
+    target,
+    clientX: 150,
+    clientY: 300,
+    preventDefault() {}
+  }, 'mousedown');
+
+  assert.equal(handled, true);
+  assert.equal(activeState.selection.main.head, closeFenceLine.from + 3);
+});
+
+test('cursor controller snaps vertical entry into fenced code to fence-line end', () => {
+  let activeState = EditorState.create({
+    doc: 'Intro\n\n```js   \nconst x = 1;\n```\n',
+    selection: { anchor: 0 }
+  });
+
+  const openFenceLine = activeState.doc.line(3);
+  const closeFenceLine = activeState.doc.line(5);
+  const cursor = createCursorController({
+    liveDebug: { trace() {} },
+    readLiveState: () => ({
+      model: {
+        blocks: [
+          {
+            id: 'code:open',
+            type: 'code',
+            from: openFenceLine.from,
+            to: closeFenceLine.to
+          }
+        ]
+      }
+    })
+  });
+  const cursorView = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {}
+  };
+
+  const lineTwo = activeState.doc.line(2);
+  activeState = activeState.update({
+    selection: {
+      anchor: lineTwo.from,
+      head: lineTwo.from
+    }
+  }).state;
+
+  const moved = cursor.moveCursorVertically(cursorView, 1, 'ArrowDown');
+  assert.equal(moved, true);
+  assert.equal(activeState.doc.lineAt(activeState.selection.main.head).number, 3);
+  assert.equal(activeState.selection.main.head, openFenceLine.from + 5);
+});
+
 test('cursor controller skips hidden marker gaps for task, ordered, and bullet lines', () => {
   let activeState = EditorState.create({
     doc: '- [ ] Task item\n1. Numbered item\n- Bullet item',

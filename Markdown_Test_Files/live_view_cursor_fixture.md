@@ -33,6 +33,14 @@ function add(a, b) {
 }
 ```
 
+```
+Code here
+```
+
+function add(a, b) {
+return a + b;
+}
+
 ## 6) Table block
 
 | Column | Value |

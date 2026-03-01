@@ -89,13 +89,9 @@ function extractFrontmatterRange(source) {
   };
 }
 
-function trimTrailingBlockWhitespace(source, from, to, hint) {
+function trimTrailingBlockWhitespace(source, from, to, _hint) {
   const localSource = normalizeText(source);
   let end = Math.max(from, to);
-
-  if (hint === 'fence' || hint === 'code_block') {
-    return end;
-  }
 
   while (end > from && localSource[end - 1] === '\n') {
     end -= 1;

@@ -345,6 +345,58 @@ button:disabled {
   line-height: 1.45;
 }
 
+.cm-line.mm-live-v4-source-code-line {
+  background: var(--code-background);
+  border-left: 1px solid var(--code-border);
+  border-right: 1px solid var(--code-border);
+  font-family: var(--font-monospace);
+  font-size: 0.94rem;
+  line-height: 1.45;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+}
+
+.cm-line.mm-live-v4-source-code-line-start {
+  border-top-left-radius: var(--radius-sm);
+  border-top-right-radius: var(--radius-sm);
+  box-shadow: inset 0 1px 0 var(--code-border);
+  padding-right: 4.4rem;
+  position: relative;
+}
+
+.cm-line.mm-live-v4-source-code-line-end {
+  border-bottom-left-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+  box-shadow: inset 0 -1px 0 var(--code-border);
+}
+
+.cm-line.mm-live-v4-source-code-line-start.mm-live-v4-source-code-line-end {
+  box-shadow: inset 0 1px 0 var(--code-border), inset 0 -1px 0 var(--code-border);
+}
+
+.mm-live-v4-code-copy-button {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  padding: 0.2rem 0.36rem;
+  position: absolute;
+  right: 0.45rem;
+  top: 0.28rem;
+  z-index: 4;
+}
+
+.mm-live-v4-code-copy-button:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
 .mm-live-v4-source-heading {
   font-size: 1.06em;
   font-weight: 700;

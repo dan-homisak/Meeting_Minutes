@@ -1,4 +1,5 @@
 import { EditorSelection } from '@codemirror/state';
+import { isCodeFenceLineText, resolveCodeFenceCaretPosition } from './codeFenceCaret.js';
 
 function clampToLine(line, column) {
   const normalizedColumn = Math.max(0, Math.trunc(column));
@@ -60,9 +61,57 @@ function readMarkerGapRange(lineText, lineFrom) {
 
 export function createCursorController({
   liveDebug,
+  readLiveState = null,
   createCursorSelection = (position, assoc) => EditorSelection.cursor(position, assoc)
 } = {}) {
   const preferredColumns = new WeakMap();
+
+  function readCodeBlocks(view) {
+    const liveState = typeof readLiveState === 'function' ? readLiveState(view?.state) : null;
+    const blocks = Array.isArray(liveState?.model?.blocks) ? liveState.model.blocks : [];
+    return blocks.filter((block) => (
+      block &&
+      block.type === 'code' &&
+      Number.isFinite(block.from) &&
+      Number.isFinite(block.to) &&
+      block.to > block.from
+    ));
+  }
+
+  function resolveCodeBlockAtPosition(view, position) {
+    if (!Number.isFinite(position)) {
+      return null;
+    }
+    const blocks = readCodeBlocks(view);
+    return blocks.find((block) => position >= block.from && position <= block.to) ?? null;
+  }
+
+  function sameCodeBlock(left, right) {
+    if (!left || !right) {
+      return false;
+    }
+    if (typeof left.id === 'string' && typeof right.id === 'string') {
+      return left.id === right.id;
+    }
+    return left.from === right.from && left.to === right.to;
+  }
+
+  function resolveCodeBlockAtLineStart(view, line) {
+    if (!view?.state?.doc || !line || !Number.isFinite(line.from)) {
+      return null;
+    }
+
+    const lineText = view.state.doc.sliceString(line.from, line.to);
+    if (!isCodeFenceLineText(lineText)) {
+      return null;
+    }
+    const blocks = readCodeBlocks(view);
+    return blocks.find((block) => (
+      block &&
+      block.from === line.from &&
+      block.to > line.to
+    )) ?? null;
+  }
 
   function moveCursorVertically(view, direction, trigger = 'arrow') {
     if (!Number.isInteger(direction) || direction === 0) {
@@ -101,9 +150,37 @@ export function createCursorController({
     const preferredColumn = Number.isFinite(priorPreferred) ? priorPreferred : currentColumn;
 
     const targetLine = view.state.doc.line(targetLineNumber);
-    const targetPosition = clampToLine(targetLine, preferredColumn);
+    const currentCodeBlock = resolveCodeBlockAtPosition(view, selection.head);
+    const targetCodeBlockAtLineStart = resolveCodeBlockAtLineStart(view, targetLine);
+    const provisionalPosition = clampToLine(targetLine, preferredColumn);
+    const targetCodeBlock = (
+      resolveCodeBlockAtPosition(view, provisionalPosition) ??
+      resolveCodeBlockAtPosition(view, targetLine.from)
+    );
+    const enteringCodeBlock = (
+      direction > 0 &&
+      targetCodeBlock &&
+      !sameCodeBlock(currentCodeBlock, targetCodeBlock)
+    );
 
-    preferredColumns.set(view, preferredColumn);
+    let resolvedLine = targetLine;
+    let targetColumn = preferredColumn;
+    let snappedToCodeFenceEnd = false;
+
+    if (targetCodeBlockAtLineStart) {
+      const fenceCaretTo = resolveCodeFenceCaretPosition(view.state.doc, targetLine.from, targetLine.to);
+      targetColumn = Math.max(0, (Number.isFinite(fenceCaretTo) ? fenceCaretTo : targetLine.to) - targetLine.from);
+      snappedToCodeFenceEnd = true;
+    } else if (enteringCodeBlock) {
+      resolvedLine = view.state.doc.lineAt(targetCodeBlock.from);
+      const fenceCaretTo = resolveCodeFenceCaretPosition(view.state.doc, resolvedLine.from, resolvedLine.to);
+      targetColumn = Math.max(0, (Number.isFinite(fenceCaretTo) ? fenceCaretTo : resolvedLine.to) - resolvedLine.from);
+      snappedToCodeFenceEnd = true;
+    }
+
+    const targetPosition = clampToLine(resolvedLine, targetColumn);
+
+    preferredColumns.set(view, targetColumn);
 
     view.dispatch({
       selection: createCursorSelection(targetPosition, direction > 0 ? -1 : 1),
@@ -118,8 +195,10 @@ export function createCursorController({
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
-      toLine: targetLine.number,
-      preferredColumn
+      toLine: resolvedLine.number,
+      preferredColumn: targetColumn,
+      snappedToCodeFenceEnd,
+      enteredCodeBlock: enteringCodeBlock
     });
     liveDebug?.trace?.('cursor.move.vertical', {
       trigger,
@@ -127,7 +206,7 @@ export function createCursorController({
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
-      toLine: targetLine.number
+      toLine: resolvedLine.number
     });
 
     return true;

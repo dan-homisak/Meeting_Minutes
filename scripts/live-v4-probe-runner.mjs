@@ -549,17 +549,95 @@ function buildSourceRangeCoordinatesExpression(sourceFrom, sourceTo, xRatio, yRa
       Number(entry.getAttribute('data-src-from')) === from &&
       Number(entry.getAttribute('data-src-to')) === to
     ));
-    if (!widget) {
-      return { ok: false, reason: 'source-range-widget-not-found', sourceFrom: from, sourceTo: to };
+    const sourceLines = [...document.querySelectorAll('.cm-line[data-src-from][data-src-to]')];
+    const sourceLine = sourceLines.find((entry) => (
+      Number(entry.getAttribute('data-src-from')) === from &&
+      Number(entry.getAttribute('data-src-to')) === to
+    ));
+    const host = widget ?? sourceLine;
+    if (!host) {
+      return { ok: false, reason: 'source-range-host-not-found', sourceFrom: from, sourceTo: to };
     }
 
-    const rect = widget.getBoundingClientRect();
+    const rect = host.getBoundingClientRect();
     return {
       ok: true,
       x: Math.round(rect.left + Math.max(2, Math.min(rect.width - 2, rect.width * ${Number(xRatio)}))),
       y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * ${Number(yRatio)}))),
       sourceFrom: from,
-      sourceTo: to
+      sourceTo: to,
+      hostKind: widget ? 'widget' : 'source-line'
+    };
+  })()`;
+}
+
+function buildHiddenCodeFenceCoordinatesExpression(fenceIndex, xRatio, yRatio) {
+  return `(() => {
+    const index = ${Math.max(0, Math.trunc(fenceIndex))};
+    const lines = [
+      ...document.querySelectorAll('.cm-line.mm-live-v4-source-code-fence-hidden[data-src-from][data-src-to]')
+    ];
+    const line = lines[index];
+    if (!line) {
+      return { ok: false, reason: 'hidden-code-fence-not-found', fenceIndex: index };
+    }
+
+    const from = Number(line.getAttribute('data-src-from'));
+    const to = Number(line.getAttribute('data-src-to'));
+    const rect = line.getBoundingClientRect();
+    if (!Number.isFinite(rect.left) || !Number.isFinite(rect.width) || rect.width <= 0) {
+      return { ok: false, reason: 'hidden-code-fence-rect-invalid', fenceIndex: index };
+    }
+
+    return {
+      ok: true,
+      x: Math.round(rect.left + Math.max(2, Math.min(rect.width - 2, rect.width * ${Number(xRatio)}))),
+      y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * ${Number(yRatio)}))),
+      fenceIndex: index,
+      sourceFrom: Number.isFinite(from) ? Math.trunc(from) : null,
+      sourceTo: Number.isFinite(to) ? Math.trunc(to) : null
+    };
+  })()`;
+}
+
+function buildLineNumberCoordinatesExpression(lineNumber, xRatio, yRatio) {
+  return `(() => {
+    const lineNumber = ${Math.max(1, Math.trunc(lineNumber))};
+    const api = window['${PROBE_API_KEY}'];
+    const snapshot = api?.getStateSnapshot?.({ maxLines: 240 }) ?? null;
+    const lines = Array.isArray(snapshot?.lines) ? snapshot.lines : [];
+    const line = lines.find((entry) => Number(entry?.number) === lineNumber);
+    if (!line) {
+      return { ok: false, reason: 'line-number-not-found', lineNumber };
+    }
+
+    const hosts = [...document.querySelectorAll('[data-src-from][data-src-to]')];
+    const host = hosts.find((entry) => (
+      Number(entry.getAttribute('data-src-from')) === Number(line.from) &&
+      Number(entry.getAttribute('data-src-to')) === Number(line.to)
+    ));
+    if (!host) {
+      return {
+        ok: false,
+        reason: 'line-host-not-found',
+        lineNumber,
+        sourceFrom: Number(line.from),
+        sourceTo: Number(line.to)
+      };
+    }
+
+    const rect = host.getBoundingClientRect();
+    if (!Number.isFinite(rect.left) || !Number.isFinite(rect.width) || rect.width <= 0) {
+      return { ok: false, reason: 'line-host-rect-invalid', lineNumber };
+    }
+
+    return {
+      ok: true,
+      x: Math.round(rect.left + Math.max(2, Math.min(rect.width - 2, rect.width * ${Number(xRatio)}))),
+      y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * ${Number(yRatio)}))),
+      lineNumber,
+      sourceFrom: Number(line.from),
+      sourceTo: Number(line.to)
     };
   })()`;
 }
@@ -594,6 +672,70 @@ async function dispatchMouseClick(client, sessionId, x, y) {
       y,
       button: 'left',
       clickCount: 1
+    },
+    sessionId
+  );
+}
+
+const KEY_EVENT_MAP = {
+  ArrowLeft: {
+    key: 'ArrowLeft',
+    code: 'ArrowLeft',
+    windowsVirtualKeyCode: 37,
+    nativeVirtualKeyCode: 123
+  },
+  ArrowRight: {
+    key: 'ArrowRight',
+    code: 'ArrowRight',
+    windowsVirtualKeyCode: 39,
+    nativeVirtualKeyCode: 124
+  },
+  ArrowUp: {
+    key: 'ArrowUp',
+    code: 'ArrowUp',
+    windowsVirtualKeyCode: 38,
+    nativeVirtualKeyCode: 126
+  },
+  ArrowDown: {
+    key: 'ArrowDown',
+    code: 'ArrowDown',
+    windowsVirtualKeyCode: 40,
+    nativeVirtualKeyCode: 125
+  },
+  Tab: {
+    key: 'Tab',
+    code: 'Tab',
+    windowsVirtualKeyCode: 9,
+    nativeVirtualKeyCode: 48
+  }
+};
+
+async function dispatchKeyPress(client, sessionId, key) {
+  const keyDefinition = KEY_EVENT_MAP[String(key)] ?? null;
+  if (!keyDefinition) {
+    throw new Error(`Unsupported key press action: ${String(key)}`);
+  }
+
+  await client.send(
+    'Input.dispatchKeyEvent',
+    {
+      type: 'rawKeyDown',
+      key: keyDefinition.key,
+      code: keyDefinition.code,
+      windowsVirtualKeyCode: keyDefinition.windowsVirtualKeyCode,
+      nativeVirtualKeyCode: keyDefinition.nativeVirtualKeyCode
+    },
+    sessionId
+  );
+
+  await client.send(
+    'Input.dispatchKeyEvent',
+    {
+      type: 'keyUp',
+      key: keyDefinition.key,
+      code: keyDefinition.code,
+      windowsVirtualKeyCode: keyDefinition.windowsVirtualKeyCode,
+      nativeVirtualKeyCode: keyDefinition.nativeVirtualKeyCode
     },
     sessionId
   );
@@ -1031,6 +1173,316 @@ function buildSingleNestedBulletFixtureSteps() {
   ];
 }
 
+function buildCodeBlocksFixtureSteps() {
+  return [
+    {
+      id: 'load-fixture-code-blocks',
+      action: 'load-fixture',
+      fixtureName: 'code-blocks'
+    },
+    {
+      id: 'baseline',
+      action: 'snapshot'
+    },
+    {
+      id: 'click-hidden-fence-open',
+      action: 'click-hidden-code-fence',
+      fenceIndex: 0,
+      xRatio: 0.18,
+      yRatio: 0.5
+    },
+    {
+      id: 'cursor-line-3-col-8-intro-after-fence-clicks',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 8
+    },
+    {
+      id: 'cursor-line-3-col-8-intro',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 8
+    },
+    {
+      id: 'cursor-line-4-col-0-before-first-fence',
+      action: 'set-cursor',
+      lineNumber: 4,
+      column: 0
+    },
+    {
+      id: 'arrow-down-into-first-fence',
+      action: 'press-key',
+      key: 'ArrowDown'
+    },
+    {
+      id: 'cursor-line-5-col-1-fence-open',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 1
+    },
+    {
+      id: 'cursor-line-5-col-5-fence-open-right-edge',
+      action: 'set-cursor',
+      lineNumber: 5,
+      column: 5
+    },
+    {
+      id: 'arrow-left-line-5-fence-open',
+      action: 'press-key',
+      key: 'ArrowLeft'
+    },
+    {
+      id: 'arrow-left-line-5-fence-open-second',
+      action: 'press-key',
+      key: 'ArrowLeft'
+    },
+    {
+      id: 'cursor-line-6-col-3-code-content',
+      action: 'set-cursor',
+      lineNumber: 6,
+      column: 3
+    },
+    {
+      id: 'cursor-line-6-col-0-code-content-start',
+      action: 'set-cursor',
+      lineNumber: 6,
+      column: 0
+    },
+    {
+      id: 'tab-line-6-code-content-start',
+      action: 'press-key',
+      key: 'Tab'
+    },
+    {
+      id: 'cursor-line-10-col-1-fence-close',
+      action: 'set-cursor',
+      lineNumber: 10,
+      column: 1
+    },
+    {
+      id: 'click-visible-fence-close-line-10',
+      action: 'click-line-number',
+      lineNumber: 10,
+      xRatio: 0.24,
+      yRatio: 0.5
+    },
+    {
+      id: 'cursor-line-10-col-3-fence-close-right-edge',
+      action: 'set-cursor',
+      lineNumber: 10,
+      column: 3
+    },
+    {
+      id: 'arrow-left-line-10-fence-close',
+      action: 'press-key',
+      key: 'ArrowLeft'
+    },
+    {
+      id: 'cursor-line-12-col-10-middle-para',
+      action: 'set-cursor',
+      lineNumber: 12,
+      column: 10
+    },
+    {
+      id: 'cursor-line-13-col-0-before-second-fence',
+      action: 'set-cursor',
+      lineNumber: 13,
+      column: 0
+    },
+    {
+      id: 'arrow-down-into-second-fence',
+      action: 'press-key',
+      key: 'ArrowDown'
+    },
+    {
+      id: 'cursor-line-14-col-1-fence-open-plain',
+      action: 'set-cursor',
+      lineNumber: 14,
+      column: 1
+    },
+    {
+      id: 'cursor-line-14-col-3-fence-open-plain-right-edge',
+      action: 'set-cursor',
+      lineNumber: 14,
+      column: 3
+    },
+    {
+      id: 'arrow-left-line-14-fence-open-plain',
+      action: 'press-key',
+      key: 'ArrowLeft'
+    },
+    {
+      id: 'cursor-line-15-col-5-code-plain-content',
+      action: 'set-cursor',
+      lineNumber: 15,
+      column: 5
+    },
+    {
+      id: 'cursor-line-18-col-6-outro',
+      action: 'set-cursor',
+      lineNumber: 18,
+      column: 6
+    }
+  ];
+}
+
+function readStepSnapshotPayload(step) {
+  if (step?.actionResult?.snapshot?.ready) {
+    return step.actionResult.snapshot;
+  }
+  if (step?.snapshot?.payload?.ready) {
+    return step.snapshot.payload;
+  }
+  return null;
+}
+
+function findStepResult(steps, stepId) {
+  return (Array.isArray(steps) ? steps : []).find((step) => step?.id === stepId) ?? null;
+}
+
+function readStepActiveBlockType(step) {
+  const snapshot = readStepSnapshotPayload(step);
+  return snapshot?.liveState?.activeBlockType ?? null;
+}
+
+function readStepSelection(step) {
+  const snapshot = readStepSnapshotPayload(step);
+  return snapshot?.selection ?? null;
+}
+
+function readStepHasFocus(step) {
+  const snapshot = readStepSnapshotPayload(step);
+  return snapshot?.hasFocus === true;
+}
+
+function readStepCursorVisible(step) {
+  const snapshot = readStepSnapshotPayload(step);
+  const cursorRect = snapshot?.cursorRect;
+  return Boolean(
+    cursorRect &&
+    Number.isFinite(cursorRect.height) &&
+    Number.isFinite(cursorRect.width) &&
+    cursorRect.height > 0 &&
+    cursorRect.width > 0
+  );
+}
+
+function stepHasDomLineClass(step, classToken) {
+  if (typeof classToken !== 'string' || classToken.length === 0) {
+    return false;
+  }
+  const snapshot = readStepSnapshotPayload(step);
+  const domLines = Array.isArray(snapshot?.domLines) ? snapshot.domLines : [];
+  return domLines.some((line) => typeof line?.className === 'string' && line.className.includes(classToken));
+}
+
+function stepLineTextMatches(step, lineNumber, expectedText) {
+  const snapshot = readStepSnapshotPayload(step);
+  const lines = Array.isArray(snapshot?.lines) ? snapshot.lines : [];
+  const line = lines.find((entry) => Number(entry?.number) === Number(lineNumber));
+  if (!line) {
+    return false;
+  }
+  return String(line.text ?? '') === String(expectedText ?? '');
+}
+
+function buildCodeBlockAssertions(stepResults, fixtureName) {
+  if (fixtureName !== 'code-blocks') {
+    return {};
+  }
+
+  const codeContentStep = findStepResult(stepResults, 'cursor-line-6-col-3-code-content');
+  const plainCodeContentStep = findStepResult(stepResults, 'cursor-line-15-col-5-code-plain-content');
+  const blankLineStep = findStepResult(stepResults, 'cursor-line-18-col-6-outro');
+  const fenceOpenStep = findStepResult(stepResults, 'cursor-line-5-col-1-fence-open');
+  const fenceCloseStep = findStepResult(stepResults, 'cursor-line-10-col-1-fence-close');
+  const visibleFenceCloseClickStep = findStepResult(stepResults, 'click-visible-fence-close-line-10');
+  const plainFenceOpenStep = findStepResult(stepResults, 'cursor-line-14-col-1-fence-open-plain');
+  const hiddenFenceClickOpenStep = findStepResult(stepResults, 'click-hidden-fence-open');
+  const arrowDownFirstFenceStep = findStepResult(stepResults, 'arrow-down-into-first-fence');
+  const arrowDownSecondFenceStep = findStepResult(stepResults, 'arrow-down-into-second-fence');
+  const tabCodeContentStep = findStepResult(stepResults, 'tab-line-6-code-content-start');
+
+  const cursorStepIds = [
+    'cursor-line-5-col-1-fence-open',
+    'cursor-line-5-col-5-fence-open-right-edge',
+    'arrow-left-line-5-fence-open',
+    'arrow-left-line-5-fence-open-second',
+    'cursor-line-6-col-3-code-content',
+    'tab-line-6-code-content-start',
+    'cursor-line-10-col-1-fence-close',
+    'cursor-line-10-col-3-fence-close-right-edge',
+    'arrow-left-line-10-fence-close',
+    'cursor-line-14-col-1-fence-open-plain',
+    'cursor-line-14-col-3-fence-open-plain-right-edge',
+    'arrow-left-line-14-fence-open-plain',
+    'cursor-line-15-col-5-code-plain-content'
+  ];
+
+  const cursorVisibleAcrossFenceTraversal = cursorStepIds.every((stepId) => {
+    const step = findStepResult(stepResults, stepId);
+    return readStepCursorVisible(step);
+  });
+
+  const firstFenceSelection = readStepSelection(arrowDownFirstFenceStep);
+  const secondFenceSelection = readStepSelection(arrowDownSecondFenceStep);
+  const arrowDownIntoFirstFenceAtLineEnd = Boolean(
+    firstFenceSelection &&
+    Number(firstFenceSelection.lineNumber) === 5 &&
+    Number(firstFenceSelection.head) === Number(firstFenceSelection.lineTo)
+  );
+  const arrowDownIntoSecondFenceAtLineEnd = Boolean(
+    secondFenceSelection &&
+    Number(secondFenceSelection.lineNumber) === 14 &&
+    Number(secondFenceSelection.head) === Number(secondFenceSelection.lineTo)
+  );
+  const codeLineIndentedByTab = (() => {
+    const snapshot = readStepSnapshotPayload(tabCodeContentStep);
+    const lines = Array.isArray(snapshot?.lines) ? snapshot.lines : [];
+    const line = lines.find((entry) => Number(entry?.number) === 6);
+    const text = String(line?.text ?? '');
+    return /^\s+const value = 1;$/.test(text);
+  })();
+  const hiddenFenceClickOpenSelection = readStepSelection(hiddenFenceClickOpenStep);
+  const visibleFenceCloseClickSelection = readStepSelection(visibleFenceCloseClickStep);
+  const hiddenFenceOpenClickAtLineEnd = Boolean(
+    hiddenFenceClickOpenSelection &&
+    Number(hiddenFenceClickOpenSelection.lineNumber) === 5 &&
+    Number(hiddenFenceClickOpenSelection.head) === Number(hiddenFenceClickOpenSelection.lineTo)
+  );
+  const visibleFenceCloseClickAtLineEnd = Boolean(
+    visibleFenceCloseClickSelection &&
+    Number(visibleFenceCloseClickSelection.lineNumber) === 10 &&
+    Number(visibleFenceCloseClickSelection.head) === Number(visibleFenceCloseClickSelection.lineTo)
+  );
+
+  return {
+    hiddenFenceOpenClickAtLineEnd,
+    visibleFenceCloseClickAtLineEnd,
+    codeActivationOnFenceOpen: readStepActiveBlockType(fenceOpenStep) === 'code',
+    codeActivationOnFenceClose: readStepActiveBlockType(fenceCloseStep) === 'code',
+    codeActivationOnContent: readStepActiveBlockType(codeContentStep) === 'code',
+    codeActivationOnPlainFence: readStepActiveBlockType(plainFenceOpenStep) === 'code',
+    codeActivationOnPlainContent: readStepActiveBlockType(plainCodeContentStep) === 'code',
+    blankLineAfterFenceHasNoActiveBlock: readStepActiveBlockType(blankLineStep) == null,
+    blankLineAfterFenceNotCode: readStepActiveBlockType(blankLineStep) !== 'code',
+    cursorVisibleAcrossFenceTraversal,
+    arrowDownIntoFirstFenceAtLineEnd,
+    arrowDownIntoSecondFenceAtLineEnd,
+    tabRetainsEditorFocusInCodeBlock: readStepHasFocus(tabCodeContentStep),
+    tabIndentsCodeContentInsteadOfMovingUiFocus: codeLineIndentedByTab,
+    activeCodeSourceLineStyleApplied: (
+      stepHasDomLineClass(codeContentStep, 'mm-live-v4-source-code-line') &&
+      stepHasDomLineClass(plainCodeContentStep, 'mm-live-v4-source-code-line')
+    ),
+    fenceSourceTextPreserved: (
+      stepLineTextMatches(fenceOpenStep, 5, '```js') &&
+      stepLineTextMatches(fenceCloseStep, 10, '```') &&
+      stepLineTextMatches(plainFenceOpenStep, 14, '```')
+    )
+  };
+}
+
 function buildStepDefinitions(fixtureName) {
   if (fixtureName === 'lists-and-tasks') {
     return buildListFixtureSteps();
@@ -1049,6 +1501,9 @@ function buildStepDefinitions(fixtureName) {
   }
   if (fixtureName === 'single-nested-bullet') {
     return buildSingleNestedBulletFixtureSteps();
+  }
+  if (fixtureName === 'code-blocks') {
+    return buildCodeBlocksFixtureSteps();
   }
   return buildDefaultFixtureSteps();
 }
@@ -1121,12 +1576,38 @@ async function runProbe({
       if (coordinates?.ok) {
         await dispatchMouseClick(client, sessionId, coordinates.x, coordinates.y);
       }
+    } else if (step.action === 'click-hidden-code-fence') {
+      const coordinates = await evaluate(
+        client,
+        sessionId,
+        buildHiddenCodeFenceCoordinatesExpression(step.fenceIndex, step.xRatio ?? 0.25, step.yRatio ?? 0.5)
+      );
+      actionResult = coordinates;
+      if (coordinates?.ok) {
+        await dispatchMouseClick(client, sessionId, coordinates.x, coordinates.y);
+      }
+    } else if (step.action === 'click-line-number') {
+      const coordinates = await evaluate(
+        client,
+        sessionId,
+        buildLineNumberCoordinatesExpression(step.lineNumber, step.xRatio ?? 0.25, step.yRatio ?? 0.5)
+      );
+      actionResult = coordinates;
+      if (coordinates?.ok) {
+        await dispatchMouseClick(client, sessionId, coordinates.x, coordinates.y);
+      }
     } else if (step.action === 'move-cursor-horizontal') {
       actionResult = await evaluate(
         client,
         sessionId,
         buildMoveCursorHorizontalExpression(step.direction, step.repeat ?? 1)
       );
+    } else if (step.action === 'press-key') {
+      await dispatchKeyPress(client, sessionId, step.key);
+      actionResult = {
+        ok: true,
+        key: step.key
+      };
     }
 
     await sleep(STEP_WAIT_MS);
@@ -1250,7 +1731,8 @@ async function main() {
       assertions: {
         pointerActivationObserved: eventSummary.pointer.activate > 0,
         noPointerActivateMiss: eventSummary.pointer.activateMiss === 0,
-        fragmentMappingObserved: eventSummary.pointer.fragment > 0
+        fragmentMappingObserved: eventSummary.pointer.fragment > 0,
+        ...buildCodeBlockAssertions(stepResults, options.fixture)
       }
     };
 

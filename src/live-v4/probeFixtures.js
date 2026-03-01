@@ -46,6 +46,26 @@ Paragraph with **bold**, *emphasis*, ~~strike~~, \`inline code\`, [link](https:/
   - Child two
 - Sibling top
 `,
+  'code-blocks': `# Code Blocks
+
+Intro paragraph before fences.
+
+\`\`\`js
+const value = 1;
+function add(a, b) {
+  return a + b;
+}
+\`\`\`
+
+Paragraph between blocks.
+
+\`\`\`
+no language fence line
+second line
+\`\`\`
+
+End paragraph after fences.
+`,
   'single-bullet': `# Single Bullet
 
 - Text

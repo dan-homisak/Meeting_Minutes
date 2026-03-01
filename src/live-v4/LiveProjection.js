@@ -43,27 +43,7 @@ function findBlockByPosition(blocks, position) {
       return block;
     }
   }
-
-  let nearest = null;
-  let nearestDistance = Number.POSITIVE_INFINITY;
-
-  for (const block of blocks) {
-    if (!block || !Number.isFinite(block.from) || !Number.isFinite(block.to)) {
-      continue;
-    }
-
-    const distance = Math.min(
-      Math.abs(pos - block.from),
-      Math.abs(pos - Math.max(block.from, block.to - 1))
-    );
-
-    if (distance < nearestDistance) {
-      nearest = block;
-      nearestDistance = distance;
-    }
-  }
-
-  return nearest;
+  return null;
 }
 
 function virtualizeBlocksAroundViewport({
@@ -310,6 +290,21 @@ export function buildLiveProjection({
 
   for (const block of candidateBlocks) {
     if (!block) {
+      continue;
+    }
+
+    if (block.type === 'code') {
+      sourceTransforms.push({
+        blockId: block.id,
+        type: block.type,
+        sourceFrom: block.from,
+        sourceTo: block.to,
+        attrs: block.attrs ?? {},
+        depth: block.depth,
+        isActive: block.id === activeBlockId
+      });
+
+      interactionEntries.push(...collectMarkerEntriesForBlock(state.doc, block));
       continue;
     }
 

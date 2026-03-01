@@ -1,6 +1,6 @@
-import { EditorState } from '@codemirror/state';
+import { EditorSelection, EditorState } from '@codemirror/state';
 import { autocompletion, completionKeymap } from '@codemirror/autocomplete';
-import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
+import { defaultKeymap, history, historyKeymap, indentLess, indentMore, insertTab } from '@codemirror/commands';
 import { markdown, insertNewlineContinueMarkup } from '@codemirror/lang-markdown';
 import {
   EditorView,
@@ -12,6 +12,133 @@ import {
 
 export const DEFAULT_EDITOR_DOC =
   '# Welcome\n\nChoose a folder and start editing markdown files.\n\nType `/` for quick markdown snippets.\n';
+
+function insertSoftTabFallback(view, tabText = '  ') {
+  if (!view?.state) {
+    return false;
+  }
+
+  const transaction = view.state.changeByRange((range) => {
+    const nextPosition = range.from + tabText.length;
+    return {
+      changes: {
+        from: range.from,
+        to: range.to,
+        insert: tabText
+      },
+      range: EditorSelection.cursor(nextPosition, -1)
+    };
+  });
+
+  view.dispatch(
+    view.state.update(transaction, {
+      scrollIntoView: true,
+      userEvent: 'input'
+    })
+  );
+  return true;
+}
+
+function snapshotSelectionState(view) {
+  const selection = view?.state?.selection?.main;
+  return {
+    length: view?.state?.doc?.length ?? null,
+    head: selection?.head ?? null,
+    anchor: selection?.anchor ?? null
+  };
+}
+
+function didSelectionStateChange(before, after) {
+  if (!before || !after) {
+    return false;
+  }
+  return (
+    before.length !== after.length ||
+    before.head !== after.head ||
+    before.anchor !== after.anchor
+  );
+}
+
+export function runTabIndentCommand(view, adjustLiveListIndent) {
+  const adjustedListIndent = adjustLiveListIndent?.(view, 1, 'Tab') ?? false;
+  if (adjustedListIndent) {
+    return true;
+  }
+
+  const beforeInsert = snapshotSelectionState(view);
+  const insertedTab = insertTab(view);
+  const afterInsert = snapshotSelectionState(view);
+  if (insertedTab && didSelectionStateChange(beforeInsert, afterInsert)) {
+    return true;
+  }
+
+  const beforeIndent = snapshotSelectionState(view);
+  const indented = indentMore(view);
+  const afterIndent = snapshotSelectionState(view);
+  if (indented && didSelectionStateChange(beforeIndent, afterIndent)) {
+    return true;
+  }
+  return insertSoftTabFallback(view);
+}
+
+export function runShiftTabIndentCommand(view, adjustLiveListIndent) {
+  const adjustedListIndent = adjustLiveListIndent?.(view, -1, 'Shift-Tab') ?? false;
+  if (adjustedListIndent) {
+    return true;
+  }
+  if (indentLess(view)) {
+    return true;
+  }
+  // Returning true keeps tab focus from escaping to browser/UI even when no unindent applies.
+  return true;
+}
+
+export function buildCodeFenceAutoCloseSpec(state, {
+  from,
+  to,
+  text
+} = {}) {
+  if (!state?.doc || typeof text !== 'string' || text.length === 0) {
+    return null;
+  }
+  if (!Number.isFinite(from) || !Number.isFinite(to) || from !== to) {
+    return null;
+  }
+  if (text !== '`' && text !== '```') {
+    return null;
+  }
+
+  const line = state.doc.lineAt(from);
+  const lineText = state.doc.sliceString(line.from, line.to);
+  const cursorColumn = from - line.from;
+  const before = lineText.slice(0, cursorColumn);
+  const after = lineText.slice(cursorColumn);
+  if (after.trim().length > 0) {
+    return null;
+  }
+
+  const prospectiveLine = `${before}${text}`;
+  const indentMatch = prospectiveLine.match(/^(\s*)/);
+  const indentation = indentMatch?.[1] ?? '';
+  const markerCandidate = prospectiveLine.slice(indentation.length);
+  if (markerCandidate !== '```') {
+    return null;
+  }
+
+  const hasNextLine = line.number < state.doc.lines;
+  const nextLineStart = hasNextLine ? line.to + 1 : line.to;
+  const closingFenceInsert = hasNextLine
+    ? `${indentation}\`\`\`\n`
+    : `\n${indentation}\`\`\``;
+
+  return {
+    changes: [
+      { from, to, insert: text },
+      { from: nextLineStart, to: nextLineStart, insert: closingFenceInsert }
+    ],
+    selection: { anchor: from + text.length, head: from + text.length }
+  };
+}
 
 export function createEditor({
   parent,
@@ -38,6 +165,23 @@ export function createEditor({
   const createUpdateListenerExtension =
     factories.createUpdateListenerExtension ??
     ((listener) => EditorView.updateListener.of(listener));
+  const createInputHandlerExtension =
+    factories.createInputHandlerExtension ??
+    ((handler) => EditorView.inputHandler.of(handler));
+
+  function handleCodeFenceAutoClose(view, from, to, text) {
+    const autoCloseSpec = buildCodeFenceAutoCloseSpec(view?.state, { from, to, text });
+    if (!autoCloseSpec) {
+      return false;
+    }
+
+    view.dispatch({
+      ...autoCloseSpec,
+      scrollIntoView: true,
+      userEvent: 'input.type'
+    });
+    return true;
+  }
 
   const keyBindings = [
     {
@@ -58,14 +202,11 @@ export function createEditor({
     },
     {
       key: 'Tab',
-      run: (view) => (
-        adjustLiveListIndent?.(view, 1, 'Tab') ??
-        false
-      ) || indentWithTab(view)
+      run: (view) => runTabIndentCommand(view, adjustLiveListIndent)
     },
     {
       key: 'Shift-Tab',
-      run: (view) => adjustLiveListIndent?.(view, -1, 'Shift-Tab') ?? false
+      run: (view) => runShiftTabIndentCommand(view, adjustLiveListIndent)
     },
     {
       key: 'Backspace',
@@ -77,8 +218,7 @@ export function createEditor({
     },
     ...defaultKeymap,
     ...historyKeymap,
-    ...completionKeymap,
-    indentWithTab
+    ...completionKeymap
   ];
 
   const state = createEditorState({
@@ -100,6 +240,9 @@ export function createEditor({
         activateOnTyping: true,
         override: [slashCommandCompletion]
       }),
+      createInputHandlerExtension((view, from, to, text) => (
+        handleCodeFenceAutoClose(view, from, to, text)
+      )),
       createUpdateListenerExtension((update) => {
         handleEditorUpdate?.(update);
       })

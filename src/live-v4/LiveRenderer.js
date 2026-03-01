@@ -177,6 +177,132 @@ class InlineQuotePrefixWidget extends WidgetType {
   }
 }
 
+function extractCopyTextForCodeBlock(state, sourceFrom, sourceTo) {
+  if (!state?.doc || !Number.isFinite(sourceFrom) || !Number.isFinite(sourceTo) || sourceTo <= sourceFrom) {
+    return '';
+  }
+
+  const source = state.doc.sliceString(sourceFrom, sourceTo);
+  const lines = source.split('\n');
+  if (lines.length < 2) {
+    return source;
+  }
+
+  const firstTrimmed = String(lines[0] ?? '').trimStart();
+  const lastTrimmed = String(lines[lines.length - 1] ?? '').trimStart();
+  const firstFenceMatch = firstTrimmed.match(/^([`~]{3,})/);
+  const lastFenceMatch = lastTrimmed.match(/^([`~]{3,})\s*$/);
+
+  if (!firstFenceMatch || !lastFenceMatch) {
+    return source;
+  }
+
+  const openFenceChar = firstFenceMatch[1][0];
+  const closeFenceChar = lastFenceMatch[1][0];
+  if (openFenceChar !== closeFenceChar) {
+    return source;
+  }
+
+  return lines.slice(1, -1).join('\n');
+}
+
+class CodeCopyButtonWidget extends WidgetType {
+  constructor({ sourceFrom, sourceTo, copyText = '' } = {}) {
+    super();
+    this.sourceFrom = sourceFrom;
+    this.sourceTo = sourceTo;
+    this.copyText = typeof copyText === 'string' ? copyText : '';
+  }
+
+  eq(other) {
+    return (
+      other instanceof CodeCopyButtonWidget &&
+      this.sourceFrom === other.sourceFrom &&
+      this.sourceTo === other.sourceTo &&
+      this.copyText === other.copyText
+    );
+  }
+
+  toDOM() {
+    const focusEditor = (target) => {
+      const hostEditor = target?.closest?.('.cm-editor');
+      const focusTarget = hostEditor?.querySelector?.('.cm-content') ?? hostEditor ?? null;
+      focusTarget?.focus?.();
+    };
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'mm-live-v4-code-copy-button';
+    button.textContent = 'Copy';
+    button.setAttribute('aria-label', 'Copy code block');
+    button.setAttribute('data-src-from', String(this.sourceFrom));
+    button.setAttribute('data-src-to', String(this.sourceTo));
+    button.tabIndex = -1;
+    button.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      focusEditor(event.currentTarget);
+    });
+    button.addEventListener('focus', (event) => {
+      event.preventDefault();
+      focusEditor(event.currentTarget);
+    });
+    button.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      focusEditor(event.currentTarget);
+    });
+
+    const copyText = this.copyText;
+    let resetTimer = null;
+
+    const setLabel = (label) => {
+      button.textContent = label;
+      if (resetTimer) {
+        clearTimeout(resetTimer);
+      }
+      if (label !== 'Copy') {
+        resetTimer = window.setTimeout(() => {
+          button.textContent = 'Copy';
+          resetTimer = null;
+        }, 1200);
+      }
+    };
+
+    button.addEventListener('click', async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      try {
+        if (navigator?.clipboard?.writeText) {
+          await navigator.clipboard.writeText(copyText);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = copyText;
+          temp.setAttribute('readonly', 'readonly');
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        setLabel('Copied');
+      } catch {
+        setLabel('Failed');
+      }
+    });
+
+    return button;
+  }
+
+  ignoreEvent() {
+    return true;
+  }
+}
+
 function normalizeListMarker(marker) {
   if (typeof marker !== 'string' || marker.length === 0) {
     return '•';
@@ -227,8 +353,13 @@ function resolveLineTransformMeta(state, transform) {
     type: transform.type,
     sourceFrom: range.from,
     sourceTo: range.to,
-    depth
+    depth,
+    isActive: Boolean(transform?.isActive)
   };
+
+  if (transform.type === 'code') {
+    return base;
+  }
 
   if (transform.type === 'heading') {
     const match = lineText.match(/^(\s{0,3}#{1,6}\s+)/);
@@ -326,6 +457,69 @@ function resolveLineTransformMeta(state, transform) {
   return null;
 }
 
+function buildCodeSourceLineDecorations(state, meta) {
+  if (!state?.doc || !meta || !Number.isFinite(meta.sourceFrom) || !Number.isFinite(meta.sourceTo) || meta.sourceTo <= meta.sourceFrom) {
+    return [];
+  }
+
+  const doc = state.doc;
+  const startLine = doc.lineAt(meta.sourceFrom);
+  const endLine = doc.lineAt(Math.max(meta.sourceFrom, meta.sourceTo - 1));
+  const startNumber = startLine.number;
+  const endNumber = endLine.number;
+  const isActive = Boolean(meta.isActive);
+  const hasFenceLines = endNumber > startNumber;
+
+  const decorations = [];
+  const copyText = extractCopyTextForCodeBlock(state, meta.sourceFrom, meta.sourceTo);
+  decorations.push(
+    Decoration.widget({
+      widget: new CodeCopyButtonWidget({
+        sourceFrom: meta.sourceFrom,
+        sourceTo: meta.sourceTo,
+        copyText
+      }),
+      side: 1
+    }).range(startLine.from)
+  );
+
+  for (let lineNumber = startNumber; lineNumber <= endNumber; lineNumber += 1) {
+    const line = doc.line(lineNumber);
+    const isFenceLine = !isActive && hasFenceLines && (lineNumber === startNumber || lineNumber === endNumber);
+    const classes = ['mm-live-v4-source-code-line'];
+    if (lineNumber === startNumber) {
+      classes.push('mm-live-v4-source-code-line-start');
+    }
+    if (lineNumber === endNumber) {
+      classes.push('mm-live-v4-source-code-line-end');
+    }
+    if (isFenceLine) {
+      classes.push('mm-live-v4-source-code-fence-hidden');
+    }
+    if (isFenceLine) {
+      if (line.to > line.from) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(line.from, line.to)
+        );
+      }
+    }
+    decorations.push(
+      Decoration.line({
+        attributes: {
+          class: classes.join(' '),
+          'data-src-from': String(line.from),
+          'data-src-to': String(line.to),
+          'data-mm-code-fence-hidden': isFenceLine ? 'true' : 'false'
+        }
+      }).range(line.from)
+    );
+  }
+
+  return decorations;
+}
+
 function buildSourceLineDecorations(state, sourceTransforms) {
   if (!Array.isArray(sourceTransforms) || sourceTransforms.length === 0) {
     return [];
@@ -340,6 +534,11 @@ function buildSourceLineDecorations(state, sourceTransforms) {
   for (const transform of sortedTransforms) {
     const meta = resolveLineTransformMeta(state, transform);
     if (!meta) {
+      continue;
+    }
+
+    if (meta.type === 'code') {
+      decorations.push(...buildCodeSourceLineDecorations(state, meta));
       continue;
     }
 

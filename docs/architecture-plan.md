@@ -29,6 +29,12 @@
 - Keep exactly one editable active block.
 - Render inactive multiline regions as block widgets.
 - For single-line syntax-sensitive blocks (`heading`, `list`, `task`, `blockquote`), keep the line in source and apply syntax transforms via marks/widgets.
+- For `code` blocks, use source-transform lines (not multiline replacement widgets) with dedicated code-line styling to preserve monospace typography and continuous gutter numbering.
+- Code fences stay hidden when inactive and are revealed when the code block becomes active.
+- Typing the third backtick on an empty fence line triggers automatic closing-fence insertion on the following line while keeping the cursor at the end of the opening fence.
+- Code blocks expose a copy control that copies only content between fence lines.
+- Vertical cursor entry into opening fence lines snaps to end-of-line so caret lands after language text (or after ``` for plain fences).
+- `Tab` / `Shift-Tab` are captured by editor keymaps to apply editing indentation behavior, not browser/UI focus navigation.
 - Hide syntax markers when cursor is outside marker ranges; reveal marker source only when cursor enters marker syntax.
 - Use marker-width-aware inline prefix widgets to keep horizontal geometry stable across hidden/visible marker transitions.
 
@@ -46,7 +52,7 @@ This is the active behavior contract for list-like lines in live view:
 
 ## Non-Negotiable Runtime Contracts
 
-1. Exactly one active editable block.
+1. Exactly one active editable block for block-backed lines (`activeBlockId` can be `null` on inter-block blank lines).
 2. Deterministic pointer mapping from rendered DOM back to source positions.
 3. Cursor movement does not jump unexpectedly across rendered/source boundaries.
 4. Task toggles mutate markdown source (`[ ]` <-> `[x]`).
@@ -60,5 +66,7 @@ This is the active behavior contract for list-like lines in live view:
 4. For cursor/list-marker changes, also run:
 `npm run probe:live-v4 -- --fixture single-bullet`
 `npm run probe:live-v4 -- --fixture single-nested-bullet`
+5. For fenced-code behavior/styling changes, also run:
+`npm run probe:live-v4 -- --fixture code-blocks`
 
 Probe output is the visual/interaction source of truth for regression triage.

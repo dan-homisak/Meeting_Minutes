@@ -6,6 +6,7 @@ Use the probe runner first, not manual debugging:
 
 ```bash
 npm run probe:live-v4 -- --fixture lists-and-tasks
+npm run probe:live-v4 -- --fixture code-blocks
 ```
 
 Artifacts:
@@ -22,6 +23,11 @@ Artifacts:
 4. Gutter stability: `typography.gutters.visibleLineNumberCount` and `gutterLines` should remain stable through cursor steps.
 5. Task toggles: `click-task-source-*` steps should mutate markdown source deterministically.
 6. Cursor visibility: marker traversal steps should keep `cursorRect` non-null for list/task/ordered syntax columns.
+7. Code blocks:
+- active code steps should apply `.mm-live-v4-source-code-line` classes in `domLines`.
+- fence traversal steps (`press-key` ArrowLeft) should keep cursor visible and move one character at a time.
+- blank-line-after-fence step should report `activeBlockType: null`.
+- gutter lines should remain continuous through code blocks (no numbering jump while code is visually rendered).
 
 ## Debug Console Controls
 
@@ -41,6 +47,7 @@ npm run probe:live-v4 -- --fixture lists-and-tasks
 npm run probe:live-v4 -- --fixture mixed-inline
 npm run probe:live-v4 -- --fixture single-bullet
 npm run probe:live-v4 -- --fixture single-nested-bullet
+npm run probe:live-v4 -- --fixture code-blocks
 ```
 
 If parity regresses, use the latest probe `report.json` + screenshots as the bug report payload.
