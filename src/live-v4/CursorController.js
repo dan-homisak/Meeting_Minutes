@@ -54,6 +54,23 @@ function readMarkerGapRange(lineText, lineFrom) {
   return null;
 }
 
+function constrainPositionToVisibleListBoundary(position, markerGapRange) {
+  if (!Number.isFinite(position) || !markerGapRange) {
+    return position;
+  }
+
+  const target = Math.trunc(position);
+  if (target < markerGapRange.markerCoreFrom) {
+    return markerGapRange.markerCoreFrom;
+  }
+
+  if (target > markerGapRange.markerCoreTo && target < markerGapRange.contentFrom) {
+    return markerGapRange.contentFrom;
+  }
+
+  return target;
+}
+
 export function createCursorController({
   liveDebug,
   readLiveState = null,
@@ -131,6 +148,8 @@ export function createCursorController({
     } else {
       targetPosition = Math.min(targetLine.to, targetLine.from + currentColumn);
     }
+
+    targetPosition = constrainPositionToVisibleListBoundary(targetPosition, targetMarkerGapRange);
 
     const targetFenceBoundary = resolveCodeFenceBoundaryAtLine(view, targetLine);
     if (targetFenceBoundary) {

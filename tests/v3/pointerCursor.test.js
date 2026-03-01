@@ -626,6 +626,39 @@ test('cursor controller does not enter hidden list guide columns near marker edg
   assert.equal(activeState.selection.main.head, line.from + 4);
 });
 
+test('cursor controller entering nested list from empty line lands on visible left boundary', () => {
+  let activeState = EditorState.create({
+    doc: '\n  - Nested item\n',
+    selection: { anchor: 0 }
+  });
+
+  const cursor = createCursorController({
+    liveDebug: { trace() {} }
+  });
+  const cursorView = {
+    get state() {
+      return activeState;
+    },
+    dispatch(transaction) {
+      activeState = activeState.update(transaction).state;
+    },
+    focus() {}
+  };
+
+  const firstLine = activeState.doc.line(1);
+  activeState = activeState.update({
+    selection: {
+      anchor: firstLine.from,
+      head: firstLine.from
+    }
+  }).state;
+
+  assert.equal(cursor.moveCursorVertically(cursorView, 1, 'ArrowDown'), true);
+
+  const nestedLine = activeState.doc.line(2);
+  assert.equal(activeState.selection.main.head, nestedLine.from + 2);
+});
+
 test('pointer controller passes through non-rendered targets to native editor behavior', () => {
   const ctx = createPointerView('# One\nTwo\nThree', []);
   const pointer = createPointerController({
