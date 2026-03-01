@@ -19,7 +19,18 @@ function createModel(text, blocks, inlines = []) {
   };
 }
 
-test('buildLiveProjection keeps one active editable block and renders others as full block widgets', () => {
+function collectSyntaxHiddenRanges(projection, from, to) {
+  const ranges = [];
+  projection.decorations.between(from, to, (rangeFrom, rangeTo, value) => {
+    const className = value?.spec?.class ?? value?.spec?.attributes?.class ?? '';
+    if (String(className).includes('mm-live-v4-syntax-hidden')) {
+      ranges.push([Number(rangeFrom), Number(rangeTo)]);
+    }
+  });
+  return ranges;
+}
+
+test('buildLiveProjection uses source transforms for single-line paragraph blocks', () => {
   const text = '# A\n\nB\n\nC\n';
   const state = EditorState.create({
     doc: text,
@@ -40,8 +51,11 @@ test('buildLiveProjection keeps one active editable block and renders others as 
   });
 
   assert.equal(projection.activeBlockId, 'b1');
-  assert.equal(projection.renderedBlocks.length, 2);
-  assert.equal(projection.renderedBlocks.every((block) => block.sourceTo > block.sourceFrom), true);
+  assert.equal(projection.renderedBlocks.length, 0);
+  assert.deepEqual(
+    projection.sourceTransforms.map((entry) => entry.type),
+    ['heading', 'paragraph', 'paragraph']
+  );
 });
 
 test('createLiveRenderer enforces render budget for large docs', () => {
@@ -138,4 +152,76 @@ test('single-line heading/list/task blocks use source transforms for syntax-leve
     ['heading', 'task', 'list']
   );
   assert.equal(projection.renderedBlocks.length, 0);
+});
+
+test('paragraph source transforms include inline spans for syntax rendering', () => {
+  const text = 'Line with **bold** and [link](https://example.com)\n';
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: 6 }
+  });
+  const model = createModel(
+    text,
+    [
+      { id: 'p1', type: 'paragraph', from: 0, to: text.length - 1, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+    ],
+    [
+      { from: 10, to: 18, type: 'strong' },
+      { from: 23, to: 50, type: 'link' }
+    ]
+  );
+
+  const projection = buildLiveProjection({
+    state,
+    model,
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  assert.equal(projection.renderedBlocks.length, 0);
+  assert.equal(projection.sourceTransforms.length, 1);
+  assert.deepEqual(
+    projection.sourceTransforms[0].inlineSpans.map((span) => span.type),
+    ['strong', 'link']
+  );
+});
+
+test('inline syntax hides in content mode and reveals when cursor is inside syntax', () => {
+  const text = 'Paragraph with **bold** text\n';
+  const line = text.trimEnd();
+  const model = createModel(
+    text,
+    [
+      { id: 'p1', type: 'paragraph', from: 0, to: line.length, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+    ],
+    [
+      { from: 15, to: 23, type: 'strong' }
+    ]
+  );
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const contentState = EditorState.create({
+    doc: text,
+    selection: { anchor: 18 }
+  });
+  const contentProjection = renderer.buildRenderProjection(contentState, model);
+  const contentHidden = collectSyntaxHiddenRanges(contentProjection, 0, line.length);
+  assert.equal(contentHidden.some(([from, to]) => from === 15 && to === 17), true);
+  assert.equal(contentHidden.some(([from, to]) => from === 21 && to === 23), true);
+
+  const syntaxState = EditorState.create({
+    doc: text,
+    selection: { anchor: 16 }
+  });
+  const syntaxProjection = renderer.buildRenderProjection(syntaxState, model);
+  const syntaxHidden = collectSyntaxHiddenRanges(syntaxProjection, 0, line.length);
+  assert.equal(syntaxHidden.some(([from, to]) => from === 15 && to === 17), false);
+  assert.equal(syntaxHidden.some(([from, to]) => from === 21 && to === 23), false);
 });

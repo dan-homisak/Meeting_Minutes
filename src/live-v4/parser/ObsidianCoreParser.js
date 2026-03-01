@@ -419,10 +419,56 @@ const INLINE_PATTERNS = [
   { type: 'link', regex: /\[[^\]\n]+\]\([^\)\n]+\)/g },
   { type: 'wikilink', regex: /\[\[[^[\]\n|]+(?:\|[^[\]\n]+)?\]\]/g },
   { type: 'strong', regex: /\*\*[^*\n]+\*\*|__[^_\n]+__/g },
-  { type: 'emphasis', regex: /\*[^*\n]+\*|_[^_\n]+_/g },
+  { type: 'emphasis', regex: /(?<!\*)\*[^*\n]+\*(?!\*)|(?<!_)_[^_\n]+_(?!_)/g },
   { type: 'strike', regex: /~~[^~\n]+~~/g },
   { type: 'code', regex: /`[^`\n]+`/g }
 ];
+
+const INLINE_TYPE_PRIORITY = Object.freeze({
+  code: 400,
+  link: 320,
+  wikilink: 320,
+  strong: 240,
+  strike: 220,
+  emphasis: 180
+});
+
+function inlinePriority(type) {
+  return INLINE_TYPE_PRIORITY[type] ?? 100;
+}
+
+function spansOverlap(left, right) {
+  if (!left || !right || !Number.isFinite(left.from) || !Number.isFinite(left.to) || !Number.isFinite(right.from) || !Number.isFinite(right.to)) {
+    return false;
+  }
+  return left.from < right.to && right.from < left.to;
+}
+
+function selectNonOverlappingInlineSpans(spans) {
+  const candidates = (Array.isArray(spans) ? spans : [])
+    .filter((span) => (
+      span &&
+      Number.isFinite(span.from) &&
+      Number.isFinite(span.to) &&
+      span.to > span.from
+    ))
+    .sort((left, right) => (
+      inlinePriority(right.type) - inlinePriority(left.type) ||
+      (right.to - right.from) - (left.to - left.from) ||
+      left.from - right.from ||
+      left.to - right.to
+    ));
+
+  const selected = [];
+  for (const candidate of candidates) {
+    if (selected.some((existing) => spansOverlap(existing, candidate))) {
+      continue;
+    }
+    selected.push(candidate);
+  }
+
+  return selected.sort((left, right) => left.from - right.from || left.to - right.to);
+}
 
 function collectInlineSpans(text, blocks) {
   const spans = [];
@@ -454,8 +500,7 @@ function collectInlineSpans(text, blocks) {
     }
   }
 
-  spans.sort((left, right) => left.from - right.from || left.to - right.to);
-  return spans;
+  return selectNonOverlappingInlineSpans(spans);
 }
 
 function splitRangeByNonEmptyLines(source, from, to) {

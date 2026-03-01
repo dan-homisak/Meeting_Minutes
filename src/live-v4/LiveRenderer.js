@@ -331,6 +331,236 @@ function buildTaskSizerText() {
   return '[] ';
 }
 
+function normalizeInlineSpan(span) {
+  if (!span || !Number.isFinite(span.from) || !Number.isFinite(span.to)) {
+    return null;
+  }
+  const from = Math.trunc(span.from);
+  const to = Math.trunc(span.to);
+  if (to <= from) {
+    return null;
+  }
+  return {
+    from,
+    to,
+    type: typeof span.type === 'string' ? span.type : 'inline'
+  };
+}
+
+function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
+  if (!doc || !span || !Number.isFinite(contentFrom) || !Number.isFinite(contentTo)) {
+    return null;
+  }
+
+  const rangeFrom = Math.trunc(contentFrom);
+  const rangeTo = Math.trunc(contentTo);
+  if (rangeTo <= rangeFrom) {
+    return null;
+  }
+
+  const spanFrom = Math.trunc(span.from);
+  const spanTo = Math.trunc(span.to);
+  if (spanTo <= spanFrom || spanFrom < rangeFrom || spanTo > rangeTo) {
+    return null;
+  }
+
+  const text = doc.sliceString(spanFrom, spanTo);
+  if (typeof text !== 'string' || text.length === 0) {
+    return null;
+  }
+
+  if (span.type === 'strong') {
+    const isAsteriskStrong = text.startsWith('**') && text.endsWith('**') && text.length > 4;
+    const isUnderscoreStrong = text.startsWith('__') && text.endsWith('__') && text.length > 4;
+    if (!isAsteriskStrong && !isUnderscoreStrong) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-strong',
+      contentFrom: spanFrom + 2,
+      contentTo: spanTo - 2,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 2 },
+        { from: spanTo - 2, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'emphasis') {
+    const isAsteriskEmphasis = (
+      text.startsWith('*') &&
+      text.endsWith('*') &&
+      !text.startsWith('**') &&
+      !text.endsWith('**') &&
+      text.length > 2
+    );
+    const isUnderscoreEmphasis = (
+      text.startsWith('_') &&
+      text.endsWith('_') &&
+      !text.startsWith('__') &&
+      !text.endsWith('__') &&
+      text.length > 2
+    );
+    if (!isAsteriskEmphasis && !isUnderscoreEmphasis) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-emphasis',
+      contentFrom: spanFrom + 1,
+      contentTo: spanTo - 1,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 1 },
+        { from: spanTo - 1, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'strike') {
+    if (!(text.startsWith('~~') && text.endsWith('~~') && text.length > 4)) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-strike',
+      contentFrom: spanFrom + 2,
+      contentTo: spanTo - 2,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 2 },
+        { from: spanTo - 2, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'code') {
+    if (!(text.startsWith('`') && text.endsWith('`') && text.length > 2)) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-code',
+      contentFrom: spanFrom + 1,
+      contentTo: spanTo - 1,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 1 },
+        { from: spanTo - 1, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'link') {
+    const match = text.match(/^\[([^\]\n]+)\]\(([^)\n]+)\)$/);
+    if (!match || typeof match[1] !== 'string') {
+      return null;
+    }
+    const labelFrom = spanFrom + 1;
+    const labelTo = labelFrom + match[1].length;
+    return {
+      className: 'mm-live-v4-inline-link',
+      contentFrom: labelFrom,
+      contentTo: labelTo,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 1 },
+        { from: labelTo, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'wikilink') {
+    const match = text.match(/^\[\[([^[\]\n|]+)(?:\|([^[\]\n]+))?\]\]$/);
+    if (!match || typeof match[1] !== 'string') {
+      return null;
+    }
+
+    const targetText = match[1];
+    const aliasText = typeof match[2] === 'string' ? match[2] : '';
+    const innerStart = spanFrom + 2;
+
+    if (aliasText.length > 0) {
+      const aliasFrom = innerStart + targetText.length + 1;
+      const aliasTo = aliasFrom + aliasText.length;
+      return {
+        className: 'mm-live-v4-inline-link mm-live-v4-inline-wikilink',
+        contentFrom: aliasFrom,
+        contentTo: aliasTo,
+        syntaxRanges: [
+          { from: spanFrom, to: innerStart },
+          { from: innerStart, to: aliasFrom },
+          { from: spanTo - 2, to: spanTo }
+        ]
+      };
+    }
+
+    return {
+      className: 'mm-live-v4-inline-link mm-live-v4-inline-wikilink',
+      contentFrom: innerStart,
+      contentTo: spanTo - 2,
+      syntaxRanges: [
+        { from: spanFrom, to: innerStart },
+        { from: spanTo - 2, to: spanTo }
+      ]
+    };
+  }
+
+  return null;
+}
+
+function buildInlineSpanDecorations(state, meta, selectionHead) {
+  if (!state?.doc || !meta || !Array.isArray(meta.inlineSpans) || meta.inlineSpans.length === 0) {
+    return [];
+  }
+
+  const contentFrom = Number.isFinite(meta.contentFrom) ? Math.trunc(meta.contentFrom) : Math.trunc(meta.sourceFrom);
+  const contentTo = Math.trunc(meta.sourceTo);
+  if (!Number.isFinite(contentFrom) || !Number.isFinite(contentTo) || contentTo <= contentFrom) {
+    return [];
+  }
+
+  const spans = meta.inlineSpans
+    .map((span) => normalizeInlineSpan(span))
+    .filter(Boolean)
+    .sort((left, right) => left.from - right.from || right.to - left.to);
+
+  const decorations = [];
+  for (const span of spans) {
+    const styleMeta = resolveInlineStyleMeta(state.doc, span, contentFrom, contentTo);
+    if (!styleMeta) {
+      continue;
+    }
+
+    const syntaxRanges = Array.isArray(styleMeta.syntaxRanges)
+      ? styleMeta.syntaxRanges.filter((range) => (
+        range &&
+        Number.isFinite(range.from) &&
+        Number.isFinite(range.to) &&
+        range.to > range.from
+      ))
+      : [];
+
+    const selectionInsideSyntax = syntaxRanges.some((range) => (
+      selectionHead >= Math.trunc(range.from) &&
+      selectionHead <= Math.trunc(range.to)
+    ));
+
+    if (!selectionInsideSyntax) {
+      for (const range of syntaxRanges) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(Math.trunc(range.from), Math.trunc(range.to))
+        );
+      }
+
+      if (styleMeta.contentTo > styleMeta.contentFrom && typeof styleMeta.className === 'string') {
+        decorations.push(
+          Decoration.mark({
+            class: styleMeta.className
+          }).range(Math.trunc(styleMeta.contentFrom), Math.trunc(styleMeta.contentTo))
+        );
+      }
+    }
+  }
+
+  return decorations;
+}
+
 function resolveLineTransformMeta(state, transform) {
   if (!state?.doc || !transform || !Number.isFinite(transform.sourceFrom) || !Number.isFinite(transform.sourceTo)) {
     return null;
@@ -354,11 +584,20 @@ function resolveLineTransformMeta(state, transform) {
     sourceFrom: range.from,
     sourceTo: range.to,
     depth,
-    isActive: Boolean(transform?.isActive)
+    isActive: Boolean(transform?.isActive),
+    inlineSpans: Array.isArray(transform?.inlineSpans) ? transform.inlineSpans : []
   };
 
   if (transform.type === 'code') {
     return base;
+  }
+
+  if (transform.type === 'paragraph') {
+    return {
+      ...base,
+      contentFrom: range.from,
+      contentClass: 'mm-live-v4-source-content mm-live-v4-source-paragraph'
+    };
   }
 
   if (transform.type === 'heading') {
@@ -557,37 +796,50 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       );
     }
 
-    const markerCoreFrom = Number.isFinite(meta.markerCoreFrom) ? meta.markerCoreFrom : meta.markerFrom;
-    const markerCoreTo = Number.isFinite(meta.markerCoreTo) ? meta.markerCoreTo : meta.markerTo;
-    const markerIncludesSelection = (
-      selectionHead >= markerCoreFrom &&
-      selectionHead <= markerCoreTo
+    const hasMarkerRange = (
+      Number.isFinite(meta.markerFrom) &&
+      Number.isFinite(meta.markerTo) &&
+      meta.markerTo > meta.markerFrom
     );
-    const hideCoreMarker = !markerIncludesSelection;
+    const markerCoreFrom = hasMarkerRange
+      ? (Number.isFinite(meta.markerCoreFrom) ? meta.markerCoreFrom : meta.markerFrom)
+      : null;
+    const markerCoreTo = hasMarkerRange
+      ? (Number.isFinite(meta.markerCoreTo) ? meta.markerCoreTo : meta.markerTo)
+      : null;
+    let hideCoreMarker = false;
 
-    // Keep indentation and trailing marker spacing hidden even when marker core syntax is shown.
-    if (markerCoreFrom > meta.markerFrom) {
-      decorations.push(
-        Decoration.mark({
-          class: 'mm-live-v4-syntax-hidden'
-        }).range(meta.markerFrom, markerCoreFrom)
+    if (hasMarkerRange && Number.isFinite(markerCoreFrom) && Number.isFinite(markerCoreTo)) {
+      const markerIncludesSelection = (
+        selectionHead >= markerCoreFrom &&
+        selectionHead <= markerCoreTo
       );
-    }
+      hideCoreMarker = !markerIncludesSelection;
 
-    if (hideCoreMarker && meta.markerTo > markerCoreTo) {
-      decorations.push(
-        Decoration.mark({
-          class: 'mm-live-v4-syntax-hidden'
-        }).range(markerCoreTo, meta.markerTo)
-      );
-    }
+      // Keep indentation and trailing marker spacing hidden even when marker core syntax is shown.
+      if (markerCoreFrom > meta.markerFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(meta.markerFrom, markerCoreFrom)
+        );
+      }
 
-    if (hideCoreMarker && markerCoreTo > markerCoreFrom) {
-      decorations.push(
-        Decoration.mark({
-          class: 'mm-live-v4-syntax-hidden'
-        }).range(markerCoreFrom, markerCoreTo)
-      );
+      if (hideCoreMarker && meta.markerTo > markerCoreTo) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(markerCoreTo, meta.markerTo)
+        );
+      }
+
+      if (hideCoreMarker && markerCoreTo > markerCoreFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(markerCoreFrom, markerCoreTo)
+        );
+      }
     }
 
     if (meta.contentFrom < meta.sourceTo) {
@@ -604,7 +856,9 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       );
     }
 
-    if (!hideCoreMarker) {
+    decorations.push(...buildInlineSpanDecorations(state, meta, selectionHead));
+
+    if (!hasMarkerRange || !hideCoreMarker) {
       continue;
     }
 

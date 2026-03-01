@@ -1068,6 +1068,18 @@ function buildMixedInlineFixtureSteps() {
       action: 'snapshot'
     },
     {
+      id: 'cursor-line-3-col-19-bold-content',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 19
+    },
+    {
+      id: 'cursor-line-3-col-15-bold-syntax',
+      action: 'set-cursor',
+      lineNumber: 3,
+      column: 15
+    },
+    {
       id: 'cursor-line-3-col-14',
       action: 'set-cursor',
       lineNumber: 3,
@@ -1451,6 +1463,16 @@ function readStepCursorVisible(step) {
   );
 }
 
+function stepDomHtmlContains(step, pattern) {
+  if (typeof pattern !== 'string' || pattern.length === 0) {
+    return false;
+  }
+  const snapshot = readStepSnapshotPayload(step);
+  const domLines = Array.isArray(snapshot?.domLines) ? snapshot.domLines : [];
+  const html = domLines.map((line) => String(line?.html ?? '')).join('\n');
+  return html.includes(pattern);
+}
+
 function stepHasDomLineClass(step, classToken) {
   if (typeof classToken !== 'string' || classToken.length === 0) {
     return false;
@@ -1563,6 +1585,26 @@ function buildCodeBlockAssertions(stepResults, fixtureName) {
       stepLineTextMatches(fenceOpenStep, 5, '```js') &&
       stepLineTextMatches(fenceCloseStep, 10, '```') &&
       stepLineTextMatches(plainFenceOpenStep, 14, '```')
+    )
+  };
+}
+
+function buildMixedInlineAssertions(stepResults, fixtureName) {
+  if (fixtureName !== 'mixed-inline') {
+    return {};
+  }
+
+  const boldContentStep = findStepResult(stepResults, 'cursor-line-3-col-19-bold-content');
+  const boldSyntaxStep = findStepResult(stepResults, 'cursor-line-3-col-15-bold-syntax');
+
+  return {
+    boldContentHidesSyntaxMarkers: stepDomHtmlContains(
+      boldContentStep,
+      'mm-live-v4-syntax-hidden">**</span><span class="mm-live-v4-inline-strong">bold'
+    ),
+    boldSyntaxShowsRawMarkerText: stepDomHtmlContains(
+      boldSyntaxStep,
+      '**bold**'
     )
   };
 }
@@ -1885,6 +1927,7 @@ async function main() {
         fragmentMappingObserved: eventSummary.pointer.fragment > 0,
         ...buildDefaultFixtureAssertions(stepResults, options.fixture),
         ...buildListFixtureAssertions(stepResults, options.fixture),
+        ...buildMixedInlineAssertions(stepResults, options.fixture),
         ...buildCodeBlockAssertions(stepResults, options.fixture)
       }
     };

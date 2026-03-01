@@ -345,6 +345,42 @@ button:disabled {
   line-height: 1.45;
 }
 
+.mm-live-v4-source-paragraph {
+  font-weight: 400;
+}
+
+.mm-live-v4-inline-strong {
+  font-weight: 650;
+}
+
+.mm-live-v4-inline-emphasis {
+  font-style: italic;
+}
+
+.mm-live-v4-inline-strike {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.mm-live-v4-inline-code {
+  background: var(--background-primary-alt);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  font-family: var(--font-monospace);
+  font-size: 0.92em;
+  padding: 0 0.18em;
+}
+
+.mm-live-v4-inline-link {
+  color: var(--interactive-accent);
+  text-decoration: none;
+}
+
+.mm-live-v4-inline-wikilink {
+  color: color-mix(in srgb, var(--interactive-accent) 90%, #1e40af 10%);
+}
+
 .cm-line.mm-live-v4-source-code-line {
   background: var(--code-background);
   border-left: 1px solid var(--code-border);
