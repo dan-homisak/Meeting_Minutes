@@ -612,11 +612,50 @@ function buildLineNumberCoordinatesExpression(lineNumber, xRatio, yRatio) {
     }
 
     const hosts = [...document.querySelectorAll('[data-src-from][data-src-to]')];
-    const host = hosts.find((entry) => (
+    const exactHost = hosts.find((entry) => (
       Number(entry.getAttribute('data-src-from')) === Number(line.from) &&
       Number(entry.getAttribute('data-src-to')) === Number(line.to)
     ));
-    if (!host) {
+    if (exactHost) {
+      const rect = exactHost.getBoundingClientRect();
+      if (!Number.isFinite(rect.left) || !Number.isFinite(rect.width) || rect.width <= 0) {
+        return { ok: false, reason: 'line-host-rect-invalid', lineNumber };
+      }
+
+      return {
+        ok: true,
+        x: Math.round(rect.left + Math.max(2, Math.min(rect.width - 2, rect.width * ${Number(xRatio)}))),
+        y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * ${Number(yRatio)}))),
+        lineNumber,
+        sourceFrom: Number(line.from),
+        sourceTo: Number(line.to),
+        hostKind: 'exact'
+      };
+    }
+
+    const coveringWidget = hosts.find((entry) => {
+      if (!entry.classList?.contains('mm-live-v4-block-widget')) {
+        return false;
+      }
+      const from = Number(entry.getAttribute('data-src-from'));
+      const to = Number(entry.getAttribute('data-src-to'));
+      return Number.isFinite(from) && Number.isFinite(to) && from <= Number(line.from) && to >= Number(line.to);
+    });
+
+    let hostForRect = coveringWidget;
+    let hostKind = 'covering-widget';
+
+    if (!hostForRect) {
+      const gutterElements = [...document.querySelectorAll('.cm-lineNumbers .cm-gutterElement')];
+      const matchedGutterIndex = gutterElements.findIndex((entry) => Number(entry.innerText) === lineNumber);
+      const lineElements = [...document.querySelectorAll('.cm-line')];
+      if (matchedGutterIndex >= 0 && matchedGutterIndex < lineElements.length) {
+        hostForRect = lineElements[matchedGutterIndex];
+        hostKind = 'gutter-index-line';
+      }
+    }
+
+    if (!hostForRect) {
       return {
         ok: false,
         reason: 'line-host-not-found',
@@ -626,18 +665,28 @@ function buildLineNumberCoordinatesExpression(lineNumber, xRatio, yRatio) {
       };
     }
 
-    const rect = host.getBoundingClientRect();
+    const rect = hostForRect.getBoundingClientRect();
     if (!Number.isFinite(rect.left) || !Number.isFinite(rect.width) || rect.width <= 0) {
       return { ok: false, reason: 'line-host-rect-invalid', lineNumber };
     }
 
+    const widgetFrom = Number(hostForRect.getAttribute?.('data-src-from'));
+    const widgetTo = Number(hostForRect.getAttribute?.('data-src-to'));
+    const linesInWidget = lines.filter((entry) => (
+      Number(entry?.from) >= widgetFrom && Number(entry?.to) <= widgetTo
+    ));
+    const lineIndexInWidget = Math.max(0, linesInWidget.findIndex((entry) => Number(entry?.number) === lineNumber));
+    const linesInWidgetCount = Math.max(1, linesInWidget.length);
+    const yFraction = (lineIndexInWidget + Math.max(0.1, Math.min(0.9, ${Number(yRatio)}))) / linesInWidgetCount;
+
     return {
       ok: true,
       x: Math.round(rect.left + Math.max(2, Math.min(rect.width - 2, rect.width * ${Number(xRatio)}))),
-      y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * ${Number(yRatio)}))),
+      y: Math.round(rect.top + Math.max(2, Math.min(rect.height - 2, rect.height * yFraction))),
       lineNumber,
       sourceFrom: Number(line.from),
-      sourceTo: Number(line.to)
+      sourceTo: Number(line.to),
+      hostKind
     };
   })()`;
 }
@@ -970,9 +1019,33 @@ function buildListFixtureSteps() {
       column: 12
     },
     {
+      id: 'arrow-up-from-line-6-col-12',
+      action: 'press-key',
+      key: 'ArrowUp'
+    },
+    {
+      id: 'arrow-down-back-to-line-6-col-12',
+      action: 'press-key',
+      key: 'ArrowDown'
+    },
+    {
+      id: 'click-line-5-text-area',
+      action: 'click-line-number',
+      lineNumber: 5,
+      xRatio: 0.82,
+      yRatio: 0.5
+    },
+    {
       id: 'click-task-source-87',
       action: 'click-task-source',
       sourceFrom: 87
+    },
+    {
+      id: 'click-line-8-text-area',
+      action: 'click-line-number',
+      lineNumber: 8,
+      xRatio: 0.82,
+      yRatio: 0.5
     },
     {
       id: 'cursor-line-9-col-7',
@@ -1350,6 +1423,17 @@ function readStepSelection(step) {
   return snapshot?.selection ?? null;
 }
 
+function readSelectionColumn(selection) {
+  if (
+    !selection ||
+    !Number.isFinite(selection.head) ||
+    !Number.isFinite(selection.lineFrom)
+  ) {
+    return null;
+  }
+  return Math.max(0, Math.trunc(selection.head) - Math.trunc(selection.lineFrom));
+}
+
 function readStepHasFocus(step) {
   const snapshot = readStepSnapshotPayload(step);
   return snapshot?.hasFocus === true;
@@ -1479,6 +1563,73 @@ function buildCodeBlockAssertions(stepResults, fixtureName) {
       stepLineTextMatches(fenceOpenStep, 5, '```js') &&
       stepLineTextMatches(fenceCloseStep, 10, '```') &&
       stepLineTextMatches(plainFenceOpenStep, 14, '```')
+    )
+  };
+}
+
+function buildDefaultFixtureAssertions(stepResults, fixtureName) {
+  if (fixtureName !== 'default-welcome') {
+    return {};
+  }
+
+  const leftClickStep = findStepResult(stepResults, 'click-source-11-60-left');
+  const rightClickStep = findStepResult(stepResults, 'click-source-11-60-right');
+  const leftSelection = readStepSelection(leftClickStep);
+  const rightSelection = readStepSelection(rightClickStep);
+  const leftColumn = readSelectionColumn(leftSelection);
+  const rightColumn = readSelectionColumn(rightSelection);
+
+  return {
+    pointerClickLeftResolvedInsideLine: Number.isFinite(leftColumn) && leftColumn > 0,
+    pointerClickRightResolvedInsideLine: Number.isFinite(rightColumn) && rightColumn > 0,
+    pointerClickRightLandsAfterLeft: (
+      Number.isFinite(leftColumn) &&
+      Number.isFinite(rightColumn) &&
+      rightColumn >= leftColumn + 2
+    )
+  };
+}
+
+function buildListFixtureAssertions(stepResults, fixtureName) {
+  if (fixtureName !== 'lists-and-tasks') {
+    return {};
+  }
+
+  const arrowUpStep = findStepResult(stepResults, 'arrow-up-from-line-6-col-12');
+  const arrowDownStep = findStepResult(stepResults, 'arrow-down-back-to-line-6-col-12');
+  const clickLine5Step = findStepResult(stepResults, 'click-line-5-text-area');
+  const clickLine8Step = findStepResult(stepResults, 'click-line-8-text-area');
+
+  const arrowUpSelection = readStepSelection(arrowUpStep);
+  const arrowDownSelection = readStepSelection(arrowDownStep);
+  const clickLine5Selection = readStepSelection(clickLine5Step);
+  const clickLine8Selection = readStepSelection(clickLine8Step);
+
+  const arrowUpColumn = readSelectionColumn(arrowUpSelection);
+  const arrowDownColumn = readSelectionColumn(arrowDownSelection);
+  const clickLine5Column = readSelectionColumn(clickLine5Selection);
+  const clickLine8Column = readSelectionColumn(clickLine8Selection);
+
+  return {
+    arrowUpFromNestedListKeepsColumn: (
+      Number(arrowUpSelection?.lineNumber) === 5 &&
+      Number.isFinite(arrowUpColumn) &&
+      arrowUpColumn >= 10
+    ),
+    arrowDownFromNestedListKeepsColumn: (
+      Number(arrowDownSelection?.lineNumber) === 6 &&
+      Number.isFinite(arrowDownColumn) &&
+      arrowDownColumn >= 10
+    ),
+    clickLine5TextDoesNotJumpToLineStart: (
+      Number.isFinite(clickLine5Column) &&
+      clickLine5Column > 2 &&
+      Number(clickLine5Selection?.head) !== Number(arrowDownSelection?.head)
+    ),
+    clickLine8TextDoesNotJumpToLineStart: (
+      Number.isFinite(clickLine8Column) &&
+      clickLine8Column > 2 &&
+      Number(clickLine8Selection?.head) !== Number(clickLine5Selection?.head)
     )
   };
 }
@@ -1732,6 +1883,8 @@ async function main() {
         pointerActivationObserved: eventSummary.pointer.activate > 0,
         noPointerActivateMiss: eventSummary.pointer.activateMiss === 0,
         fragmentMappingObserved: eventSummary.pointer.fragment > 0,
+        ...buildDefaultFixtureAssertions(stepResults, options.fixture),
+        ...buildListFixtureAssertions(stepResults, options.fixture),
         ...buildCodeBlockAssertions(stepResults, options.fixture)
       }
     };

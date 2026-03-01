@@ -239,6 +239,66 @@ test('pointer controller maps rendered source attrs and cursor controller moves 
   assert.equal(activeState.selection.main.head > 0, true);
 });
 
+test('pointer controller prefers coordinate-mapped positions over fragment range starts', () => {
+  const ctx = createPointerView('Alpha\nBeta\nGamma', [
+    {
+      id: 'entry-1',
+      kind: 'block',
+      blockId: 'b1',
+      fragmentId: 'frag-1',
+      sourceFrom: 0,
+      sourceTo: 5,
+      priority: 180
+    }
+  ]);
+  ctx.view.posAtCoords = () => 8;
+
+  const pointer = createPointerController({
+    liveDebug: { trace() {}, warn() {} },
+    readInteractionMapForView: () => ctx.interactionMap
+  });
+
+  const target = {
+    getAttribute(name) {
+      if (name === 'data-src-from') {
+        return '0';
+      }
+      if (name === 'data-src-to') {
+        return '5';
+      }
+      return null;
+    },
+    closest(selector) {
+      if (selector === '[data-task-source-from]') {
+        return null;
+      }
+      if (selector === 'a[href]') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-code-copy-button') {
+        return null;
+      }
+      if (selector === '.mm-live-v4-block-widget') {
+        return this;
+      }
+      if (selector === '[data-src-from][data-src-to], [data-fragment-id]') {
+        return this;
+      }
+      return null;
+    }
+  };
+
+  const handled = pointer.handlePointer(ctx.view, {
+    target,
+    clientX: 120,
+    clientY: 120,
+    preventDefault() {}
+  }, 'mousedown');
+
+  assert.equal(handled, true);
+  assert.equal(ctx.readSelectionHead(), 8);
+});
+
 test('pointer controller maps clicks inside hidden code-fence source lines', () => {
   const text = '```js   \nconst value = 1;\n```   ';
   const ctx = createPointerView(text);

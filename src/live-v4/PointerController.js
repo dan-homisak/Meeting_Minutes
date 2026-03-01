@@ -58,7 +58,6 @@ function isPositionInsideRange(position, sourceFrom, sourceTo) {
   if (!Number.isFinite(position) || !Number.isFinite(sourceFrom) || !Number.isFinite(sourceTo)) {
     return false;
   }
-
   const pos = Math.trunc(position);
   return pos >= Math.trunc(sourceFrom) && pos <= Math.trunc(sourceTo);
 }
@@ -304,48 +303,24 @@ export function createPointerController({
     });
   }
 
-  function resolvePointerPosition(view, event, targetElement, trigger = 'mousedown') {
+  function resolvePointerPosition(
+    view,
+    event,
+    targetElement,
+    trigger = 'mousedown',
+    renderedWidgetTarget = false
+  ) {
     const interactionMap = readInteractionMapForView(view);
     const interactionRange = resolveInteractionSourceFromTarget(targetElement, interactionMap);
+    const coordinates = readPointerCoordinates(event);
+    const mappedByCoords = (
+      coordinates && typeof view.posAtCoords === 'function'
+        ? view.posAtCoords(coordinates)
+        : null
+    );
+    const clampedByCoords = clampPosition(mappedByCoords, view.state.doc.length);
 
     if (Number.isFinite(interactionRange.sourceFrom) && Number.isFinite(interactionRange.sourceTo)) {
-      const coordinates = readPointerCoordinates(event);
-      if (coordinates && typeof view.posAtCoords === 'function') {
-        const mappedByCoords = view.posAtCoords(coordinates);
-        if (isPositionInsideRange(mappedByCoords, interactionRange.sourceFrom, interactionRange.sourceTo)) {
-          const clamped = clampPosition(mappedByCoords, view.state.doc.length);
-          const geometryMapped = mapPointerByElementGeometry({
-            event,
-            targetElement,
-            sourceFrom: interactionRange.sourceFrom,
-            sourceTo: interactionRange.sourceTo,
-            docLength: view.state.doc.length
-          });
-          const shouldPreferGeometry = (
-            Number.isFinite(geometryMapped) &&
-            Number.isFinite(clamped) &&
-            Math.abs(geometryMapped - clamped) >= 3
-          );
-          const finalMapped = shouldPreferGeometry ? geometryMapped : clamped;
-
-          liveDebug?.trace?.('pointer.map.fragment', {
-            trigger,
-            fragmentId: interactionRange.fragmentId ?? null,
-            sourceFrom: interactionRange.sourceFrom,
-            sourceTo: interactionRange.sourceTo,
-            mappedPosition: finalMapped,
-            strategy: shouldPreferGeometry
-              ? 'native-with-geometry-correction'
-              : 'native-within-range',
-            targetTagName: describeTargetElement(targetElement).tagName
-          });
-          return {
-            targetPosition: finalMapped,
-            interactionRange
-          };
-        }
-      }
-
       const geometryMapped = mapPointerByElementGeometry({
         event,
         targetElement,
@@ -353,6 +328,41 @@ export function createPointerController({
         sourceTo: interactionRange.sourceTo,
         docLength: view.state.doc.length
       });
+
+      if (Number.isFinite(clampedByCoords)) {
+        const nativeInsideRange = isPositionInsideRange(
+          clampedByCoords,
+          interactionRange.sourceFrom,
+          interactionRange.sourceTo
+        );
+        const preferGeometry = (
+          renderedWidgetTarget &&
+          Number.isFinite(geometryMapped) &&
+          (
+            !nativeInsideRange ||
+            Math.abs(Math.trunc(geometryMapped) - Math.trunc(clampedByCoords)) >= 3
+          )
+        );
+
+        const finalMapped = preferGeometry ? geometryMapped : clampedByCoords;
+        liveDebug?.trace?.('pointer.map.fragment', {
+          trigger,
+          fragmentId: interactionRange.fragmentId ?? null,
+          sourceFrom: interactionRange.sourceFrom,
+          sourceTo: interactionRange.sourceTo,
+          mappedPosition: finalMapped,
+          strategy: preferGeometry
+            ? 'geometry-preferred-for-rendered-widget'
+            : 'native-coords',
+          nativeInsideRange,
+          targetTagName: describeTargetElement(targetElement).tagName
+        });
+        return {
+          targetPosition: finalMapped,
+          interactionRange
+        };
+      }
+
       if (Number.isFinite(geometryMapped)) {
         liveDebug?.trace?.('pointer.map.fragment', {
           trigger,
@@ -405,45 +415,29 @@ export function createPointerController({
       });
     }
 
-    const coordinates = readPointerCoordinates(event);
-    if (coordinates && typeof view.posAtCoords === 'function') {
-      const mapped = view.posAtCoords(coordinates);
-      if (Number.isFinite(mapped)) {
-        const clamped = clampPosition(mapped, view.state.doc.length);
-        if (clamped !== Math.trunc(mapped)) {
-          liveDebug?.trace?.('pointer.map.clamped', {
-            trigger,
-            rawMappedPosition: Math.trunc(mapped),
-            mappedPosition: clamped,
-            docLength: view.state.doc.length
-          });
-        }
-        liveDebug?.trace?.('pointer.map.native', {
-          trigger,
-          rawMappedPosition: Math.trunc(mapped),
-          mappedPosition: clamped,
-          lineInfo: {
-            lineNumber: Number.isFinite(clamped) ? view.state.doc.lineAt(clamped).number : null
-          },
-          targetTagName: describeTargetElement(targetElement).tagName
-        });
+    if (Number.isFinite(clampedByCoords)) {
+      liveDebug?.trace?.('pointer.map.native', {
+        trigger,
+        rawMappedPosition: Number.isFinite(mappedByCoords) ? Math.trunc(mappedByCoords) : null,
+        mappedPosition: clampedByCoords,
+        targetTagName: describeTargetElement(targetElement).tagName
+      });
+      return {
+        targetPosition: clampedByCoords,
+        interactionRange: null
+      };
+    }
 
-        const entries = findInteractionEntriesAtPosition(interactionMap, mapped);
-        if (entries.length > 0) {
-          return {
-            targetPosition: clampPosition(entries[0].sourceFrom, view.state.doc.length),
-            interactionRange: {
-              sourceFrom: entries[0].sourceFrom,
-              sourceTo: entries[0].sourceTo,
-              fragmentId: entries[0].fragmentId ?? null
-            }
-          };
-        }
-        return {
-          targetPosition: clamped,
-          interactionRange: null
-        };
-      }
+    const entries = Number.isFinite(mappedByCoords)
+      ? findInteractionEntriesAtPosition(interactionMap, mappedByCoords)
+      : [];
+    if (entries.length > 0) {
+      liveDebug?.trace?.('pointer.map.fragment-miss', {
+        trigger,
+        reason: 'native-miss-with-entry',
+        entrySourceFrom: entries[0].sourceFrom,
+        entrySourceTo: entries[0].sourceTo
+      });
     }
 
     if (typeof view.posAtDOM === 'function') {
@@ -569,7 +563,7 @@ export function createPointerController({
     const {
       targetPosition,
       interactionRange
-    } = resolvePointerPosition(view, event, target, trigger);
+    } = resolvePointerPosition(view, event, target, trigger, renderedWidgetTarget);
     if (!Number.isFinite(targetPosition)) {
       liveDebug?.warn?.('block.activate.miss', {
         trigger,

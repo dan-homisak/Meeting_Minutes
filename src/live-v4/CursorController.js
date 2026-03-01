@@ -1,11 +1,6 @@
 import { EditorSelection } from '@codemirror/state';
 import { isCodeFenceLineText, resolveCodeFenceCaretPosition } from './codeFenceCaret.js';
 
-function clampToLine(line, column) {
-  const normalizedColumn = Math.max(0, Math.trunc(column));
-  return Math.min(line.to, line.from + normalizedColumn);
-}
-
 function readMarkerGapRange(lineText, lineFrom) {
   if (typeof lineText !== 'string' || !Number.isFinite(lineFrom)) {
     return null;
@@ -64,8 +59,6 @@ export function createCursorController({
   readLiveState = null,
   createCursorSelection = (position, assoc) => EditorSelection.cursor(position, assoc)
 } = {}) {
-  const preferredColumns = new WeakMap();
-
   function readCodeBlocks(view) {
     const liveState = typeof readLiveState === 'function' ? readLiveState(view?.state) : null;
     const blocks = Array.isArray(liveState?.model?.blocks) ? liveState.model.blocks : [];
@@ -78,25 +71,7 @@ export function createCursorController({
     ));
   }
 
-  function resolveCodeBlockAtPosition(view, position) {
-    if (!Number.isFinite(position)) {
-      return null;
-    }
-    const blocks = readCodeBlocks(view);
-    return blocks.find((block) => position >= block.from && position <= block.to) ?? null;
-  }
-
-  function sameCodeBlock(left, right) {
-    if (!left || !right) {
-      return false;
-    }
-    if (typeof left.id === 'string' && typeof right.id === 'string') {
-      return left.id === right.id;
-    }
-    return left.from === right.from && left.to === right.to;
-  }
-
-  function resolveCodeBlockAtLineStart(view, line) {
+  function resolveCodeFenceBoundaryAtLine(view, line) {
     if (!view?.state?.doc || !line || !Number.isFinite(line.from)) {
       return null;
     }
@@ -108,8 +83,7 @@ export function createCursorController({
     const blocks = readCodeBlocks(view);
     return blocks.find((block) => (
       block &&
-      block.from === line.from &&
-      block.to > line.to
+      (block.from === line.from || block.to === line.to)
     )) ?? null;
   }
 
@@ -125,12 +99,6 @@ export function createCursorController({
 
     const selection = view.state.selection.main;
     if (!selection.empty) {
-      liveDebug?.trace?.('cursor.move.vertical.skipped', {
-        trigger,
-        reason: 'selection-not-empty',
-        anchor: selection.anchor,
-        head: selection.head
-      });
       return false;
     }
 
@@ -145,42 +113,40 @@ export function createCursorController({
       return true;
     }
 
-    const priorPreferred = preferredColumns.get(view);
-    const currentColumn = Math.max(0, selection.head - currentLine.from);
-    const preferredColumn = Number.isFinite(priorPreferred) ? priorPreferred : currentColumn;
-
     const targetLine = view.state.doc.line(targetLineNumber);
-    const currentCodeBlock = resolveCodeBlockAtPosition(view, selection.head);
-    const targetCodeBlockAtLineStart = resolveCodeBlockAtLineStart(view, targetLine);
-    const provisionalPosition = clampToLine(targetLine, preferredColumn);
-    const targetCodeBlock = (
-      resolveCodeBlockAtPosition(view, provisionalPosition) ??
-      resolveCodeBlockAtPosition(view, targetLine.from)
-    );
-    const enteringCodeBlock = (
-      direction > 0 &&
-      targetCodeBlock &&
-      !sameCodeBlock(currentCodeBlock, targetCodeBlock)
-    );
+    const currentColumn = Math.max(0, selection.head - currentLine.from);
+    const currentLineText = view.state.doc.sliceString(currentLine.from, currentLine.to);
+    const currentMarkerGapRange = readMarkerGapRange(currentLineText, currentLine.from);
+    const targetLineText = view.state.doc.sliceString(targetLine.from, targetLine.to);
+    const targetMarkerGapRange = readMarkerGapRange(targetLineText, targetLine.from);
 
-    let resolvedLine = targetLine;
-    let targetColumn = preferredColumn;
-    let snappedToCodeFenceEnd = false;
-
-    if (targetCodeBlockAtLineStart) {
-      const fenceCaretTo = resolveCodeFenceCaretPosition(view.state.doc, targetLine.from, targetLine.to);
-      targetColumn = Math.max(0, (Number.isFinite(fenceCaretTo) ? fenceCaretTo : targetLine.to) - targetLine.from);
-      snappedToCodeFenceEnd = true;
-    } else if (enteringCodeBlock) {
-      resolvedLine = view.state.doc.lineAt(targetCodeBlock.from);
-      const fenceCaretTo = resolveCodeFenceCaretPosition(view.state.doc, resolvedLine.from, resolvedLine.to);
-      targetColumn = Math.max(0, (Number.isFinite(fenceCaretTo) ? fenceCaretTo : resolvedLine.to) - resolvedLine.from);
-      snappedToCodeFenceEnd = true;
+    let targetPosition = null;
+    const currentInListContent = (
+      currentMarkerGapRange &&
+      selection.head >= currentMarkerGapRange.contentFrom
+    );
+    if (currentInListContent && targetMarkerGapRange) {
+      const contentOffset = selection.head - currentMarkerGapRange.contentFrom;
+      targetPosition = Math.min(targetLine.to, targetMarkerGapRange.contentFrom + contentOffset);
+    } else {
+      targetPosition = Math.min(targetLine.to, targetLine.from + currentColumn);
     }
 
-    const targetPosition = clampToLine(resolvedLine, targetColumn);
+    const targetFenceBoundary = resolveCodeFenceBoundaryAtLine(view, targetLine);
+    if (targetFenceBoundary) {
+      const snappedFencePosition = resolveCodeFenceCaretPosition(
+        view.state.doc,
+        targetLine.from,
+        targetLine.to
+      );
+      if (Number.isFinite(snappedFencePosition)) {
+        targetPosition = snappedFencePosition;
+      }
+    }
 
-    preferredColumns.set(view, targetColumn);
+    if (!Number.isFinite(targetPosition)) {
+      return false;
+    }
 
     view.dispatch({
       selection: createCursorSelection(targetPosition, direction > 0 ? -1 : 1),
@@ -195,10 +161,8 @@ export function createCursorController({
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
-      toLine: resolvedLine.number,
-      preferredColumn: targetColumn,
-      snappedToCodeFenceEnd,
-      enteredCodeBlock: enteringCodeBlock
+      toLine: targetLine.number,
+      snappedToCodeFenceEnd: Boolean(targetFenceBoundary)
     });
     liveDebug?.trace?.('cursor.move.vertical', {
       trigger,
@@ -206,7 +170,7 @@ export function createCursorController({
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
-      toLine: resolvedLine.number
+      toLine: targetLine.number
     });
 
     return true;
