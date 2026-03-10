@@ -379,6 +379,12 @@ button:disabled {
   padding: 0 0.18em;
 }
 
+.mm-live-v4-inline-code-selected {
+  background: color-mix(in srgb, var(--interactive-accent) 32%, white 68%);
+  border-radius: 2px;
+  box-decoration-break: clone;
+}
+
 .mm-live-v4-inline-link {
   color: var(--interactive-accent);
   text-decoration: none;

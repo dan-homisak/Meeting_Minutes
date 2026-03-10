@@ -30,6 +30,17 @@ function collectSyntaxHiddenRanges(projection, from, to) {
   return ranges;
 }
 
+function collectRangesByClass(projection, from, to, classPattern) {
+  const ranges = [];
+  projection.decorations.between(from, to, (rangeFrom, rangeTo, value) => {
+    const className = value?.spec?.class ?? value?.spec?.attributes?.class ?? '';
+    if (String(className).includes(classPattern)) {
+      ranges.push([Number(rangeFrom), Number(rangeTo)]);
+    }
+  });
+  return ranges;
+}
+
 test('buildLiveProjection uses source transforms for single-line paragraph blocks', () => {
   const text = '# A\n\nB\n\nC\n';
   const state = EditorState.create({
@@ -263,4 +274,46 @@ test('highlight inline renders style and hides == markers outside syntax focus',
   const syntaxHidden = collectSyntaxHiddenRanges(syntaxProjection, 0, line.length);
   assert.equal(syntaxHidden.some(([from, to]) => from === 10 && to === 12), false);
   assert.equal(syntaxHidden.some(([from, to]) => from === 16 && to === 18), false);
+});
+
+test('inline code selection adds explicit visible selection styling for selected content', () => {
+  const text = 'Paragraph with `~text~` token\n';
+  const line = text.trimEnd();
+  const codeFrom = text.indexOf('`~text~`');
+  const codeTo = codeFrom + '`~text~`'.length;
+  const selectedTextFrom = text.indexOf('text');
+  const selectedTextTo = selectedTextFrom + 'text'.length;
+  const model = createModel(
+    text,
+    [
+      { id: 'p1', type: 'paragraph', from: 0, to: line.length, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+    ],
+    [
+      { from: codeFrom, to: codeTo, type: 'code' }
+    ]
+  );
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const selectedState = EditorState.create({
+    doc: text,
+    selection: {
+      anchor: selectedTextFrom,
+      head: selectedTextTo
+    }
+  });
+  const projection = renderer.buildRenderProjection(selectedState, model);
+  const selectedRanges = collectRangesByClass(
+    projection,
+    0,
+    line.length,
+    'mm-live-v4-inline-code-selected'
+  );
+
+  assert.equal(selectedRanges.some(([from, to]) => from === selectedTextFrom && to === selectedTextTo), true);
 });

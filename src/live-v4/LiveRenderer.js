@@ -522,6 +522,10 @@ function buildInlineSpanDecorations(state, meta, selectionHead) {
     return [];
   }
 
+  const selection = state.selection.main;
+  const selectionFrom = Math.min(selection.anchor, selection.head);
+  const selectionTo = Math.max(selection.anchor, selection.head);
+  const hasSelection = selectionTo > selectionFrom;
   const contentFrom = Number.isFinite(meta.contentFrom) ? Math.trunc(meta.contentFrom) : Math.trunc(meta.sourceFrom);
   const contentTo = Math.trunc(meta.sourceTo);
   if (!Number.isFinite(contentFrom) || !Number.isFinite(contentTo) || contentTo <= contentFrom) {
@@ -568,6 +572,17 @@ function buildInlineSpanDecorations(state, meta, selectionHead) {
           Decoration.mark({
             class: styleMeta.className
           }).range(Math.trunc(styleMeta.contentFrom), Math.trunc(styleMeta.contentTo))
+        );
+      }
+
+      const isInlineCode = styleMeta.className === 'mm-live-v4-inline-code';
+      const selectionOverlapFrom = Math.max(Math.trunc(styleMeta.contentFrom), selectionFrom);
+      const selectionOverlapTo = Math.min(Math.trunc(styleMeta.contentTo), selectionTo);
+      if (isInlineCode && hasSelection && selectionOverlapTo > selectionOverlapFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-inline-code-selected'
+          }).range(selectionOverlapFrom, selectionOverlapTo)
         );
       }
     }
