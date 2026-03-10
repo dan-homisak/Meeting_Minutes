@@ -91,6 +91,32 @@ This repository currently uses a "visible-syntax first" cursor policy for list l
 6. Typing the third backtick on an otherwise empty fence line auto-inserts a closing fence on the next line, shifting existing next-line content down.
 7. Code blocks include a right-aligned `Copy` button that copies only content between the opening and closing fences.
 
+## Inline Formatting Keyboard Behavior
+
+1. With text selected, typing an inline marker wraps the selection:
+   - `*` -> `*text*` (press again -> `**text**`)
+   - `_` -> `_text_`
+   - `~` -> `~text~` (press again -> `~~text~~`)
+   - `` ` `` -> `` `text` ``
+   - `[` -> `[text]` (press again -> `[[text]]`)
+   - `=` -> `=text=` (press again -> `==text==` highlight)
+2. `Mod-k` wraps selected text as a markdown link: `[text]()` and places the cursor in the URL slot.
+3. Shift-latch toggle (selection required):
+   - Hold `Shift`.
+   - Press one marker key repeatedly (for example `*`).
+   - If matching wrappers already surround the selection, each press removes one outer pair.
+   - Once no wrapper pairs remain, further presses add wrapper pairs again.
+   - Release `Shift` to reset latch mode.
+4. Physical-key behavior while `Shift` is held:
+   - `Shift + [` targets `[`...`]` wrappers (works even though the typed character is `{`).
+   - `Shift + =` targets `=`...`=` wrappers (works even though the typed character is `+`).
+   - `Shift + \`` uses the backquote domain `['~', '\`']`.
+5. Backquote-domain latch rules:
+   - If selection is already wrapped by backticks, `Shift + \`` toggles backtick wrapping.
+   - If selection is already wrapped by tildes, `Shift + \`` toggles tilde wrapping.
+   - If no wrappers exist, first press uses `~` (typed symbol), then continues in that marker domain until `Shift` is released.
+6. Latch mode is marker-domain specific while held. Changing marker keys while still holding `Shift` starts a fresh toggle cycle for that marker/domain.
+
 ## Build
 
 ```bash

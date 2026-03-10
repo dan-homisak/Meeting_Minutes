@@ -17,4 +17,9 @@ if [ ! -d node_modules ]; then
 fi
 
 echo "Starting Meeting Minutes launcher..."
+
+# Clean up any stale probe/headless sessions so normal launch opens a visible browser window.
+pkill -9 -f "scripts/live-v4-probe-runner.mjs" >/dev/null 2>&1 || true
+pkill -9 -f "mm-live-v4-probe-" >/dev/null 2>&1 || true
+
 npm run launch
