@@ -39,7 +39,11 @@ function findBlockByPosition(blocks, position) {
     if (!block || !Number.isFinite(block.from) || !Number.isFinite(block.to)) {
       continue;
     }
-    if (pos >= block.from && pos <= block.to) {
+    const upperBoundInclusive = block.type !== 'frontmatter';
+    const isWithinBlock = upperBoundInclusive
+      ? pos >= block.from && pos <= block.to
+      : pos >= block.from && pos < block.to;
+    if (isWithinBlock) {
       return block;
     }
   }
@@ -161,7 +165,7 @@ function resolveInlineBlockId(blocks, inlineFrom) {
 }
 
 const ACTIVE_SLICE_TYPES = new Set(['paragraph', 'blockquote', 'list']);
-const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'paragraph', 'list', 'task', 'blockquote']);
+const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'paragraph', 'list', 'task', 'blockquote', 'frontmatter']);
 
 function canSliceActiveBlock(block) {
   if (!block || typeof block.type !== 'string') {
@@ -176,6 +180,9 @@ function shouldUseSourceTransform(block) {
   }
   if (!SOURCE_TRANSFORM_TYPES.has(block.type)) {
     return false;
+  }
+  if (block.type === 'frontmatter') {
+    return true;
   }
   return Number.isFinite(block.lineFrom) && Number.isFinite(block.lineTo) && block.lineFrom === block.lineTo;
 }
@@ -343,6 +350,7 @@ export function buildLiveProjection({
         sourceTo: block.to,
         attrs: block.attrs ?? {},
         depth: block.depth,
+        isActive: block.id === activeBlockId,
         inlineSpans: collectInlineSpansForRange(inlines, block.from, block.to)
       });
 

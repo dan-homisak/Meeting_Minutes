@@ -177,6 +177,23 @@ class InlineQuotePrefixWidget extends WidgetType {
   }
 }
 
+class FrontmatterLabelWidget extends WidgetType {
+  eq(other) {
+    return other instanceof FrontmatterLabelWidget;
+  }
+
+  toDOM() {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'mm-live-v4-frontmatter-label-pill';
+    wrapper.textContent = 'Properties';
+    return wrapper;
+  }
+
+  ignoreEvent() {
+    return false;
+  }
+}
+
 function extractCopyTextForCodeBlock(state, sourceFrom, sourceTo) {
   if (!state?.doc || !Number.isFinite(sourceFrom) || !Number.isFinite(sourceTo) || sourceTo <= sourceFrom) {
     return '';
@@ -789,6 +806,119 @@ function buildCodeSourceLineDecorations(state, meta) {
   return decorations;
 }
 
+function buildFrontmatterSourceLineDecorations(state, transform) {
+  if (
+    !state?.doc ||
+    !transform ||
+    !Number.isFinite(transform.sourceFrom) ||
+    !Number.isFinite(transform.sourceTo) ||
+    transform.sourceTo <= transform.sourceFrom ||
+    transform.isActive
+  ) {
+    return [];
+  }
+
+  const range = clampRangeToDoc(state, transform.sourceFrom, transform.sourceTo);
+  if (!range) {
+    return [];
+  }
+
+  const doc = state.doc;
+  const startLine = doc.lineAt(range.from);
+  const endLine = doc.lineAt(Math.max(range.from, range.to - 1));
+  const decorations = [];
+
+  for (let lineNumber = startLine.number; lineNumber <= endLine.number; lineNumber += 1) {
+    const line = doc.line(lineNumber);
+    const lineText = doc.sliceString(line.from, line.to);
+    const isStart = lineNumber === startLine.number;
+    const isEnd = lineNumber === endLine.number;
+    const lineClasses = ['mm-live-v4-source-frontmatter-line'];
+
+    if (isStart) {
+      lineClasses.push('mm-live-v4-source-frontmatter-line-start');
+    }
+    if (isEnd) {
+      lineClasses.push('mm-live-v4-source-frontmatter-line-end');
+    }
+
+    decorations.push(
+      Decoration.line({
+        attributes: {
+          class: lineClasses.join(' '),
+          'data-mm-frontmatter-role': isStart || isEnd ? 'fence' : 'entry'
+        }
+      }).range(line.from)
+    );
+
+    if (isStart || isEnd) {
+      if (line.to > line.from) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(line.from, line.to)
+        );
+      }
+
+      if (isStart) {
+        decorations.push(
+          Decoration.widget({
+            widget: new FrontmatterLabelWidget(),
+            side: -1
+          }).range(line.from)
+        );
+      }
+      continue;
+    }
+
+    const keyValueMatch = lineText.match(/^(\s*)([^:\s][^:]*?)(\s*:\s*)(.*)$/);
+    if (keyValueMatch) {
+      const indentationText = keyValueMatch[1] ?? '';
+      const keyText = keyValueMatch[2] ?? '';
+      const separatorText = keyValueMatch[3] ?? '';
+      const keyFrom = line.from + indentationText.length;
+      const keyTo = keyFrom + keyText.length;
+      const separatorFrom = keyTo;
+      const separatorTo = separatorFrom + separatorText.length;
+
+      if (keyTo > keyFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-frontmatter-key'
+          }).range(keyFrom, keyTo)
+        );
+      }
+
+      if (separatorTo > separatorFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-frontmatter-separator'
+          }).range(separatorFrom, separatorTo)
+        );
+      }
+
+      if (line.to > separatorTo) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-frontmatter-value'
+          }).range(separatorTo, line.to)
+        );
+      }
+      continue;
+    }
+
+    if (line.to > line.from) {
+      decorations.push(
+        Decoration.mark({
+          class: 'mm-live-v4-frontmatter-value mm-live-v4-frontmatter-value-raw'
+        }).range(line.from, line.to)
+      );
+    }
+  }
+
+  return decorations;
+}
+
 function buildSourceLineDecorations(state, sourceTransforms) {
   if (!Array.isArray(sourceTransforms) || sourceTransforms.length === 0) {
     return [];
@@ -801,6 +931,11 @@ function buildSourceLineDecorations(state, sourceTransforms) {
     .sort((left, right) => left.sourceFrom - right.sourceFrom || left.sourceTo - right.sourceTo);
 
   for (const transform of sortedTransforms) {
+    if (transform?.type === 'frontmatter') {
+      decorations.push(...buildFrontmatterSourceLineDecorations(state, transform));
+      continue;
+    }
+
     const meta = resolveLineTransformMeta(state, transform);
     if (!meta) {
       continue;

@@ -165,6 +165,35 @@ test('single-line heading/list/task blocks use source transforms for syntax-leve
   assert.equal(projection.renderedBlocks.length, 0);
 });
 
+test('frontmatter uses source transforms instead of rendered block replacement', () => {
+  const text = '---\ntitle: Note\ntags:\n  - project\n---\n\nBody\n';
+  const bodyFrom = text.indexOf('Body');
+  const bodyTo = bodyFrom + 'Body'.length;
+  const frontmatterTo = text.indexOf('\n\nBody');
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: bodyFrom }
+  });
+  const model = createModel(text, [
+    { id: 'fm1', type: 'frontmatter', from: 0, to: frontmatterTo, lineFrom: 1, lineTo: 5, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyFrom, to: bodyTo, lineFrom: 7, lineTo: 7, depth: null, attrs: {} }
+  ]);
+
+  const projection = buildLiveProjection({
+    state,
+    model,
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  assert.equal(projection.renderedBlocks.length, 0);
+  assert.deepEqual(
+    projection.sourceTransforms.map((entry) => entry.type),
+    ['frontmatter', 'paragraph']
+  );
+});
+
 test('paragraph source transforms include inline spans for syntax rendering', () => {
   const text = 'Line with **bold** and [link](https://example.com)\n';
   const state = EditorState.create({
@@ -196,6 +225,102 @@ test('paragraph source transforms include inline spans for syntax rendering', ()
     projection.sourceTransforms[0].inlineSpans.map((span) => span.type),
     ['strong', 'link']
   );
+});
+
+test('frontmatter renders as a full block when inactive and drops to raw source when active', () => {
+  const text = '---\ntitle: Note\nowner: qa\n---\n\nBody\n';
+  const bodyAnchor = text.indexOf('Body');
+  const titleAnchor = text.indexOf('title');
+  const closingFenceFrom = text.indexOf('\n---\n') + 1;
+  const frontmatterTo = text.indexOf('\n\nBody');
+  const model = createModel(text, [
+    { id: 'fm1', type: 'frontmatter', from: 0, to: frontmatterTo, lineFrom: 1, lineTo: 4, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyAnchor, to: bodyAnchor + 'Body'.length, lineFrom: 6, lineTo: 6, depth: null, attrs: {} }
+  ]);
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const inactiveState = EditorState.create({
+    doc: text,
+    selection: { anchor: bodyAnchor }
+  });
+  const inactiveProjection = renderer.buildRenderProjection(inactiveState, model);
+  const inactiveHidden = collectSyntaxHiddenRanges(inactiveProjection, 0, frontmatterTo);
+  assert.equal(inactiveProjection.renderedBlocks.length, 0);
+  assert.equal(inactiveHidden.some(([from, to]) => from === 0 && to === 3), true);
+  assert.equal(inactiveHidden.some(([from, to]) => from === closingFenceFrom && to === closingFenceFrom + 3), true);
+
+  const activeState = EditorState.create({
+    doc: text,
+    selection: { anchor: titleAnchor }
+  });
+  const activeProjection = renderer.buildRenderProjection(activeState, model);
+  const activeHidden = collectSyntaxHiddenRanges(activeProjection, 0, frontmatterTo);
+  assert.equal(activeHidden.some(([from, to]) => from === 0 && to === 3), false);
+  assert.equal(activeHidden.some(([from, to]) => from === closingFenceFrom && to === closingFenceFrom + 3), false);
+});
+
+test('frontmatter drops to raw source when the cursor is on the closing fence', () => {
+  const text = '---\ntitle: Note\nowner: qa\n---\n\nBody\n';
+  const closingFenceAnchor = text.indexOf('\n---\n') + 1;
+  const closingFenceFrom = text.indexOf('\n---\n') + 1;
+  const bodyAnchor = text.indexOf('Body');
+  const frontmatterTo = text.indexOf('\n\nBody');
+  const model = createModel(text, [
+    { id: 'fm1', type: 'frontmatter', from: 0, to: frontmatterTo, lineFrom: 1, lineTo: 4, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyAnchor, to: bodyAnchor + 'Body'.length, lineFrom: 6, lineTo: 6, depth: null, attrs: {} }
+  ]);
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const fenceState = EditorState.create({
+    doc: text,
+    selection: { anchor: closingFenceAnchor }
+  });
+  const fenceProjection = renderer.buildRenderProjection(fenceState, model);
+  const fenceHidden = collectSyntaxHiddenRanges(fenceProjection, 0, frontmatterTo);
+
+  assert.equal(fenceHidden.some(([from, to]) => from === 0 && to === 3), false);
+  assert.equal(fenceHidden.some(([from, to]) => from === closingFenceFrom && to === closingFenceFrom + 3), false);
+});
+
+test('frontmatter remains rendered when the cursor is on the blank line after the closing fence', () => {
+  const text = '---\ntitle: Note\nowner: qa\n---\n\nBody\n';
+  const closingFenceFrom = text.indexOf('\n---\n') + 1;
+  const blankLineAnchor = closingFenceFrom + 4;
+  const bodyAnchor = text.indexOf('Body');
+  const parserFrontmatterTo = blankLineAnchor;
+  const model = createModel(text, [
+    { id: 'fm1', type: 'frontmatter', from: 0, to: parserFrontmatterTo, lineFrom: 1, lineTo: 4, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyAnchor, to: bodyAnchor + 'Body'.length, lineFrom: 6, lineTo: 6, depth: null, attrs: {} }
+  ]);
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const blankLineState = EditorState.create({
+    doc: text,
+    selection: { anchor: blankLineAnchor }
+  });
+  const blankLineProjection = renderer.buildRenderProjection(blankLineState, model);
+  const blankLineHidden = collectSyntaxHiddenRanges(blankLineProjection, 0, parserFrontmatterTo);
+
+  assert.equal(blankLineHidden.some(([from, to]) => from === 0 && to === 3), true);
+  assert.equal(blankLineHidden.some(([from, to]) => from === closingFenceFrom && to === closingFenceFrom + 3), true);
 });
 
 test('inline syntax hides in content mode and reveals when cursor is inside syntax', () => {

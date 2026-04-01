@@ -62,7 +62,7 @@ function renderFrontmatterHtml(frontmatter, options = null) {
     })
     .join('');
 
-  return `<section class="frontmatter-block"${sourceAttrs}><div class="frontmatter-label">Frontmatter</div>${entries}</section>`;
+  return `<section class="frontmatter-block"${sourceAttrs}><div class="frontmatter-label">Properties</div>${entries}</section>`;
 }
 
 function transformObsidianSyntax(markdownText) {
