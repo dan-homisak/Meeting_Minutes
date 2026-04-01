@@ -41,6 +41,33 @@ function collectRangesByClass(projection, from, to, classPattern) {
   return ranges;
 }
 
+function collectLineRangesByClass(projection, from, to, classPattern) {
+  const ranges = [];
+  projection.decorations.between(from, to, (rangeFrom, rangeTo, value) => {
+    const className = value?.spec?.attributes?.class ?? '';
+    if (value?.spec?.attributes && String(className).includes(classPattern)) {
+      ranges.push([Number(rangeFrom), Number(rangeTo)]);
+    }
+  });
+  return ranges;
+}
+
+function collectLineAttributesByClass(projection, from, to, classPattern) {
+  const attributes = [];
+  projection.decorations.between(from, to, (rangeFrom, rangeTo, value) => {
+    const lineAttributes = value?.spec?.attributes ?? null;
+    const className = lineAttributes?.class ?? '';
+    if (lineAttributes && String(className).includes(classPattern)) {
+      attributes.push({
+        from: Number(rangeFrom),
+        to: Number(rangeTo),
+        attributes: lineAttributes
+      });
+    }
+  });
+  return attributes;
+}
+
 test('buildLiveProjection uses source transforms for single-line paragraph blocks', () => {
   const text = '# A\n\nB\n\nC\n';
   const state = EditorState.create({
@@ -136,16 +163,17 @@ test('active multi-line paragraph keeps only active line editable and renders in
   assert.equal(projection.renderedBlocks.every((entry) => entry.blockId === 'p1'), true);
 });
 
-test('single-line heading/list/task blocks use source transforms for syntax-level live preview', () => {
-  const text = '# H\n- [ ] alpha\n- beta\n';
+test('single-line heading/quote/list/task blocks use source transforms for syntax-level live preview', () => {
+  const text = '# H\n> quoted\n- [ ] alpha\n- beta\n';
   const state = EditorState.create({
     doc: text,
     selection: { anchor: 6 }
   });
   const model = createModel(text, [
     { id: 'h1', type: 'heading', from: 0, to: 3, lineFrom: 1, lineTo: 1, depth: null, attrs: { level: 1 } },
-    { id: 't1', type: 'task', from: 4, to: 15, lineFrom: 2, lineTo: 2, depth: 0, attrs: { checked: false, depth: 0 } },
-    { id: 'l1', type: 'list', from: 16, to: 22, lineFrom: 3, lineTo: 3, depth: 0, attrs: { depth: 0 } }
+    { id: 'q1', type: 'blockquote', from: 4, to: 12, lineFrom: 2, lineTo: 2, depth: null, attrs: {} },
+    { id: 't1', type: 'task', from: 13, to: 24, lineFrom: 3, lineTo: 3, depth: 0, attrs: { checked: false, depth: 0 } },
+    { id: 'l1', type: 'list', from: 25, to: 31, lineFrom: 4, lineTo: 4, depth: 0, attrs: { depth: 0 } }
   ]);
 
   const projection = buildLiveProjection({
@@ -157,12 +185,135 @@ test('single-line heading/list/task blocks use source transforms for syntax-leve
   });
 
   assert.equal(Array.isArray(projection.sourceTransforms), true);
-  assert.equal(projection.sourceTransforms.length, 3);
+  assert.equal(projection.sourceTransforms.length, 4);
   assert.deepEqual(
     projection.sourceTransforms.map((entry) => entry.type),
-    ['heading', 'task', 'list']
+    ['heading', 'blockquote', 'task', 'list']
   );
   assert.equal(projection.renderedBlocks.length, 0);
+});
+
+test('blockquote source transforms add one rendered quote line decoration per quoted line', () => {
+  const text = '> alpha\n> beta\nplain\n';
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: text.indexOf('alpha') + 1 }
+  });
+  const model = createModel(text, [
+    { id: 'q1', type: 'blockquote', from: 0, to: 7, lineFrom: 1, lineTo: 1, depth: null, attrs: {} },
+    { id: 'q2', type: 'blockquote', from: 8, to: 14, lineFrom: 2, lineTo: 2, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: 15, to: 20, lineFrom: 3, lineTo: 3, depth: null, attrs: {} }
+  ]);
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const projection = renderer.buildRenderProjection(state, model);
+  const quoteLineRanges = collectLineRangesByClass(
+    projection,
+    0,
+    text.length,
+    'mm-live-v4-source-quote-line'
+  );
+  const quoteLineAttributes = collectLineAttributesByClass(
+    projection,
+    0,
+    text.length,
+    'mm-live-v4-source-quote-line'
+  );
+  const hiddenRanges = collectSyntaxHiddenRanges(projection, 0, text.length);
+
+  assert.deepEqual(quoteLineRanges, [[0, 0], [8, 8]]);
+  assert.deepEqual(
+    quoteLineAttributes.map((entry) => entry.attributes['data-mm-quote-rendered']),
+    ['true', 'true']
+  );
+  assert.equal(hiddenRanges.some(([from, to]) => from === 0 && to === 1), true);
+  assert.equal(hiddenRanges.some(([from, to]) => from === 1 && to === 2), true);
+  assert.equal(hiddenRanges.some(([from, to]) => from === 8 && to === 9), true);
+  assert.equal(hiddenRanges.some(([from, to]) => from === 9 && to === 10), true);
+});
+
+test('blockquote content start keeps marker rendered while marker selection reveals raw syntax', () => {
+  const text = '> alpha\n';
+  const model = createModel(text, [
+    { id: 'q1', type: 'blockquote', from: 0, to: 7, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+  ]);
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const contentState = EditorState.create({
+    doc: text,
+    selection: { anchor: 2 }
+  });
+  const contentProjection = renderer.buildRenderProjection(contentState, model);
+  const contentHidden = collectSyntaxHiddenRanges(contentProjection, 0, text.length);
+  const contentQuoteLine = collectLineAttributesByClass(
+    contentProjection,
+    0,
+    text.length,
+    'mm-live-v4-source-quote-line'
+  );
+
+  assert.equal(contentHidden.some(([from, to]) => from === 0 && to === 1), true);
+  assert.equal(contentHidden.some(([from, to]) => from === 1 && to === 2), true);
+  assert.equal(contentQuoteLine[0]?.attributes?.['data-mm-quote-rendered'], 'true');
+
+  const leftEdgeState = EditorState.create({
+    doc: text,
+    selection: { anchor: 0 }
+  });
+  const leftEdgeProjection = renderer.buildRenderProjection(leftEdgeState, model);
+  const leftEdgeHidden = collectSyntaxHiddenRanges(leftEdgeProjection, 0, text.length);
+  const leftEdgeQuoteLine = collectLineAttributesByClass(
+    leftEdgeProjection,
+    0,
+    text.length,
+    'mm-live-v4-source-quote-line'
+  );
+  const leftEdgeVisibleMarker = collectRangesByClass(
+    leftEdgeProjection,
+    0,
+    text.length,
+    'mm-live-v4-inline-quote-marker-visible'
+  );
+
+  assert.equal(leftEdgeHidden.some(([from, to]) => from === 0 && to === 1), false);
+  assert.equal(leftEdgeHidden.some(([from, to]) => from === 1 && to === 2), true);
+  assert.equal(leftEdgeQuoteLine[0]?.attributes?.['data-mm-quote-rendered'], 'false');
+  assert.equal(leftEdgeVisibleMarker.some(([from, to]) => from === 0 && to === 1), true);
+
+  const markerState = EditorState.create({
+    doc: text,
+    selection: { anchor: 1 }
+  });
+  const markerProjection = renderer.buildRenderProjection(markerState, model);
+  const markerHidden = collectSyntaxHiddenRanges(markerProjection, 0, text.length);
+  const markerQuoteLine = collectLineAttributesByClass(
+    markerProjection,
+    0,
+    text.length,
+    'mm-live-v4-source-quote-line'
+  );
+  const markerVisibleMarker = collectRangesByClass(
+    markerProjection,
+    0,
+    text.length,
+    'mm-live-v4-inline-quote-marker-visible'
+  );
+
+  assert.equal(markerHidden.some(([from, to]) => from === 0 && to === 1), false);
+  assert.equal(markerHidden.some(([from, to]) => from === 1 && to === 2), true);
+  assert.equal(markerQuoteLine[0]?.attributes?.['data-mm-quote-rendered'], 'false');
+  assert.equal(markerVisibleMarker.some(([from, to]) => from === 0 && to === 1), true);
 });
 
 test('frontmatter uses source transforms instead of rendered block replacement', () => {

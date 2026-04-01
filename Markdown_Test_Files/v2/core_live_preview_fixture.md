@@ -18,6 +18,8 @@ owner: team-notes
 > Blockquote line
 > continues on second line.
 
+>
+
 - [ ] Open task item
 - [x] Done task item
   - Nested list bullet

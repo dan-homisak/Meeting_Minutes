@@ -15,6 +15,10 @@
   --code-background: #f3f5f8;
   --code-border: #d8e0ec;
   --blockquote-border: #ced7e6;
+  --quote-guide-width: 3px;
+  --quote-guide-offset-source: 0.62rem;
+  --quote-prefix-offset: 0.94rem;
+  --quote-line-padding: 1.54rem;
   --frontmatter-background: #f7f9fc;
   --frontmatter-border: #d8e1ee;
   --frontmatter-key: #637185;
@@ -521,10 +525,28 @@ button:disabled {
   line-height: 1.2;
 }
 
+.cm-line.mm-live-v4-source-quote-line {
+  padding-left: var(--quote-line-padding);
+  background-image: linear-gradient(var(--blockquote-border), var(--blockquote-border));
+  background-position: var(--quote-guide-offset-source) 0;
+  background-repeat: no-repeat;
+  background-size: var(--quote-guide-width) 100%;
+}
+
 .mm-live-v4-source-quote {
-  border-left: 3px solid var(--blockquote-border);
   margin-left: 0;
-  padding-left: 0.6rem;
+  padding-left: 0;
+}
+
+.mm-live-v4-inline-quote-marker-visible {
+  color: var(--text-muted);
+  display: inline-block;
+  left: calc(var(--quote-prefix-offset) - var(--quote-line-padding));
+  overflow: visible;
+  pointer-events: none;
+  position: relative;
+  white-space: pre;
+  width: 0;
 }
 
 .cm-line.mm-live-v4-source-list-line,
@@ -660,14 +682,6 @@ button:disabled {
 .mm-live-v4-inline-task-prefix input[type="checkbox"]:checked::before,
 .mm-live-v4-block-widget .task-list-control input[type="checkbox"]:checked::before {
   transform: translateY(-0.04em) rotate(45deg) scale(1);
-}
-
-.mm-live-v4-inline-quote-prefix {
-  border-left: 3px solid var(--blockquote-border);
-  height: 1em;
-  margin-right: 0.5rem;
-  width: 0;
-  vertical-align: -0.08em;
 }
 
 .mm-live-v4-block-widget {

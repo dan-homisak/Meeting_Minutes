@@ -165,18 +165,6 @@ class InlineTaskPrefixWidget extends WidgetType {
   }
 }
 
-class InlineQuotePrefixWidget extends WidgetType {
-  toDOM() {
-    const wrapper = document.createElement('span');
-    wrapper.className = 'mm-live-v4-inline-quote-prefix';
-    return wrapper;
-  }
-
-  ignoreEvent() {
-    return false;
-  }
-}
-
 class FrontmatterLabelWidget extends WidgetType {
   eq(other) {
     return other instanceof FrontmatterLabelWidget;
@@ -662,15 +650,23 @@ function resolveLineTransformMeta(state, transform) {
   }
 
   if (transform.type === 'blockquote') {
-    const match = lineText.match(/^(\s*>\s?)/);
-    if (!match || !match[1]) {
+    const match = lineText.match(/^(\s*)(>)(\s?)/);
+    if (!match || !match[2]) {
       return null;
     }
+    const indentationText = match[1] ?? '';
+    const markerText = match[2] ?? '>';
+    const trailingSpaceText = match[3] ?? '';
+    const markerCoreFrom = range.from + indentationText.length;
+    const markerCoreTo = markerCoreFrom + markerText.length;
+    const markerTo = markerCoreTo + trailingSpaceText.length;
     return {
       ...base,
       markerFrom: range.from,
-      markerTo: range.from + match[1].length,
-      contentFrom: range.from + match[1].length,
+      markerTo,
+      markerCoreFrom,
+      markerCoreTo,
+      contentFrom: markerTo,
       contentClass: 'mm-live-v4-source-content mm-live-v4-source-quote'
     };
   }
@@ -946,21 +942,6 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       continue;
     }
 
-    if (meta.type === 'list' || meta.type === 'task') {
-      const listKind = /^\d+\.$/.test(String(meta.listMarker ?? '')) ? 'ordered' : 'bullet';
-      const lineAttributes = {
-        class: meta.type === 'task' ? 'mm-live-v4-source-task-line' : 'mm-live-v4-source-list-line',
-        'data-mm-list-depth': String(Number.isFinite(meta.depth) ? meta.depth : 0),
-        'data-mm-marker-chars': String(Number.isFinite(meta.markerChars) ? meta.markerChars : 0),
-        'data-mm-list-kind': listKind
-      };
-      decorations.push(
-        Decoration.line({
-          attributes: lineAttributes
-        }).range(meta.sourceFrom)
-      );
-    }
-
     const hasMarkerRange = (
       Number.isFinite(meta.markerFrom) &&
       Number.isFinite(meta.markerTo) &&
@@ -980,7 +961,35 @@ function buildSourceLineDecorations(state, sourceTransforms) {
         selectionHead <= markerCoreTo
       );
       hideCoreMarker = !markerIncludesSelection;
+    }
 
+    if (meta.type === 'list' || meta.type === 'task') {
+      const listKind = /^\d+\.$/.test(String(meta.listMarker ?? '')) ? 'ordered' : 'bullet';
+      const lineAttributes = {
+        class: meta.type === 'task' ? 'mm-live-v4-source-task-line' : 'mm-live-v4-source-list-line',
+        'data-mm-list-depth': String(Number.isFinite(meta.depth) ? meta.depth : 0),
+        'data-mm-marker-chars': String(Number.isFinite(meta.markerChars) ? meta.markerChars : 0),
+        'data-mm-list-kind': listKind
+      };
+      decorations.push(
+        Decoration.line({
+          attributes: lineAttributes
+        }).range(meta.sourceFrom)
+      );
+    }
+
+    if (meta.type === 'blockquote') {
+      decorations.push(
+        Decoration.line({
+          attributes: {
+            class: 'mm-live-v4-source-quote-line',
+            'data-mm-quote-rendered': hideCoreMarker ? 'true' : 'false'
+          }
+        }).range(meta.sourceFrom)
+      );
+    }
+
+    if (hasMarkerRange && Number.isFinite(markerCoreFrom) && Number.isFinite(markerCoreTo)) {
       // Keep indentation and trailing marker spacing hidden even when marker core syntax is shown.
       if (markerCoreFrom > meta.markerFrom) {
         decorations.push(
@@ -990,7 +999,10 @@ function buildSourceLineDecorations(state, sourceTransforms) {
         );
       }
 
-      if (hideCoreMarker && meta.markerTo > markerCoreTo) {
+      if (
+        (hideCoreMarker || meta.type === 'blockquote') &&
+        meta.markerTo > markerCoreTo
+      ) {
         decorations.push(
           Decoration.mark({
             class: 'mm-live-v4-syntax-hidden'
@@ -1002,6 +1014,12 @@ function buildSourceLineDecorations(state, sourceTransforms) {
         decorations.push(
           Decoration.mark({
             class: 'mm-live-v4-syntax-hidden'
+          }).range(markerCoreFrom, markerCoreTo)
+        );
+      } else if (meta.type === 'blockquote' && markerCoreTo > markerCoreFrom) {
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-inline-quote-marker-visible'
           }).range(markerCoreFrom, markerCoreTo)
         );
       }
@@ -1056,14 +1074,6 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       continue;
     }
 
-    if (meta.type === 'blockquote') {
-      decorations.push(
-        Decoration.widget({
-          widget: new InlineQuotePrefixWidget(),
-          side: -1
-        }).range(meta.contentFrom)
-      );
-    }
   }
 
   return decorations;

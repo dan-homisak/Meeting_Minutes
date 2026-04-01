@@ -1052,6 +1052,30 @@ function buildListFixtureSteps() {
       action: 'set-cursor',
       lineNumber: 9,
       column: 7
+    },
+    {
+      id: 'cursor-line-11-col-7-quote-content',
+      action: 'set-cursor',
+      lineNumber: 11,
+      column: 7
+    },
+    {
+      id: 'cursor-line-11-col-2-quote-content-start',
+      action: 'set-cursor',
+      lineNumber: 11,
+      column: 2
+    },
+    {
+      id: 'cursor-line-11-col-0-quote-left-edge',
+      action: 'set-cursor',
+      lineNumber: 11,
+      column: 0
+    },
+    {
+      id: 'cursor-line-11-col-1-quote-syntax',
+      action: 'set-cursor',
+      lineNumber: 11,
+      column: 1
     }
   ];
 }
@@ -1492,6 +1516,15 @@ function stepLineTextMatches(step, lineNumber, expectedText) {
   return String(line.text ?? '') === String(expectedText ?? '');
 }
 
+function readStepDomLineByClass(step, classToken) {
+  if (typeof classToken !== 'string' || classToken.length === 0) {
+    return null;
+  }
+  const snapshot = readStepSnapshotPayload(step);
+  const domLines = Array.isArray(snapshot?.domLines) ? snapshot.domLines : [];
+  return domLines.find((line) => typeof line?.className === 'string' && line.className.includes(classToken)) ?? null;
+}
+
 function buildCodeBlockAssertions(stepResults, fixtureName) {
   if (fixtureName !== 'code-blocks') {
     return {};
@@ -1646,6 +1679,14 @@ function buildListFixtureAssertions(stepResults, fixtureName) {
   const arrowDownSelection = readStepSelection(arrowDownStep);
   const clickLine5Selection = readStepSelection(clickLine5Step);
   const clickLine8Selection = readStepSelection(clickLine8Step);
+  const quoteContentStep = findStepResult(stepResults, 'cursor-line-11-col-7-quote-content');
+  const quoteContentStartStep = findStepResult(stepResults, 'cursor-line-11-col-2-quote-content-start');
+  const quoteLeftEdgeStep = findStepResult(stepResults, 'cursor-line-11-col-0-quote-left-edge');
+  const quoteSyntaxStep = findStepResult(stepResults, 'cursor-line-11-col-1-quote-syntax');
+  const quoteContentDomLine = readStepDomLineByClass(quoteContentStep, 'mm-live-v4-source-quote-line');
+  const quoteContentStartDomLine = readStepDomLineByClass(quoteContentStartStep, 'mm-live-v4-source-quote-line');
+  const quoteLeftEdgeDomLine = readStepDomLineByClass(quoteLeftEdgeStep, 'mm-live-v4-source-quote-line');
+  const quoteSyntaxDomLine = readStepDomLineByClass(quoteSyntaxStep, 'mm-live-v4-source-quote-line');
 
   const arrowUpColumn = readSelectionColumn(arrowUpSelection);
   const arrowDownColumn = readSelectionColumn(arrowDownSelection);
@@ -1672,6 +1713,30 @@ function buildListFixtureAssertions(stepResults, fixtureName) {
       Number.isFinite(clickLine8Column) &&
       clickLine8Column > 2 &&
       Number(clickLine8Selection?.head) !== Number(clickLine5Selection?.head)
+    ),
+    quoteContentKeepsMarkerRendered: (
+      String(quoteContentDomLine?.text ?? '').startsWith('>') === false &&
+      quoteContentDomLine?.lineQuoteRendered === 'true'
+    ),
+    quoteContentStartKeepsMarkerRendered: (
+      String(quoteContentStartDomLine?.text ?? '').startsWith('>') === false &&
+      quoteContentStartDomLine?.lineQuoteRendered === 'true'
+    ),
+    quoteSyntaxShowsRawMarker: (
+      String(quoteSyntaxDomLine?.text ?? '').startsWith('>') === true &&
+      quoteSyntaxDomLine?.lineQuoteRendered === 'false'
+    ),
+    quoteLeftEdgeLayoutStableOnEntry: (
+      Math.abs(
+        Number(quoteContentDomLine?.sourceContentRect?.left ?? Number.NaN) -
+        Number(quoteLeftEdgeDomLine?.sourceContentRect?.left ?? Number.NaN)
+      ) <= 0.5
+    ),
+    quoteContentLayoutStableOnEntry: (
+      Math.abs(
+        Number(quoteContentDomLine?.sourceContentRect?.left ?? Number.NaN) -
+        Number(quoteContentStartDomLine?.sourceContentRect?.left ?? Number.NaN)
+      ) <= 0.5
     )
   };
 }

@@ -51,6 +51,26 @@ function readMarkerGapRange(lineText, lineFrom) {
     }
   }
 
+  const quoteMatch = lineText.match(/^(\s*)(>)(\s+)/);
+  if (quoteMatch) {
+    const indentationText = quoteMatch[1] ?? '';
+    const markerText = quoteMatch[2] ?? '>';
+    const trailingSpacing = quoteMatch[3] ?? ' ';
+    const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
+    const markerCoreTo = markerCoreFrom + markerText.length;
+    const contentFrom = markerCoreTo + trailingSpacing.length;
+    if (contentFrom > markerCoreTo) {
+      return {
+        markerKind: 'quote',
+        lineFrom: Math.trunc(lineFrom),
+        markerCoreFrom,
+        markerCoreTo,
+        contentFrom,
+        indentationChars: indentationText.length
+      };
+    }
+  }
+
   return null;
 }
 

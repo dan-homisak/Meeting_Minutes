@@ -488,9 +488,9 @@ test('cursor controller snaps vertical entry into fenced code to fence-line end'
   assert.equal(activeState.selection.main.head, openFenceLine.from + 5);
 });
 
-test('cursor controller skips hidden marker gaps for task, ordered, and bullet lines', () => {
+test('cursor controller skips hidden marker gaps for task, ordered, bullet, and quote lines', () => {
   let activeState = EditorState.create({
-    doc: '- [ ] Task item\n1. Numbered item\n- Bullet item',
+    doc: '- [ ] Task item\n1. Numbered item\n- Bullet item\n> Quote item',
     selection: { anchor: 0 }
   });
 
@@ -537,6 +537,12 @@ test('cursor controller skips hidden marker gaps for task, ordered, and bullet l
   assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
   assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
+
+  setCursorByLineColumn(4, 2);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(4).from + 1);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(4).from + 2);
 });
 
 test('cursor controller keeps caret out of guide columns and supports list indent controls', () => {
