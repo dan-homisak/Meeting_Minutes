@@ -182,6 +182,36 @@ class FrontmatterLabelWidget extends WidgetType {
   }
 }
 
+class InlineImagePlaceholderWidget extends WidgetType {
+  constructor({ label = '', source = '' } = {}) {
+    super();
+    this.label = typeof label === 'string' && label.trim().length > 0 ? label.trim() : 'image';
+    this.source = typeof source === 'string' ? source.trim() : '';
+  }
+
+  eq(other) {
+    return (
+      other instanceof InlineImagePlaceholderWidget &&
+      this.label === other.label &&
+      this.source === other.source
+    );
+  }
+
+  toDOM() {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'mm-live-v4-image-placeholder mm-live-v4-inline-image-placeholder';
+    wrapper.textContent = this.label;
+    if (this.source) {
+      wrapper.setAttribute('title', this.source);
+    }
+    return wrapper;
+  }
+
+  ignoreEvent() {
+    return false;
+  }
+}
+
 function extractCopyTextForCodeBlock(state, sourceFrom, sourceTo) {
   if (!state?.doc || !Number.isFinite(sourceFrom) || !Number.isFinite(sourceTo) || sourceTo <= sourceFrom) {
     return '';
@@ -352,6 +382,34 @@ function normalizeInlineSpan(span) {
   };
 }
 
+function resolveImagePlaceholder(text) {
+  if (typeof text !== 'string' || !text.startsWith('!')) {
+    return null;
+  }
+
+  const markdownImageMatch = text.match(/^!\[([^\]\n]*)\]\(([^)\n]+)\)$/);
+  if (markdownImageMatch) {
+    const alt = markdownImageMatch[1] ?? '';
+    const source = markdownImageMatch[2] ?? '';
+    return {
+      label: alt.trim() || source.trim() || 'image',
+      source
+    };
+  }
+
+  const obsidianImageMatch = text.match(/^!\[\[([^[\]\n|]+)(?:\|([^[\]\n]+))?\]\]$/);
+  if (obsidianImageMatch) {
+    const target = obsidianImageMatch[1] ?? '';
+    const alias = obsidianImageMatch[2] ?? '';
+    return {
+      label: alias.trim() || target.trim() || 'image',
+      source: target
+    };
+  }
+
+  return null;
+}
+
 function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
   if (!doc || !span || !Number.isFinite(contentFrom) || !Number.isFinite(contentTo)) {
     return null;
@@ -372,6 +430,62 @@ function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
   const text = doc.sliceString(spanFrom, spanTo);
   if (typeof text !== 'string' || text.length === 0) {
     return null;
+  }
+
+  if (span.type === 'image') {
+    const image = resolveImagePlaceholder(text);
+    if (!image) {
+      return null;
+    }
+    return {
+      widget: new InlineImagePlaceholderWidget(image),
+      replaceFrom: spanFrom,
+      replaceTo: spanTo,
+      syntaxRanges: []
+    };
+  }
+
+  if (span.type === 'escape') {
+    if (!(text.startsWith('\\') && text.length === 2)) {
+      return null;
+    }
+    return {
+      contentFrom: spanFrom + 1,
+      contentTo: spanTo,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 1 }
+      ]
+    };
+  }
+
+  if (span.type === 'hardbreak') {
+    if (text !== '\\') {
+      return null;
+    }
+    return {
+      contentFrom: spanFrom,
+      contentTo: spanFrom,
+      syntaxRanges: [
+        { from: spanFrom, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'strong-emphasis') {
+    const isAsteriskStrongEmphasis = text.startsWith('***') && text.endsWith('***') && text.length > 6;
+    const isUnderscoreStrongEmphasis = text.startsWith('___') && text.endsWith('___') && text.length > 6;
+    if (!isAsteriskStrongEmphasis && !isUnderscoreStrongEmphasis) {
+      return null;
+    }
+    return {
+      className: 'mm-live-v4-inline-strong mm-live-v4-inline-emphasis',
+      contentFrom: spanFrom + 3,
+      contentTo: spanTo - 3,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 3 },
+        { from: spanTo - 3, to: spanTo }
+      ]
+    };
   }
 
   if (span.type === 'strong') {
@@ -451,11 +565,50 @@ function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
   }
 
   if (span.type === 'code') {
-    if (!(text.startsWith('`') && text.endsWith('`') && text.length > 2)) {
+    const codeMatch = text.match(/^(`+)([\s\S]*)\1$/);
+    if (!codeMatch || !codeMatch[1] || text.length <= codeMatch[1].length * 2) {
+      return null;
+    }
+    const markerLength = codeMatch[1].length;
+    return {
+      className: 'mm-live-v4-inline-code',
+      contentFrom: spanFrom + markerLength,
+      contentTo: spanTo - markerLength,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + markerLength },
+        { from: spanTo - markerLength, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'link' || span.type === 'reference-link') {
+    const match = text.match(/^\[([^\]\n]+)\]\(([^)\n]+)\)$/);
+    const referenceMatch = span.type === 'reference-link'
+      ? text.match(/^\[([^\]\n]+)\]\[([^\]\n]*)\]$/)
+      : null;
+    const labelText = match?.[1] ?? referenceMatch?.[1] ?? null;
+    if (typeof labelText !== 'string') {
+      return null;
+    }
+    const labelFrom = spanFrom + 1;
+    const labelTo = labelFrom + labelText.length;
+    return {
+      className: 'mm-live-v4-inline-link',
+      contentFrom: labelFrom,
+      contentTo: labelTo,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 1 },
+        { from: labelTo, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'autolink') {
+    if (!(text.startsWith('<') && text.endsWith('>') && text.length > 2)) {
       return null;
     }
     return {
-      className: 'mm-live-v4-inline-code',
+      className: 'mm-live-v4-inline-link',
       contentFrom: spanFrom + 1,
       contentTo: spanTo - 1,
       syntaxRanges: [
@@ -465,21 +618,12 @@ function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
     };
   }
 
-  if (span.type === 'link') {
-    const match = text.match(/^\[([^\]\n]+)\]\(([^)\n]+)\)$/);
-    if (!match || typeof match[1] !== 'string') {
-      return null;
-    }
-    const labelFrom = spanFrom + 1;
-    const labelTo = labelFrom + match[1].length;
+  if (span.type === 'bare-link') {
     return {
       className: 'mm-live-v4-inline-link',
-      contentFrom: labelFrom,
-      contentTo: labelTo,
-      syntaxRanges: [
-        { from: spanFrom, to: spanFrom + 1 },
-        { from: labelTo, to: spanTo }
-      ]
+      contentFrom: spanFrom,
+      contentTo: spanTo,
+      syntaxRanges: []
     };
   }
 
@@ -515,6 +659,24 @@ function resolveInlineStyleMeta(doc, span, contentFrom, contentTo) {
       syntaxRanges: [
         { from: spanFrom, to: innerStart },
         { from: spanTo - 2, to: spanTo }
+      ]
+    };
+  }
+
+  if (span.type === 'footnote-ref') {
+    const match = text.match(/^\[\^([^\]\n]+)\]$/);
+    if (!match || typeof match[1] !== 'string') {
+      return null;
+    }
+    const labelFrom = spanFrom + 2;
+    const labelTo = labelFrom + match[1].length;
+    return {
+      className: 'mm-live-v4-inline-footnote-ref',
+      contentFrom: labelFrom,
+      contentTo: labelTo,
+      syntaxRanges: [
+        { from: spanFrom, to: spanFrom + 2 },
+        { from: spanTo - 1, to: spanTo }
       ]
     };
   }
@@ -562,6 +724,26 @@ function buildInlineSpanDecorations(state, meta, selectionHead) {
       selectionHead >= Math.trunc(range.from) &&
       selectionHead <= Math.trunc(range.to)
     ));
+
+    const replaceFrom = Number.isFinite(styleMeta.replaceFrom) ? Math.trunc(styleMeta.replaceFrom) : null;
+    const replaceTo = Number.isFinite(styleMeta.replaceTo) ? Math.trunc(styleMeta.replaceTo) : null;
+    const hasReplacement = (
+      styleMeta.widget &&
+      Number.isFinite(replaceFrom) &&
+      Number.isFinite(replaceTo) &&
+      replaceTo > replaceFrom
+    );
+    const selectionInsideReplacement = hasReplacement && selectionHead >= replaceFrom && selectionHead <= replaceTo;
+
+    if (hasReplacement && !selectionInsideReplacement) {
+      decorations.push(
+        Decoration.replace({
+          widget: styleMeta.widget,
+          inclusive: false
+        }).range(replaceFrom, replaceTo)
+      );
+      continue;
+    }
 
     if (!selectionInsideSyntax) {
       for (const range of syntaxRanges) {
@@ -627,6 +809,14 @@ function resolveLineTransformMeta(state, transform) {
     return base;
   }
 
+  if (transform.type === 'definition') {
+    return {
+      ...base,
+      contentFrom: range.from,
+      contentClass: 'mm-live-v4-source-content mm-live-v4-source-definition'
+    };
+  }
+
   if (transform.type === 'paragraph') {
     return {
       ...base,
@@ -650,16 +840,19 @@ function resolveLineTransformMeta(state, transform) {
   }
 
   if (transform.type === 'blockquote') {
-    const match = lineText.match(/^(\s*)(>)(\s?)/);
+    const match = lineText.match(/^(\s*)((?:>\s?)*)/);
     if (!match || !match[2]) {
       return null;
     }
     const indentationText = match[1] ?? '';
     const markerText = match[2] ?? '>';
-    const trailingSpaceText = match[3] ?? '';
+    const trailingSpaceText = markerText.match(/\s*$/)?.[0] ?? '';
+    const markerCoreText = trailingSpaceText
+      ? markerText.slice(0, -trailingSpaceText.length)
+      : markerText;
     const markerCoreFrom = range.from + indentationText.length;
-    const markerCoreTo = markerCoreFrom + markerText.length;
-    const markerTo = markerCoreTo + trailingSpaceText.length;
+    const markerCoreTo = markerCoreFrom + markerCoreText.length;
+    const markerTo = markerCoreFrom + markerText.length;
     return {
       ...base,
       markerFrom: range.from,
@@ -942,6 +1135,24 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       continue;
     }
 
+    if (meta.type === 'definition') {
+      if (!meta.isActive && meta.sourceTo > meta.sourceFrom) {
+        decorations.push(
+          Decoration.line({
+            attributes: {
+              class: 'mm-live-v4-source-definition-line'
+            }
+          }).range(meta.sourceFrom)
+        );
+        decorations.push(
+          Decoration.mark({
+            class: 'mm-live-v4-syntax-hidden'
+          }).range(meta.sourceFrom, meta.sourceTo)
+        );
+      }
+      continue;
+    }
+
     const hasMarkerRange = (
       Number.isFinite(meta.markerFrom) &&
       Number.isFinite(meta.markerTo) &&
@@ -1000,7 +1211,12 @@ function buildSourceLineDecorations(state, sourceTransforms) {
       }
 
       if (
-        (hideCoreMarker || meta.type === 'blockquote') &&
+        (
+          hideCoreMarker ||
+          meta.type === 'blockquote' ||
+          meta.type === 'list' ||
+          meta.type === 'task'
+        ) &&
         meta.markerTo > markerCoreTo
       ) {
         decorations.push(

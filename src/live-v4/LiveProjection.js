@@ -165,7 +165,8 @@ function resolveInlineBlockId(blocks, inlineFrom) {
 }
 
 const ACTIVE_SLICE_TYPES = new Set(['paragraph', 'blockquote', 'list']);
-const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'paragraph', 'list', 'task', 'blockquote', 'frontmatter']);
+const SOURCE_TRANSFORM_TYPES = new Set(['heading', 'paragraph', 'list', 'task', 'blockquote', 'frontmatter', 'definition']);
+const ACTIVE_RAW_SOURCE_TYPES = new Set(['table', 'html', 'footnote']);
 
 function canSliceActiveBlock(block) {
   if (!block || typeof block.type !== 'string') {
@@ -185,6 +186,13 @@ function shouldUseSourceTransform(block) {
     return true;
   }
   return Number.isFinite(block.lineFrom) && Number.isFinite(block.lineTo) && block.lineFrom === block.lineTo;
+}
+
+function shouldLeaveActiveBlockAsRawSource(block, activeBlockId) {
+  if (!block || block.id !== activeBlockId || typeof block.type !== 'string') {
+    return false;
+  }
+  return ACTIVE_RAW_SOURCE_TYPES.has(block.type);
 }
 
 function collectInlineSpansForRange(inlines, rangeFrom, rangeTo) {
@@ -355,6 +363,10 @@ export function buildLiveProjection({
       });
 
       interactionEntries.push(...collectMarkerEntriesForBlock(state.doc, block));
+      continue;
+    }
+
+    if (shouldLeaveActiveBlockAsRawSource(block, activeBlockId)) {
       continue;
     }
 

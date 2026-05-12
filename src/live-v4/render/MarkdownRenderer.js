@@ -92,7 +92,11 @@ function transformObsidianSyntax(markdownText) {
     return `[${label}](${href})`;
   };
 
-  return source.replace(/(!)?\[\[([^[\]\n|]+)(?:\|([^[\]\n]+))?\]\]/g, replaceWikiLike);
+  return source
+    .replace(/(!)?\[\[([^[\]\n|]+)(?:\|([^[\]\n]+))?\]\]/g, replaceWikiLike)
+    .replace(/\[\^([^\]\n]+)\]/g, (_match, labelRaw) => (
+      `<sup class="mm-live-v4-inline-footnote-ref">${escapeHtml(labelRaw ?? '')}</sup>`
+    ));
 }
 
 function renderInlineMarkdown(markdownEngine, markdownText) {
@@ -150,6 +154,29 @@ function renderListLikeBlock(markdownText, options = null, markdownEngine = null
   const bullet = /^\d+\.$/.test(marker) ? marker : '&bull;';
   const contentHtml = renderInlineMarkdown(markdownEngine, listMatch[3] ?? '');
   return `<div class="mm-live-list-row"${depthAttr}${sourceAttrs}><span class="list-bullet">${bullet}</span><span class="list-content">${contentHtml}</span></div>`;
+}
+
+function renderFootnoteDefinitionBlock(markdownText, options = null, markdownEngine = null) {
+  const source = typeof markdownText === 'string' ? markdownText.replace(/\n+$/, '') : '';
+  if (!source || options?.blockType !== 'footnote') {
+    return null;
+  }
+
+  const match = source.match(/^\s{0,3}\[\^([^\]\n]+)\]:\s*([\s\S]*)$/);
+  if (!match) {
+    return null;
+  }
+
+  const sourceFrom = Number(options?.sourceFrom);
+  const sourceTo = Number(options?.sourceTo);
+  const hasSourceBounds = Number.isFinite(sourceFrom) && Number.isFinite(sourceTo) && sourceTo > sourceFrom;
+  const sourceAttrs = hasSourceBounds
+    ? ` data-src-from="${Math.trunc(sourceFrom)}" data-src-to="${Math.trunc(sourceTo)}"`
+    : '';
+
+  const label = escapeHtml(match[1] ?? '');
+  const contentHtml = renderInlineMarkdown(markdownEngine, match[2] ?? '');
+  return `<div class="mm-live-v4-footnote-definition"${sourceAttrs}><sup class="mm-live-v4-inline-footnote-ref">${label}</sup><span class="mm-live-v4-footnote-content">${contentHtml}</span></div>`;
 }
 
 function createSanitizer() {
@@ -319,6 +346,11 @@ export function createMarkdownRenderer({
   }
 
   function renderMarkdownHtml(markdownText, options = null) {
+    const footnoteRendered = renderFootnoteDefinitionBlock(markdownText, options, markdownEngine);
+    if (typeof footnoteRendered === 'string') {
+      return sanitizeHtml(footnoteRendered);
+    }
+
     const listLikeRendered = renderListLikeBlock(markdownText, options, markdownEngine);
     if (typeof listLikeRendered === 'string') {
       return sanitizeHtml(listLikeRendered);

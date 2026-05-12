@@ -7,7 +7,10 @@ const BLOCK_TYPES = new Set([
   'task',
   'table',
   'code',
-  'hr'
+  'hr',
+  'html',
+  'definition',
+  'footnote'
 ]);
 
 function normalizeNumber(value, fallback = 0) {

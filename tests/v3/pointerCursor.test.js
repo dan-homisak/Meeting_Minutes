@@ -519,24 +519,30 @@ test('cursor controller skips hidden marker gaps for task, ordered, bullet, and 
     return position;
   }
 
-  // Task list: jump from content start across hidden trailing marker gap.
+  // Cursor can traverse visible marker cores, but still skips hidden guide/gap ranges.
   setCursorByLineColumn(1, 6);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 5);
-  // Inside visible syntax we defer to native per-character movement.
+  setCursorByLineColumn(1, 5);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
+  setCursorByLineColumn(1, 5);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(1).from + 6);
 
-  // Ordered list: same behavior as bullets/tasks for hidden-gap transitions.
   setCursorByLineColumn(2, 3);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 2);
+  setCursorByLineColumn(2, 2);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
+  setCursorByLineColumn(2, 2);
+  assert.equal(cursor.moveCursorHorizontally(cursorView, 1, 'ArrowRight'), true);
+  assert.equal(activeState.selection.main.head, activeState.doc.line(2).from + 3);
 
   setCursorByLineColumn(3, 2);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
   assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
+  setCursorByLineColumn(3, 1);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
-  assert.equal(activeState.selection.main.head, activeState.doc.line(3).from + 1);
 
   setCursorByLineColumn(4, 2);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
@@ -621,6 +627,7 @@ test('cursor controller does not enter hidden list guide columns near marker edg
   }).state;
 
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), true);
+  assert.equal(activeState.selection.main.head, line.from + 5);
   assert.equal(cursor.moveCursorHorizontally(cursorView, -1, 'ArrowLeft'), false);
   activeState = activeState.update({
     selection: {

@@ -68,6 +68,18 @@ function collectLineAttributesByClass(projection, from, to, classPattern) {
   return attributes;
 }
 
+function collectReplacementsByWidgetName(projection, from, to, namePattern) {
+  const ranges = [];
+  projection.decorations.between(from, to, (rangeFrom, rangeTo, value) => {
+    const widget = value?.spec?.widget ?? null;
+    const widgetName = widget?.constructor?.name ?? '';
+    if (String(widgetName).includes(namePattern)) {
+      ranges.push([Number(rangeFrom), Number(rangeTo)]);
+    }
+  });
+  return ranges;
+}
+
 test('buildLiveProjection uses source transforms for single-line paragraph blocks', () => {
   const text = '# A\n\nB\n\nC\n';
   const state = EditorState.create({
@@ -314,6 +326,95 @@ test('blockquote content start keeps marker rendered while marker selection reve
   assert.equal(markerHidden.some(([from, to]) => from === 1 && to === 2), true);
   assert.equal(markerQuoteLine[0]?.attributes?.['data-mm-quote-rendered'], 'false');
   assert.equal(markerVisibleMarker.some(([from, to]) => from === 0 && to === 1), true);
+});
+
+test('list and task marker core becomes source-visible in marker zone while trailing gap stays hidden', () => {
+  const text = '- Bullet\n1. Ordered\n- [ ] Task\n';
+  const orderedFrom = text.indexOf('1.');
+  const taskFrom = text.indexOf('- [ ]');
+  const model = createModel(text, [
+    {
+      id: 'l1',
+      type: 'list',
+      from: 0,
+      to: 8,
+      lineFrom: 1,
+      lineTo: 1,
+      depth: 0,
+      attrs: { depth: 0, listMarker: '-' }
+    },
+    {
+      id: 'l2',
+      type: 'list',
+      from: orderedFrom,
+      to: orderedFrom + '1. Ordered'.length,
+      lineFrom: 2,
+      lineTo: 2,
+      depth: 0,
+      attrs: { depth: 0, listMarker: '1.' }
+    },
+    {
+      id: 't1',
+      type: 'task',
+      from: taskFrom,
+      to: taskFrom + '- [ ] Task'.length,
+      lineFrom: 3,
+      lineTo: 3,
+      depth: 0,
+      attrs: { checked: false, depth: 0, listMarker: '-' }
+    }
+  ]);
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const cases = [
+    {
+      anchor: 0,
+      hiddenRanges: [[1, 2]],
+      widgetName: 'InlineListPrefixWidget',
+      widgetAt: 2,
+      expectWidget: false
+    },
+    {
+      anchor: orderedFrom + 1,
+      hiddenRanges: [[orderedFrom + 2, orderedFrom + 3]],
+      widgetName: 'InlineListPrefixWidget',
+      widgetAt: orderedFrom + 3,
+      expectWidget: false
+    },
+    {
+      anchor: taskFrom + 1,
+      hiddenRanges: [[taskFrom + 5, taskFrom + 6]],
+      widgetName: 'InlineTaskPrefixWidget',
+      widgetAt: taskFrom + 6,
+      expectWidget: false
+    }
+  ];
+
+  for (const entry of cases) {
+    const state = EditorState.create({
+      doc: text,
+      selection: { anchor: entry.anchor }
+    });
+    const projection = renderer.buildRenderProjection(state, model);
+    const hiddenRanges = collectSyntaxHiddenRanges(projection, 0, text.length);
+    const widgets = collectReplacementsByWidgetName(projection, 0, text.length, entry.widgetName);
+
+    for (const range of entry.hiddenRanges) {
+      assert.equal(
+        hiddenRanges.some(([from, to]) => from === range[0] && to === range[1]),
+        true
+      );
+    }
+    assert.equal(
+      widgets.some(([from, to]) => from === entry.widgetAt && to === entry.widgetAt),
+      entry.expectWidget
+    );
+  }
 });
 
 test('frontmatter uses source transforms instead of rendered block replacement', () => {
@@ -592,4 +693,120 @@ test('inline code selection adds explicit visible selection styling for selected
   );
 
   assert.equal(selectedRanges.some(([from, to]) => from === selectedTextFrom && to === selectedTextTo), true);
+});
+
+test('richer inline spans hide syntax and render stable inline replacements', () => {
+  const text = 'Inline [ref link][ref], <https://example.com>, ***both***, \\*literal\\*, ![[diagram.png]], [^1], and end\\\n';
+  const line = text.trimEnd();
+  const imageFrom = text.indexOf('![[diagram.png]]');
+  const imageTo = imageFrom + '![[diagram.png]]'.length;
+  const model = createModel(
+    text,
+    [
+      { id: 'p1', type: 'paragraph', from: 0, to: line.length, lineFrom: 1, lineTo: 1, depth: null, attrs: {} }
+    ],
+    [
+      { from: text.indexOf('[ref link][ref]'), to: text.indexOf('[ref link][ref]') + '[ref link][ref]'.length, type: 'reference-link' },
+      { from: text.indexOf('<https://example.com>'), to: text.indexOf('<https://example.com>') + '<https://example.com>'.length, type: 'autolink' },
+      { from: text.indexOf('***both***'), to: text.indexOf('***both***') + '***both***'.length, type: 'strong-emphasis' },
+      { from: text.indexOf('\\*literal'), to: text.indexOf('\\*literal') + 2, type: 'escape' },
+      { from: text.indexOf('literal\\*') + 'literal'.length, to: text.indexOf('literal\\*') + 'literal'.length + 2, type: 'escape' },
+      { from: imageFrom, to: imageTo, type: 'image' },
+      { from: text.indexOf('[^1]'), to: text.indexOf('[^1]') + '[^1]'.length, type: 'footnote-ref' },
+      { from: text.lastIndexOf('\\'), to: text.lastIndexOf('\\') + 1, type: 'hardbreak' }
+    ]
+  );
+
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const state = EditorState.create({
+    doc: text,
+    selection: { anchor: 0 }
+  });
+  const projection = renderer.buildRenderProjection(state, model);
+  const hidden = collectSyntaxHiddenRanges(projection, 0, line.length);
+  const strongRanges = collectRangesByClass(projection, 0, line.length, 'mm-live-v4-inline-strong');
+  const linkRanges = collectRangesByClass(projection, 0, line.length, 'mm-live-v4-inline-link');
+  const footnoteRanges = collectRangesByClass(projection, 0, line.length, 'mm-live-v4-inline-footnote-ref');
+  const imageReplacements = collectReplacementsByWidgetName(projection, 0, line.length, 'InlineImagePlaceholderWidget');
+
+  assert.equal(hidden.some(([from, to]) => from === text.indexOf('[ref link][ref]') && to === text.indexOf('[ref link][ref]') + 1), true);
+  assert.equal(hidden.some(([from, to]) => from === text.indexOf('<https://example.com>') && to === text.indexOf('<https://example.com>') + 1), true);
+  assert.equal(strongRanges.some(([from, to]) => from === text.indexOf('both') && to === text.indexOf('both') + 'both'.length), true);
+  assert.equal(linkRanges.length >= 2, true);
+  assert.equal(footnoteRanges.some(([from, to]) => from === text.indexOf('1') && to === text.indexOf('1') + 1), true);
+  assert.deepEqual(imageReplacements, [[imageFrom, imageTo]]);
+  assert.equal(hidden.some(([from, to]) => from === text.lastIndexOf('\\') && to === text.lastIndexOf('\\') + 1), true);
+});
+
+test('inactive reference definitions are hidden while active definitions stay editable', () => {
+  const text = '[ref]: https://example.net\n\nBody\n';
+  const bodyFrom = text.indexOf('Body');
+  const model = createModel(text, [
+    { id: 'd1', type: 'definition', from: 0, to: '[ref]: https://example.net'.length, lineFrom: 1, lineTo: 1, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyFrom, to: bodyFrom + 'Body'.length, lineFrom: 3, lineTo: 3, depth: null, attrs: {} }
+  ]);
+  const renderer = createLiveRenderer({
+    liveDebug: { trace() {} },
+    renderMarkdownHtml(source) {
+      return `<p>${source}</p>`;
+    }
+  });
+
+  const inactiveState = EditorState.create({
+    doc: text,
+    selection: { anchor: bodyFrom }
+  });
+  const inactiveProjection = renderer.buildRenderProjection(inactiveState, model);
+  const inactiveHidden = collectSyntaxHiddenRanges(inactiveProjection, 0, text.length);
+  assert.deepEqual(inactiveHidden, [[0, '[ref]: https://example.net'.length]]);
+
+  const activeState = EditorState.create({
+    doc: text,
+    selection: { anchor: 2 }
+  });
+  const activeProjection = renderer.buildRenderProjection(activeState, model);
+  const activeHidden = collectSyntaxHiddenRanges(activeProjection, 0, text.length);
+  assert.deepEqual(activeHidden, []);
+});
+
+test('active render-only blocks stay as raw source instead of being replaced', () => {
+  const text = '| A | B |\n| --- | --- |\n| 1 | 2 |\n\nBody\n';
+  const bodyFrom = text.indexOf('Body');
+  const tableTo = text.indexOf('\n\nBody');
+  const model = createModel(text, [
+    { id: 'tbl1', type: 'table', from: 0, to: tableTo, lineFrom: 1, lineTo: 3, depth: null, attrs: {} },
+    { id: 'p1', type: 'paragraph', from: bodyFrom, to: bodyFrom + 'Body'.length, lineFrom: 5, lineTo: 5, depth: null, attrs: {} }
+  ]);
+
+  const inactiveState = EditorState.create({
+    doc: text,
+    selection: { anchor: bodyFrom }
+  });
+  const inactiveProjection = buildLiveProjection({
+    state: inactiveState,
+    model,
+    renderMarkdownHtml(source) {
+      return `<table>${source}</table>`;
+    }
+  });
+  assert.equal(inactiveProjection.renderedBlocks.some((entry) => entry.blockId === 'tbl1'), true);
+
+  const activeState = EditorState.create({
+    doc: text,
+    selection: { anchor: 2 }
+  });
+  const activeProjection = buildLiveProjection({
+    state: activeState,
+    model,
+    renderMarkdownHtml(source) {
+      return `<table>${source}</table>`;
+    }
+  });
+  assert.equal(activeProjection.renderedBlocks.some((entry) => entry.blockId === 'tbl1'), false);
 });

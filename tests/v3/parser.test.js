@@ -79,3 +79,77 @@ test('parser captures highlight inline spans for ==mark== syntax', () => {
   assert.ok(highlight);
   assert.equal(source.slice(highlight.from, highlight.to), '==mark==');
 });
+
+test('parser keeps table and html ranges renderable as whole blocks', () => {
+  const parser = createObsidianCoreParser({
+    markdownEngine: createMarkdownEngine()
+  });
+
+  const source = [
+    '| Left | Right |',
+    '| --- | --- |',
+    '| A | B |',
+    '',
+    'Inline HTML <span>text</span>',
+    '',
+    '<div>',
+    'HTML block',
+    '</div>',
+    ''
+  ].join('\n');
+  const result = parser.setText(source, 'renderable-blocks');
+
+  const table = result.model.blocks.find((block) => block.type === 'table');
+  assert.ok(table);
+  assert.equal(source.slice(table.from, table.to), '| Left | Right |\n| --- | --- |\n| A | B |');
+
+  const htmlBlocks = result.model.blocks.filter((block) => block.type === 'html');
+  assert.equal(htmlBlocks.length, 2);
+  assert.equal(source.slice(htmlBlocks[0].from, htmlBlocks[0].to), 'Inline HTML <span>text</span>');
+  assert.equal(source.slice(htmlBlocks[1].from, htmlBlocks[1].to), '<div>\nHTML block\n</div>');
+});
+
+test('parser covers reference definitions and footnote definitions', () => {
+  const parser = createObsidianCoreParser({
+    markdownEngine: createMarkdownEngine()
+  });
+
+  const source = '[ref]: https://example.net\n\nFootnote marker[^1].\n\n[^1]: Footnote body.\n';
+  const result = parser.setText(source, 'definitions');
+
+  const definition = result.model.blocks.find((block) => block.type === 'definition');
+  assert.ok(definition);
+  assert.equal(source.slice(definition.from, definition.to), '[ref]: https://example.net');
+
+  const footnote = result.model.blocks.find((block) => block.type === 'footnote');
+  assert.ok(footnote);
+  assert.equal(source.slice(footnote.from, footnote.to), '[^1]: Footnote body.');
+});
+
+test('parser captures richer inline spans used by live inline rendering', () => {
+  const parser = createObsidianCoreParser({
+    markdownEngine: createMarkdownEngine()
+  });
+
+  const source = [
+    'Inline [inline link](https://example.com "title"), [ref link][ref], <https://example.com>, https://example.org, ***both***, \\*literal\\*, ![[diagram.png]], [^1], and code ``tick ` inside``.',
+    `Hard break${'\\'}`,
+    ''
+  ].join('\n');
+  const result = parser.setText(source, 'richer-inline');
+  const spans = result.model.inlines.map((inline) => ({
+    type: inline.type,
+    text: source.slice(inline.from, inline.to)
+  }));
+
+  assert.ok(spans.some((span) => span.type === 'link' && span.text === '[inline link](https://example.com "title")'));
+  assert.ok(spans.some((span) => span.type === 'reference-link' && span.text === '[ref link][ref]'));
+  assert.ok(spans.some((span) => span.type === 'autolink' && span.text === '<https://example.com>'));
+  assert.ok(spans.some((span) => span.type === 'bare-link' && span.text === 'https://example.org'));
+  assert.ok(spans.some((span) => span.type === 'strong-emphasis' && span.text === '***both***'));
+  assert.equal(spans.filter((span) => span.type === 'escape').length >= 2, true);
+  assert.ok(spans.some((span) => span.type === 'image' && span.text === '![[diagram.png]]'));
+  assert.ok(spans.some((span) => span.type === 'footnote-ref' && span.text === '[^1]'));
+  assert.ok(spans.some((span) => span.type === 'code' && span.text === '``tick ` inside``'));
+  assert.ok(spans.some((span) => span.type === 'hardbreak' && span.text === '\\'));
+});

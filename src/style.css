@@ -404,6 +404,36 @@ button:disabled {
   color: color-mix(in srgb, var(--interactive-accent) 90%, #1e40af 10%);
 }
 
+.mm-live-v4-image-placeholder {
+  background: var(--background-primary-alt);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  display: inline-flex;
+  font-family: var(--font-ui);
+  font-size: 0.88em;
+  line-height: 1.2;
+  padding: 0.08rem 0.35rem;
+  vertical-align: baseline;
+}
+
+.mm-live-v4-inline-footnote-ref {
+  color: var(--interactive-accent);
+  font-size: 0.72em;
+  line-height: 1;
+  vertical-align: super;
+}
+
+.mm-live-v4-footnote-definition {
+  color: var(--text-muted);
+  display: flex;
+  gap: 0.4rem;
+}
+
+.mm-live-v4-footnote-content {
+  min-width: 0;
+}
+
 .cm-line.mm-live-v4-source-frontmatter-line {
   background: var(--frontmatter-background);
   border-left: 1px solid var(--frontmatter-border);
