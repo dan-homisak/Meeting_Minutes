@@ -145,6 +145,10 @@ function classifyBlockSource(source, { isFirstBlock = false, hint = '' } = {}) {
     return 'table';
   }
 
+  if (hint === 'html_block') {
+    return 'html';
+  }
+
   if (hint === 'fence' || hint === 'code_block') {
     return 'code';
   }
@@ -165,6 +169,18 @@ function classifyBlockSource(source, { isFirstBlock = false, hint = '' } = {}) {
   }
   if (/^\s*>\s?/.test(trimmed)) {
     return 'blockquote';
+  }
+  if (/^\s{0,3}\[\^[^\]\n]+\]:/.test(trimmed)) {
+    return 'footnote';
+  }
+  if (/^\s{0,3}\[[^\]\n]+\]:\s+\S/.test(trimmed)) {
+    return 'definition';
+  }
+  if (
+    /^\s{0,3}<\/?[A-Za-z][A-Za-z0-9-]*(?:\s[^>\n]*)?>/.test(trimmed) ||
+    /<\/?[A-Za-z][A-Za-z0-9-]*(?:\s[^>\n]*)?>/.test(trimmed)
+  ) {
+    return 'html';
   }
   if (/^\s*([`~]{3,})/.test(trimmed) && /([`~]{3,})\s*$/.test(trimmed)) {
     return 'code';
@@ -295,8 +311,8 @@ function collectBlockCandidates(tokens, source, absoluteOffset) {
       continue;
     }
 
-    if (token.type === 'tr_open') {
-      candidates.push({ ...mapped, priority: 310, hint: token.type });
+    if (token.type === 'table_open') {
+      candidates.push({ ...mapped, priority: 330, hint: token.type });
       continue;
     }
 
@@ -307,9 +323,9 @@ function collectBlockCandidates(tokens, source, absoluteOffset) {
     if (
       token.type === 'bullet_list_open' ||
       token.type === 'ordered_list_open' ||
-      token.type === 'table_open' ||
       token.type === 'thead_open' ||
-      token.type === 'tbody_open'
+      token.type === 'tbody_open' ||
+      token.type === 'tr_open'
     ) {
       continue;
     }
@@ -416,13 +432,77 @@ function assignStableBlockIds(previousBlocks, nextBlocks) {
 }
 
 const INLINE_PATTERNS = [
+  { type: 'image', regex: /!\[[^\]\n]*\]\([^\)\n]+\)|!\[\[[^[\]\n|]+(?:\|[^[\]\n]+)?\]\]/g },
+  { type: 'code', regex: /(`+)[^\n]*?\1/g },
+  { type: 'reference-link', regex: /\[[^\]\n]+\]\[[^\]\n]*\]/g },
   { type: 'link', regex: /\[[^\]\n]+\]\([^\)\n]+\)/g },
   { type: 'wikilink', regex: /\[\[[^[\]\n|]+(?:\|[^[\]\n]+)?\]\]/g },
-  { type: 'strong', regex: /\*\*[^*\n]+\*\*|__[^_\n]+__/g },
-  { type: 'emphasis', regex: /\*[^*\n]+\*|_[^_\n]+_/g },
-  { type: 'strike', regex: /~~[^~\n]+~~/g },
-  { type: 'code', regex: /`[^`\n]+`/g }
+  { type: 'autolink', regex: /<(?:(?:https?|mailto):[^<>\s]+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})>/g },
+  { type: 'bare-link', regex: /\bhttps?:\/\/[^\s<>()\],]+[^\s<>()\],.;:!?]/g },
+  { type: 'strong-emphasis', regex: /(?<!\\)\*\*\*[^*\n]+(?<!\\)\*\*\*|(?<!\\)___[^_\n]+(?<!\\)___/g },
+  { type: 'strong', regex: /(?<!\\)\*\*[^*\n]+(?<!\\)\*\*|(?<!\\)__[^_\n]+(?<!\\)__/g },
+  { type: 'emphasis', regex: /(?<![\\*])\*[^*\n]+(?<!\\)\*(?!\*)|(?<![\\_])_[^_\n]+(?<!\\)_(?!_)/g },
+  { type: 'strike', regex: /(?<!\\)~~[^~\n]+(?<!\\)~~/g },
+  { type: 'highlight', regex: /(?<!\\)==[^=\n]+(?<!\\)==/g },
+  { type: 'footnote-ref', regex: /\[\^[^\]\n]+\]/g },
+  { type: 'escape', regex: /\\[\\`*{}\[\]()#+\-.!_>~|]/g },
+  { type: 'hardbreak', regex: /\\$/g }
 ];
+
+const INLINE_TYPE_PRIORITY = Object.freeze({
+  image: 460,
+  code: 440,
+  link: 390,
+  wikilink: 390,
+  'reference-link': 390,
+  'strong-emphasis': 360,
+  autolink: 340,
+  'bare-link': 300,
+  strong: 240,
+  strike: 220,
+  highlight: 210,
+  emphasis: 180,
+  'footnote-ref': 170,
+  hardbreak: 80,
+  escape: 70
+});
+
+function inlinePriority(type) {
+  return INLINE_TYPE_PRIORITY[type] ?? 100;
+}
+
+function spansOverlap(left, right) {
+  if (!left || !right || !Number.isFinite(left.from) || !Number.isFinite(left.to) || !Number.isFinite(right.from) || !Number.isFinite(right.to)) {
+    return false;
+  }
+  return left.from < right.to && right.from < left.to;
+}
+
+function selectNonOverlappingInlineSpans(spans) {
+  const candidates = (Array.isArray(spans) ? spans : [])
+    .filter((span) => (
+      span &&
+      Number.isFinite(span.from) &&
+      Number.isFinite(span.to) &&
+      span.to > span.from
+    ))
+    .sort((left, right) => (
+      inlinePriority(right.type) - inlinePriority(left.type) ||
+      (right.to - right.from) - (left.to - left.from) ||
+      left.from - right.from ||
+      left.to - right.to
+    ));
+
+  const selected = [];
+  for (const candidate of candidates) {
+    if (selected.some((existing) => spansOverlap(existing, candidate))) {
+      continue;
+    }
+    selected.push(candidate);
+  }
+
+  return selected.sort((left, right) => left.from - right.from || left.to - right.to);
+}
 
 function collectInlineSpans(text, blocks) {
   const spans = [];
@@ -454,8 +534,7 @@ function collectInlineSpans(text, blocks) {
     }
   }
 
-  spans.sort((left, right) => left.from - right.from || left.to - right.to);
-  return spans;
+  return selectNonOverlappingInlineSpans(spans);
 }
 
 function splitRangeByNonEmptyLines(source, from, to) {
@@ -611,6 +690,56 @@ function collectUncoveredListTaskBlocks(source, lineOffsets, existingBlocks, min
   return additions;
 }
 
+function collectUncoveredDefinitionBlocks(source, lineOffsets, existingBlocks, minimumFrom = 0) {
+  const additions = [];
+  const text = normalizeText(source);
+  const minOffset = Math.max(0, Math.trunc(minimumFrom));
+  const lineCount = Math.max(1, lineOffsets.length - 1);
+
+  for (let lineIndex = 0; lineIndex < lineCount; lineIndex += 1) {
+    const lineFrom = offsetAtLine(lineOffsets, lineIndex);
+    if (lineFrom < minOffset) {
+      continue;
+    }
+
+    const rawLineEnd = offsetAtLine(lineOffsets, lineIndex + 1);
+    const lineToWithoutNewline = rawLineEnd > lineFrom && text[rawLineEnd - 1] === '\n'
+      ? rawLineEnd - 1
+      : rawLineEnd;
+    if (lineToWithoutNewline <= lineFrom) {
+      continue;
+    }
+
+    const rawLine = text.slice(lineFrom, lineToWithoutNewline);
+    const trimmedRight = rawLine.replace(/[ \t\r]+$/g, '');
+    const lineTo = lineFrom + trimmedRight.length;
+    if (lineTo <= lineFrom) {
+      continue;
+    }
+
+    if (!/^\s{0,3}\[[^\]\n]+\]:\s+\S/.test(trimmedRight)) {
+      continue;
+    }
+
+    if (lineOverlapsExistingBlock([...existingBlocks, ...additions], lineFrom, lineTo)) {
+      continue;
+    }
+
+    additions.push({
+      id: null,
+      type: 'definition',
+      from: lineFrom,
+      to: lineTo,
+      lineFrom: resolveLineForOffset(lineOffsets, lineFrom),
+      lineTo: resolveLineForOffset(lineOffsets, Math.max(lineFrom, lineTo - 1)),
+      depth: null,
+      attrs: {}
+    });
+  }
+
+  return additions;
+}
+
 function parseBlocksFromText(markdownEngine, text, previousBlocks = []) {
   const source = normalizeText(text);
   const lineOffsets = buildLineStartOffsets(source);
@@ -687,6 +816,14 @@ function parseBlocksFromText(markdownEngine, text, previousBlocks = []) {
     parseOffset
   );
   blocks.push(...uncoveredListTaskBlocks);
+
+  const uncoveredDefinitionBlocks = collectUncoveredDefinitionBlocks(
+    source,
+    lineOffsets,
+    blocks,
+    parseOffset
+  );
+  blocks.push(...uncoveredDefinitionBlocks);
 
   const sortedBlocks = blocks
     .filter((block) => Number.isFinite(block.from) && Number.isFinite(block.to) && block.to > block.from)

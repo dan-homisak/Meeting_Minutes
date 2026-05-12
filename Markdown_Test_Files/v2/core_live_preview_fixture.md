@@ -10,10 +10,15 @@ owner: team-notes
 
 ## Heading Two
 
-Paragraph with a [standard link](https://example.com), a [[Wiki Target]], and an embed ![[diagram.png]].
+==Paragraph== with a [standard link](https://example.com), a [[Wiki Target]], and an embed ![[diagram.png]].
+
+`~text~`
+~text~
 
 > Blockquote line
 > continues on second line.
+
+>
 
 - [ ] Open task item
 - [x] Done task item
@@ -26,7 +31,7 @@ Paragraph with a [standard link](https://example.com), a [[Wiki Target]], and an
 - This is a `bullet` list.
   - This is a nested bullet.
     - This is a further nested bullet.
-    - And another **bullet**. 
+    - And another **bullet is here**. 
 
 
 | Name | Value |

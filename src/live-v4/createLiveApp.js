@@ -256,6 +256,7 @@ export function createLiveApp({
         hasWidget: Boolean(lineElement.querySelector('.mm-live-v4-block-widget')),
         lineListDepth: lineElement.getAttribute('data-mm-list-depth'),
         lineMarkerChars: lineElement.getAttribute('data-mm-marker-chars'),
+        lineQuoteRendered: lineElement.getAttribute('data-mm-quote-rendered'),
         sourceContentRect: toSerializableRect(sourceContent?.getBoundingClientRect?.() ?? null),
         sourceContentText: sourceContent?.innerText ?? null,
         inlinePrefixClass: inlinePrefix?.className ?? null,

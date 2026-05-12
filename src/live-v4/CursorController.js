@@ -1,41 +1,50 @@
-import { EditorSelection } from '@codemirror/state';
-import { isCodeFenceLineText, resolveCodeFenceCaretPosition } from './codeFenceCaret.js';
+import { EditorSelection } from "@codemirror/state";
+import {
+  isCodeFenceLineText,
+  resolveCodeFenceCaretPosition,
+} from "./codeFenceCaret.js";
 
 function readMarkerGapRange(lineText, lineFrom) {
-  if (typeof lineText !== 'string' || !Number.isFinite(lineFrom)) {
+  if (typeof lineText !== "string" || !Number.isFinite(lineFrom)) {
     return null;
   }
 
-  const taskMatch = lineText.match(/^(\s*)([-+*]|\d+\.)(\s+)(\[(?: |x|X)\])(\s+)/);
+  const taskMatch = lineText.match(
+    /^(\s*)([-+*]|\d+\.)(\s+)(\[(?: |x|X)\])(\s+)/,
+  );
   if (taskMatch) {
-    const indentationText = taskMatch[1] ?? '';
-    const listToken = taskMatch[2] ?? '-';
-    const listKind = /^\d+\.$/.test(listToken) ? 'ordered' : 'bullet';
-    const markerPrefixSpacing = taskMatch[3] ?? ' ';
-    const markerCoreText = taskMatch[4] ?? '[ ]';
-    const trailingSpacing = taskMatch[5] ?? ' ';
+    const indentationText = taskMatch[1] ?? "";
+    const listToken = taskMatch[2] ?? "-";
+    const listKind = /^\d+\.$/.test(listToken) ? "ordered" : "bullet";
+    const markerPrefixSpacing = taskMatch[3] ?? " ";
+    const markerCoreText = taskMatch[4] ?? "[ ]";
+    const trailingSpacing = taskMatch[5] ?? " ";
     const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
-    const markerCoreTo = markerCoreFrom + listToken.length + markerPrefixSpacing.length + markerCoreText.length;
+    const markerCoreTo =
+      markerCoreFrom +
+      listToken.length +
+      markerPrefixSpacing.length +
+      markerCoreText.length;
     const contentFrom = markerCoreTo + trailingSpacing.length;
     if (contentFrom > markerCoreTo) {
       return {
-        markerKind: 'task',
+        markerKind: "task",
         listKind,
         lineFrom: Math.trunc(lineFrom),
         markerCoreFrom,
         markerCoreTo,
         contentFrom,
-        indentationChars: indentationText.length
+        indentationChars: indentationText.length,
       };
     }
   }
 
   const listMatch = lineText.match(/^(\s*)([-+*]|\d+\.)(\s+)/);
   if (listMatch) {
-    const indentationText = listMatch[1] ?? '';
-    const markerCoreText = listMatch[2] ?? '-';
-    const markerKind = /^\d+\.$/.test(markerCoreText) ? 'ordered' : 'bullet';
-    const trailingSpacing = listMatch[3] ?? ' ';
+    const indentationText = listMatch[1] ?? "";
+    const markerCoreText = listMatch[2] ?? "-";
+    const markerKind = /^\d+\.$/.test(markerCoreText) ? "ordered" : "bullet";
+    const trailingSpacing = listMatch[3] ?? " ";
     const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
     const markerCoreTo = markerCoreFrom + markerCoreText.length;
     const contentFrom = markerCoreTo + trailingSpacing.length;
@@ -46,7 +55,27 @@ function readMarkerGapRange(lineText, lineFrom) {
         markerCoreFrom,
         markerCoreTo,
         contentFrom,
-        indentationChars: indentationText.length
+        indentationChars: indentationText.length,
+      };
+    }
+  }
+
+  const quoteMatch = lineText.match(/^(\s*)(>)(\s+)/);
+  if (quoteMatch) {
+    const indentationText = quoteMatch[1] ?? "";
+    const markerText = quoteMatch[2] ?? ">";
+    const trailingSpacing = quoteMatch[3] ?? " ";
+    const markerCoreFrom = Math.trunc(lineFrom) + indentationText.length;
+    const markerCoreTo = markerCoreFrom + markerText.length;
+    const contentFrom = markerCoreTo + trailingSpacing.length;
+    if (contentFrom > markerCoreTo) {
+      return {
+        markerKind: "quote",
+        lineFrom: Math.trunc(lineFrom),
+        markerCoreFrom,
+        markerCoreTo,
+        contentFrom,
+        indentationChars: indentationText.length,
       };
     }
   }
@@ -64,7 +93,10 @@ function constrainPositionToVisibleListBoundary(position, markerGapRange) {
     return markerGapRange.markerCoreFrom;
   }
 
-  if (target > markerGapRange.markerCoreTo && target < markerGapRange.contentFrom) {
+  if (
+    target > markerGapRange.markerCoreTo &&
+    target < markerGapRange.contentFrom
+  ) {
     return markerGapRange.contentFrom;
   }
 
@@ -74,18 +106,23 @@ function constrainPositionToVisibleListBoundary(position, markerGapRange) {
 export function createCursorController({
   liveDebug,
   readLiveState = null,
-  createCursorSelection = (position, assoc) => EditorSelection.cursor(position, assoc)
+  createCursorSelection = (position, assoc) =>
+    EditorSelection.cursor(position, assoc),
 } = {}) {
   function readCodeBlocks(view) {
-    const liveState = typeof readLiveState === 'function' ? readLiveState(view?.state) : null;
-    const blocks = Array.isArray(liveState?.model?.blocks) ? liveState.model.blocks : [];
-    return blocks.filter((block) => (
-      block &&
-      block.type === 'code' &&
-      Number.isFinite(block.from) &&
-      Number.isFinite(block.to) &&
-      block.to > block.from
-    ));
+    const liveState =
+      typeof readLiveState === "function" ? readLiveState(view?.state) : null;
+    const blocks = Array.isArray(liveState?.model?.blocks)
+      ? liveState.model.blocks
+      : [];
+    return blocks.filter(
+      (block) =>
+        block &&
+        block.type === "code" &&
+        Number.isFinite(block.from) &&
+        Number.isFinite(block.to) &&
+        block.to > block.from,
+    );
   }
 
   function resolveCodeFenceBoundaryAtLine(view, line) {
@@ -98,18 +135,19 @@ export function createCursorController({
       return null;
     }
     const blocks = readCodeBlocks(view);
-    return blocks.find((block) => (
-      block &&
-      (block.from === line.from || block.to === line.to)
-    )) ?? null;
+    return (
+      blocks.find(
+        (block) => block && (block.from === line.from || block.to === line.to),
+      ) ?? null
+    );
   }
 
-  function moveCursorVertically(view, direction, trigger = 'arrow') {
+  function moveCursorVertically(view, direction, trigger = "arrow") {
     if (!Number.isInteger(direction) || direction === 0) {
-      liveDebug?.trace?.('cursor.move.vertical.skipped', {
+      liveDebug?.trace?.("cursor.move.vertical.skipped", {
         trigger,
-        reason: 'invalid-direction',
-        direction
+        reason: "invalid-direction",
+        direction,
       });
       return false;
     }
@@ -122,41 +160,61 @@ export function createCursorController({
     const currentLine = view.state.doc.lineAt(selection.head);
     const targetLineNumber = currentLine.number + direction;
     if (targetLineNumber < 1 || targetLineNumber > view.state.doc.lines) {
-      liveDebug?.trace?.('cursor.move.vertical.boundary', {
+      liveDebug?.trace?.("cursor.move.vertical.boundary", {
         trigger,
         from: selection.head,
-        fromLine: currentLine.number
+        fromLine: currentLine.number,
       });
       return true;
     }
 
     const targetLine = view.state.doc.line(targetLineNumber);
     const currentColumn = Math.max(0, selection.head - currentLine.from);
-    const currentLineText = view.state.doc.sliceString(currentLine.from, currentLine.to);
-    const currentMarkerGapRange = readMarkerGapRange(currentLineText, currentLine.from);
-    const targetLineText = view.state.doc.sliceString(targetLine.from, targetLine.to);
-    const targetMarkerGapRange = readMarkerGapRange(targetLineText, targetLine.from);
+    const currentLineText = view.state.doc.sliceString(
+      currentLine.from,
+      currentLine.to,
+    );
+    const currentMarkerGapRange = readMarkerGapRange(
+      currentLineText,
+      currentLine.from,
+    );
+    const targetLineText = view.state.doc.sliceString(
+      targetLine.from,
+      targetLine.to,
+    );
+    const targetMarkerGapRange = readMarkerGapRange(
+      targetLineText,
+      targetLine.from,
+    );
 
     let targetPosition = null;
-    const currentInListContent = (
+    const currentInListContent =
       currentMarkerGapRange &&
-      selection.head >= currentMarkerGapRange.contentFrom
-    );
+      selection.head >= currentMarkerGapRange.contentFrom;
     if (currentInListContent && targetMarkerGapRange) {
       const contentOffset = selection.head - currentMarkerGapRange.contentFrom;
-      targetPosition = Math.min(targetLine.to, targetMarkerGapRange.contentFrom + contentOffset);
+      targetPosition = Math.min(
+        targetLine.to,
+        targetMarkerGapRange.contentFrom + contentOffset,
+      );
     } else {
       targetPosition = Math.min(targetLine.to, targetLine.from + currentColumn);
     }
 
-    targetPosition = constrainPositionToVisibleListBoundary(targetPosition, targetMarkerGapRange);
+    targetPosition = constrainPositionToVisibleListBoundary(
+      targetPosition,
+      targetMarkerGapRange,
+    );
 
-    const targetFenceBoundary = resolveCodeFenceBoundaryAtLine(view, targetLine);
+    const targetFenceBoundary = resolveCodeFenceBoundaryAtLine(
+      view,
+      targetLine,
+    );
     if (targetFenceBoundary) {
       const snappedFencePosition = resolveCodeFenceCaretPosition(
         view.state.doc,
         targetLine.from,
-        targetLine.to
+        targetLine.to,
       );
       if (Number.isFinite(snappedFencePosition)) {
         targetPosition = snappedFencePosition;
@@ -169,33 +227,33 @@ export function createCursorController({
 
     view.dispatch({
       selection: createCursorSelection(targetPosition, direction > 0 ? -1 : 1),
-      scrollIntoView: true
+      scrollIntoView: true,
     });
 
     view.focus();
 
-    liveDebug?.trace?.('live-v4.cursor.move', {
+    liveDebug?.trace?.("live-v4.cursor.move", {
       trigger,
       direction,
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
       toLine: targetLine.number,
-      snappedToCodeFenceEnd: Boolean(targetFenceBoundary)
+      snappedToCodeFenceEnd: Boolean(targetFenceBoundary),
     });
-    liveDebug?.trace?.('cursor.move.vertical', {
+    liveDebug?.trace?.("cursor.move.vertical", {
       trigger,
       direction,
       from: selection.head,
       to: targetPosition,
       fromLine: currentLine.number,
-      toLine: targetLine.number
+      toLine: targetLine.number,
     });
 
     return true;
   }
 
-  function moveCursorHorizontally(view, direction, trigger = 'arrow') {
+  function moveCursorHorizontally(view, direction, trigger = "arrow") {
     if (!Number.isInteger(direction) || (direction !== -1 && direction !== 1)) {
       return false;
     }
@@ -217,12 +275,21 @@ export function createCursorController({
     if (direction > 0) {
       if (head < markerGapRange.markerCoreFrom) {
         target = markerGapRange.markerCoreFrom;
-      } else if (head >= markerGapRange.markerCoreTo && head < markerGapRange.contentFrom) {
+      } else if (
+        head >= markerGapRange.markerCoreTo &&
+        head < markerGapRange.contentFrom
+      ) {
         target = markerGapRange.contentFrom;
       }
-    } else if (head > markerGapRange.markerCoreTo && head <= markerGapRange.contentFrom) {
+    } else if (
+      head > markerGapRange.markerCoreTo &&
+      head <= markerGapRange.contentFrom
+    ) {
       target = markerGapRange.markerCoreTo;
-    } else if (head <= markerGapRange.markerCoreFrom && markerGapRange.markerCoreFrom > markerGapRange.lineFrom) {
+    } else if (
+      head <= markerGapRange.markerCoreFrom &&
+      markerGapRange.markerCoreFrom > markerGapRange.lineFrom
+    ) {
       // Keep the caret out of hidden indentation guide ranges.
       target = markerGapRange.markerCoreFrom;
     }
@@ -238,24 +305,24 @@ export function createCursorController({
     view.dispatch({
       // Keep caret on visible boundaries when marker/indent syntax is hidden.
       selection: createCursorSelection(target, 1),
-      scrollIntoView: true
+      scrollIntoView: true,
     });
     view.focus();
 
-    liveDebug?.trace?.('cursor.move.horizontal.marker-gap', {
+    liveDebug?.trace?.("cursor.move.horizontal.marker-gap", {
       trigger,
       direction,
       from: head,
       to: target,
       markerCoreFrom: markerGapRange.markerCoreFrom,
       markerCoreTo: markerGapRange.markerCoreTo,
-      contentFrom: markerGapRange.contentFrom
+      contentFrom: markerGapRange.contentFrom,
     });
 
     return true;
   }
 
-  function adjustListIndent(view, direction, trigger = 'list-indent') {
+  function adjustListIndent(view, direction, trigger = "list-indent") {
     if (!Number.isInteger(direction) || direction === 0) {
       return false;
     }
@@ -277,25 +344,31 @@ export function createCursorController({
       return false;
     }
 
-    const indentationChars = Math.max(0, Math.trunc(markerGapRange.indentationChars ?? 0));
+    const indentationChars = Math.max(
+      0,
+      Math.trunc(markerGapRange.indentationChars ?? 0),
+    );
     if (direction > 0) {
-      const insertText = '  ';
+      const insertText = "  ";
       view.dispatch({
         changes: {
           from: line.from,
           to: line.from,
-          insert: insertText
+          insert: insertText,
         },
-        selection: createCursorSelection(selection.head + insertText.length, -1),
-        scrollIntoView: true
+        selection: createCursorSelection(
+          selection.head + insertText.length,
+          -1,
+        ),
+        scrollIntoView: true,
       });
       view.focus();
-      liveDebug?.trace?.('cursor.list-indent', {
+      liveDebug?.trace?.("cursor.list-indent", {
         trigger,
         direction,
         from: selection.head,
         to: selection.head + insertText.length,
-        lineNumber: line.number
+        lineNumber: line.number,
       });
       return true;
     }
@@ -309,18 +382,21 @@ export function createCursorController({
       changes: {
         from: line.from,
         to: line.from + removeChars,
-        insert: ''
+        insert: "",
       },
-      selection: createCursorSelection(Math.max(line.from, selection.head - removeChars), -1),
-      scrollIntoView: true
+      selection: createCursorSelection(
+        Math.max(line.from, selection.head - removeChars),
+        -1,
+      ),
+      scrollIntoView: true,
     });
     view.focus();
-    liveDebug?.trace?.('cursor.list-indent', {
+    liveDebug?.trace?.("cursor.list-indent", {
       trigger,
       direction,
       from: selection.head,
       to: Math.max(line.from, selection.head - removeChars),
-      lineNumber: line.number
+      lineNumber: line.number,
     });
     return true;
   }
@@ -328,6 +404,6 @@ export function createCursorController({
   return {
     moveCursorVertically,
     moveCursorHorizontally,
-    adjustListIndent
+    adjustListIndent,
   };
 }
